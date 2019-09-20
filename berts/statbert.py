@@ -4,30 +4,54 @@ class statbert:
 
     def __init__(self, myConfig, myMenu, myMath):
         self.conf = myConfig
-        self.mathbert = myMath
+        self.math = myMath
         self.menu = myMenu
         self.norm_root_store = None
 
-    # Normal Density
-    ## Pass in pi to save time 
+    def binomialMass(self, n, p, x):
+        if n < 0 :
+            raise Exception("Number Of Trials Not Understood")
+        elif x > n or x < 0:
+            raise Exception("Input Not Understood")
+        elif p>1 or p<0:
+            raise Exception("Probability Of Success Not Understood")
+        else:
+            success = self.math.power(p, x)
+            failure = self.math.power(p, n - x)
+            comb = self.math.factorial(n)/(self.math.factorial(x)*self.math.factorial(n-x))
+            prob = success*failure*comb
+        return prob
+
+    def binomialDistribution(self, n, p, x):
+        if n < 0 :
+            raise Exception("Number Of Trials Not Understood")
+        elif x > n or x < 0:
+            raise Exception("Input Not Understood")
+        elif(p>1 or p<0):
+            raise Exception("Probability Of Success Not Understood")
+        else:
+            sum = 0
+            for index in range(0, x+1):
+                sum = sum + self.binomialMass(n, p, index)
+            return sum
+
     def normalDensity(self, x, mu, sigma):
         if sigma == 0:
-            return "Does Not Exist"
+            raise Exception("Variance Undefined")
         else:
-            exponent = -1*self.mathbert.power((x - mu)/sigma, 2)/2
+            exponent = -1*self.math.power((x - mu)/sigma, 2)/2
             if self.conf.EXTRA_VERBOSE:
                 self.menu.warn("Checking Store For Normal Root Constant", "normalDensity")
             if(self.norm_root_store == None):
                 if self.conf.EXTRA_VERBOSE:
                     self.menu.warn("No Normal Root Found, Calculating Normal Root Constant", "normalDensity")
-                self.norm_root_store = self.mathbert.newtRoot(2*self.mathbert.newtPi())
+                self.norm_root_store = self.math.newtRoot(2*self.math.newtPi())
             elif self.conf.EXTRA_VERBOSE:
                 self.menu.warn("Using Normal Root Constant Stored From Previous Calculations", "normalDensity")
-            term = self.mathbert.exp(exponent)/(sigma*self.norm_root_store)
+            term = self.math.exp(exponent)/(sigma*self.norm_root_store)
             return term
         
-    # Cumulative Normal Distribution
-    def normalIntegral(self, x, mu, sigma):
+    def normalDistribution(self, x, mu, sigma):
         # No variance, no distribution
         if sigma == 0:
             raise Exception("Variance Undefined")

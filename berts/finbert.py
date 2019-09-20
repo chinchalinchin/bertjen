@@ -41,18 +41,18 @@ class finbert:
         if self.conf.VERBOSE:
             self.menu.warn("Calculating Risk Free Probabilities", "BSF")
         if opt:
-            Probd1 = self.stat.normalIntegral(d1, 0, 1)
+            Probd1 = self.stat.normalDistribution(d1, 0, 1)
             if self.conf.VERBOSE:
                 self.menu.warn(f'P(d1)={Probd1}', "BSF")
-            Probd2 = self.stat.normalIntegral(d2, 0, 1)
+            Probd2 = self.stat.normalDistribution(d2, 0, 1)
             if self.conf.VERBOSE:
                 self.menu.warn(f'P(d2)={Probd2}', "BSF")
             value = dS*Probd1-dK*Probd2
         else:
-            Probd1 = self.stat.normalIntegral(-d1, 0, 1)
+            Probd1 = self.stat.normalDistribution(-d1, 0, 1)
             if self.conf.VERBOSE:
                 self.menu.warn(f'P(-d1)={Probd1}', "BSF")
-            Probd2 = self.stat.normalIntegral(-d2, 0, 1)
+            Probd2 = self.stat.normalDistribution(-d2, 0, 1)
             if self.conf.VERBOSE:
                 self.menu.warn(f'P(-d2)={Probd1}', "BSF")
             value = dK*Probd2 - dS*Probd1

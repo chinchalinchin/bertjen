@@ -7,13 +7,15 @@ class menujen:
         self.TITLE_LINE = "                The Bertjen Calculator                   "
         self.SPACE_BUFFER = 2
         self.switcher = {
-            "CF": 0,"E": 2,"F": 3,
-            "LPI":4, "M": 5, "NORMCDF": 6, "NORMPDF": 7,
-            "NPI": 8, "P": 9, "SQ": 11,
-            "BS": 12, "LN": 13, "ROOT": 15,
-            "COS": 16, "SIN": 17, "ASIN": 18,
-            "TAN": 19, "ACOS": 20, "ATAN": 21,
-            "I": 22, "V": 23,"Q" : 99,
+            "CF": 0,"E": 2,"F": 3,"LPI":4, 
+            "M": 5, "NORMCDF": 6, "NORMPDF": 7,
+            "NPI": 8, "P": 9, "SQ": 11, "BS": 12,
+            "LN": 13, "ROOT": 15, "COS": 16, 
+            "SIN": 17, "ASIN": 18, "TAN": 19, 
+            "ACOS": 20, "ATAN": 21, "I": 22, "V": 23,
+            "BINPMF": 24, "BINCDF":25, "B": 26,
+            "LOG": 27,
+            "Q" : 99,
         }
     
     # Manual Switch
@@ -30,6 +32,7 @@ class menujen:
         self.command("CF", "Count Function")
         self.command("F", "Factorial Function")
         self.command("P","Power Function")
+        self.command("LOG", "Logarithm Function")
         
         self.subtitle("Mathbert Approximations")
         self.command("E","Infinite Series Exponential Approximation")
@@ -48,11 +51,13 @@ class menujen:
         
         self.subtitle("Statbert")
         
-        self.subtitle("Statbert PDFs")
+        self.subtitle("Statbert PDFs/PMFs")
         self.command("NORMPDF","Normal Probability Density Function")
+        self.command("BINPMF", "Binomial Probability Mass Function")
         
         self.subtitle("Statbert CDFs")
-        self.command("NORMCDF", "Normal Cumulative Probability Function")
+        self.command("NORMCDF", "Normal Cumulative Distribution Function")
+        self.command("BINCDF", "Binomial Cumulative Distribution Function")
         self.divider()
         
         self.subtitle("Finbert")
@@ -65,6 +70,7 @@ class menujen:
         self.command("I", "Integration Technique Settings")
         self.command("V", "Verbose Settings")
         self.command("M", "Print Help Menu")
+        self.command("B", "Calibrate Bertjen")
         self.command("Q", "Quit")
         self.divider()
 
@@ -116,12 +122,15 @@ class menujen:
     # Formatted Time Output
     def time(self, flag, start):
         if flag:
-            self.command("TIME START", str(datetime.datetime.now().strftime("%H: %M: %S")))
+            self.command("TIME START", 
+                        str(datetime.datetime.now().strftime("%H: %M: %S.%f")[:-4]))
             return datetime.datetime.now()
         else:
             end = datetime.datetime.now()
-            self.command("TIME END", str(end.strftime("%H: %M: %S")))
-            self.command("TIME DIFF", str(end - start) + " sec")
+            self.command("TIME END", 
+                        str(end.strftime("%H: %M: %S.%f")[:-4]))
+            self.command("TIME DIFF", 
+                        str(end - start) + " sec")
             
     # Retrieve Valid Menu Input From User
     def getMenuInput(self,):

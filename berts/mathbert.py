@@ -77,9 +77,9 @@ class mathbert:
     def sin(self, x):
         sum = 0
         if self.conf.VERBOSE:
-            self.menu.warn(f'Max # Of Iterations: {str(self.conf.TRIG_ACC)}', "sin")
+            self.menu.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "sin")
         startTime = datetime.datetime.now()
-        for index in range(0, self.conf.TRIG_ACC):
+        for index in range(0, int(2*self.conf.TRIG_ACC)):
             old = sum
             num = self.power(-1, index)*self.power(x, 2*index+1)
             den = self.factorial(2*index+1)
@@ -100,9 +100,9 @@ class mathbert:
     def cos(self, x):
         sum = 0
         if self.conf.VERBOSE:
-            self.menu.warn(f'Max # Of Iterations: {str(self.conf.TRIG_ACC)}', "cos")
+            self.menu.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "cos")
         startTime = datetime.datetime.now()
-        for index in range(0, self.conf.TRIG_ACC):
+        for index in range(0, int(2*self.conf.TRIG_ACC)):
             old = sum
             num = self.power(-1, index)*self.power(x, 2*index)
             den = self.factorial(2*index)
@@ -137,9 +137,9 @@ class mathbert:
         else:
             sum = 0
             if self.conf.VERBOSE:
-                self.menu.warn(f'Max # of Iterations: {str(int(self.conf.TRIG_ACC/2))}', "arcsin")
+                self.menu.warn(f'Max # of Iterations: {str(int(self.conf.TRIG_ACC))}', "arcsin")
             startTime = datetime.datetime.now()
-            for index in range(0, int(self.conf.TRIG_ACC/2)):
+            for index in range(0, int(self.conf.TRIG_ACC)):
                 old = sum
                 num = self.factorial(2*index)*self.power(x, 2*index+1)
                 den = self.power(4, index)*self.power(self.factorial(index), 2)*(2*index+1)
@@ -167,9 +167,9 @@ class mathbert:
     def arctan(self, x):
         sum = 0
         if self.conf.VERBOSE:
-            self.menu.warn(f'Max # Of Iterations: {str(int(self.conf.TRIG_ACC/2))}', "arctan")
+            self.menu.warn(f'Max # Of Iterations: {str(int(self.conf.TRIG_ACC))}', "arctan")
         startTime = datetime.datetime.now()
-        for index in range(0, int(self.conf.TRIG_ACC/2)):
+        for index in range(0, int(self.conf.TRIG_ACC)):
             old = sum
             num = self.power(-1, index)*self.power(x, 2*index+1)
             den = 2*index + 1
@@ -233,26 +233,41 @@ class mathbert:
                 return current
         return current
 
+    def log(self, x, a):
+        if x == 0:
+            raise Exception("Log Undefined At X = 1")
+        elif x==1:
+            return 0
+        else:
+            lnx = self.naturalLog(x)
+            lnbase = self.naturalLog(a)
+            return lnx/lnbase
+
     # Newton's Method Natural Log Approximation
     def naturalLog(self, n):
-        if self.conf.VERBOSE:
-            self.menu.warn(f'Max # Of Iterations:  {str(self.conf.LN_ACC)}', "naturalLog")
-        current = self.nearestPerfectLn(n)
-        startTime = datetime.datetime.now()
-        for index in range(0, self.conf.LN_ACC):
-            old = current
-            current = old + 2 * (n - self.exp(old))/(n+self.exp(old))
-            now = datetime.datetime.now()
-            if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                self.menu.warn("Still Computing", "naturalLog")
-                self.menu.warn(f'Iteration {str(index)}', "naturalLog")
-                self.menu.warn(f'Current Value = {str(current)}', "naturalLog")
-                startTime = datetime.datetime.now()
-            if(old == current):
-                if self.conf.VERBOSE:
-                    self.menu.warn(f'Halted After {str(index)} Iterations', "naturalLog")
-                return current
-        return current
+        if n == 0:
+            raise Exception("Ln Undefined At X = 1")
+        elif n == 1:
+            return 0
+        else:
+            if self.conf.VERBOSE:
+                self.menu.warn(f'Max # Of Iterations:  {str(self.conf.LN_ACC)}', "naturalLog")
+            current = self.nearestPerfectLn(n)
+            startTime = datetime.datetime.now()
+            for index in range(0, self.conf.LN_ACC):
+                old = current
+                current = old + 2 * (n - self.exp(old))/(n+self.exp(old))
+                now = datetime.datetime.now()
+                if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
+                    self.menu.warn("Still Computing", "naturalLog")
+                    self.menu.warn(f'Iteration {str(index)}', "naturalLog")
+                    self.menu.warn(f'Current Value = {str(current)}', "naturalLog")
+                    startTime = datetime.datetime.now()
+                if(old == current):
+                    if self.conf.VERBOSE:
+                        self.menu.warn(f'Halted After {str(index)} Iterations', "naturalLog")
+                    return current
+            return current
 
     # Liebniz's Approximation Of Pi
     def liebPi(self):
@@ -291,7 +306,7 @@ class mathbert:
         else:
             if self.conf.VERBOSE:
                 self.menu.warn("Using Pi Stored From Previous Calculations", "newtPi")
-            return newt_pi_store
+            return self.newt_pi_store
    
     ########################################################################
       

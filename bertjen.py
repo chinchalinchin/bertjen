@@ -113,7 +113,7 @@ class bertjen:
             result = "error"
             now = self.menu.time(True, None)
             try:
-                result = self.stat.normalIntegral(x, mu, sigma)
+                result = self.stat.normalDistribution(x, mu, sigma)
             except Exception as e:
                 self.menu.warn(str(e), "statbert.normalIntegral")
             self.menu.time(False, now)
@@ -358,6 +358,61 @@ class bertjen:
             self.menu.time(False, now)
             # OUTPUT
             self.menu.output(f'Series Approximation of arctan({str(n)}) = {str(result)}') 
+        ######################################
+        # BINOMIAL PROBABILITY MASS FUNCTION #
+        ######################################
+        elif input == 24:
+            self.menu.subtitle("Binomial Probability Mass Function")
+            self.menu.bullet("P(X=x)")
+            # INPUT
+            n = self.menu.getInt("Please Enter Number Of Trials")
+            p = self.menu.getFloat("Please Enter Probability Of Success")
+            x = self.menu.getInt("Please Enter Desired Probability Mass")
+            # COMPUTATION
+            result = "error"
+            now = self.menu.time(True, None)
+            try:
+                result = self.stat.binomialMass(n, p, x)
+            except Exception as e:
+                self.menu.warn(str(e), "statbert.binomialMass")
+            self.menu.time(False, now)
+            # OUTPUT
+            self.menu.output(f'Binomial Probability Mass({str(x)}) = {str(result)}')
+        #############################################
+        # BINOMIAL CUMULATIVE DISTRIBUTION FUNCTION #
+        #############################################
+        elif input == 25:
+            self.menu.subtitle("Binomial Cumulative Distribution Function")
+            self.menu.bullet("P(X<=x)")
+            # INPUT
+            n = self.menu.getInt("Please Enter Number Of Trials")
+            p = self.menu.getFloat("Please Enter Probability Of Success")
+            x = self.menu.getInt("Please Enter Desired Probability Mass")
+            result = "error"
+            now = self.menu.time(True, None)
+            try:
+                result = self.stat.binomialDistribution(n, p, x)
+            except Exception as e:
+                self.menu.warn(str(e), "statbert.binomialDistribution")
+            self.menu.time(False, now)
+            # OUTPUT
+            self.menu.output(f'Binomial Cumulative Distribution({str(x)}) = {str(result)}')
+        ######################
+        # LOGARITHM FUNCTION #
+        ######################
+        elif input == 27:
+            self.menu.subtitle("Logarithm Function")
+            # INPUT
+            a = self.menu.getFloat("Please Enter Logarithm Base")
+            x = self.menu.getFloat("Please Enter Number")
+            result = "error"
+            now = self.menu.time(True, None)
+            try:
+                result = self.math.log(x, a)
+            except Exception as e:
+                self.menu.warn(str(e), "mathbert.log")
+            self.menu.time(False, now)
+            self.menu.output(f'Base {a} Logarithm of {x} = {result}')
         ########################
         # INTEGRATION SETTINGS #
         ########################
@@ -407,11 +462,35 @@ class bertjen:
             else:
                 self.menu.warn(f'Extra Verbose Setting Unchanged: {"Yes" if extraVerboseFlag else "No"}', 
                                 "confijen.extraVerbose")
+        #####################
+        # CALIBRATE BERTJEN #
+        #####################
+        elif input == 26:
+            self.menu.subtitle("Calibrate System Settings")
+            self.menu.bullet("Bertjen Info")
+            self.menu.command("Trig Series Loop Ierations", self.conf.TRIG_ACC)
+            self.menu.bullet("System Info")
+            self.menu.command("Float Max", sys.float_info.max)
+            self.menu.bullet("Calibrate Bertjen To System?")
+            calibrateFlag = self.menu.getBinaryDecision("Yes", "No")
+            if calibrateFlag:
+                changedFlag = False
+                try:
+                    changedFlag = self.conf.calibrate(self.math)
+                except Exception as e:
+                    self.menu.warn(str(e), "confijen.calibrate")
+                if changedFlag:
+                    self.menu.warn("Bertjen Info Changed!", "confijen.calibrate")
+                    self.menu.bullet("New Bertjen Info")
+                    self.menu.command("Trig Series Loop Ierations", self.conf.TRIG_ACC)
+                else:
+                    self.menu.warn("Bertjen Info Unchanged!", "confijen.calibrate")
         ########
         # QUIT #
         ########
         elif input == 99:
-            alive = False
+            self.alive = False
+            self.conf.saveConfiguration()
         #############
         # NOT FOUND #
         #############
