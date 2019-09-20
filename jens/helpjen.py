@@ -13,3 +13,6 @@ def isInt(s):
         return True
     except ValueError:
         return False
+
+def isNan(num):
+    return num != num

@@ -1,13 +1,14 @@
 import sys
 import json
+import helpjen
 
 class configuration:
-    
-    self.TRIG_LIMIT = 4000
-    self.LN_LIMIT = 1000000000
 
     def __init__(self):
-        TECHNIQUES = {
+        self.TRIG_LIMIT = 4000
+        self.LN_LIMIT = 1000
+        self.LN_BREAK = 0.000000001
+        self.TECHNIQUES = {
             0:"ENDPOINT",
             1:"MIDPOINT",
             2:"TRAPEZOID",
@@ -50,14 +51,23 @@ class configuration:
 
     def calibrate(self, math):
         flag1 = self.calibrateTrig(math)
-        return flag1
+        flag2 = self.calibrateLn(math)
+        return flag1 or flag2
         # return flag1 or flag2 or ... 
 
     def calibrateLn(self, math):
-        return None
+        current = math.nearestPerfectLn(self.LN_BREAK)
+        for index in range(1, self.LN_LIMIT):
+            current = current + 2 * (self.LN_BREAK- math.exp(current))/(self.LN_BREAK+math.exp(current))
+            if helpjen.isNan(current):
+                old = self.LN_ACC
+                self.LN_ACC = index - 1
+                if(old == self.LN_ACC):
+                    return False
+                else:
+                    return True
 
     def calibrateTrig(self, math):
-        float_max = sys.float_info.max
         for index in range(1, self.TRIG_LIMIT):
             try:
                 float(math.power(4, index)*math.power(math.factorial(index), 2)*(2*index+1))

@@ -328,7 +328,7 @@ class mathbert:
     # Find Nearest Perfect Natural Log
     def nearestPerfectLn(self, n):
         num = int(n)
-        if(num == 1 or num ==0):
+        if num == 1 or num == 0:
             return 0
         else:
             for index in range(1, num):

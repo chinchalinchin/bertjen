@@ -468,9 +468,11 @@ class bertjen:
         elif input == 26:
             self.menu.subtitle("Calibrate System Settings")
             self.menu.bullet("Bertjen Info")
-            self.menu.command("Trig Series Loop Ierations", self.conf.TRIG_ACC)
+            self.menu.command("Trig Series Max Loop Ierations", self.conf.TRIG_ACC)
+            self.menu.command("Ln Series Max Loop Iterations", self.conf.LN_ACC)
             self.menu.bullet("System Info")
             self.menu.command("Float Max", sys.float_info.max)
+            self.menu.command("Float Min", sys.float_info.min)
             self.menu.bullet("Calibrate Bertjen To System?")
             calibrateFlag = self.menu.getBinaryDecision("Yes", "No")
             if calibrateFlag:
@@ -482,7 +484,8 @@ class bertjen:
                 if changedFlag:
                     self.menu.warn("Bertjen Info Changed!", "confijen.calibrate")
                     self.menu.bullet("New Bertjen Info")
-                    self.menu.command("Trig Series Loop Ierations", self.conf.TRIG_ACC)
+                    self.menu.command("Trig Series Max Loop Iterations", self.conf.TRIG_ACC)
+                    self.menu.command("Ln Series Max Loop Ierations", self.conf.LN_ACC)
                 else:
                     self.menu.warn("Bertjen Info Unchanged!", "confijen.calibrate")
         ########
