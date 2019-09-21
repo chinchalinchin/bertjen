@@ -1,6 +1,7 @@
 import sys
 import json
 import helpjen
+import datetime
 
 class configuration:
 
@@ -24,6 +25,7 @@ class configuration:
             self.NPI_ACC = data['NPI_ACC']
             self.LPI_ACC = data['LPI_ACC']
             self.SQ_ACC = data['SQ_ACC']
+            self.ROOT_ACC = data['ROOT_ACC']
             self.LN_ACC = data['LN_ACC']
             self.NORM_ACC =data['NORM_ACC']
             self.VERBOSE = data['VERBOSE']
@@ -39,6 +41,7 @@ class configuration:
         data["NPI_ACC"] = self.NPI_ACC
         data["LPI_ACC"] = self.LPI_ACC
         data["SQ_ACC"] = self.SQ_ACC
+        data["ROOT_ACC"] = self.ROOT_ACC
         data["LN_ACC"] = self.LN_ACC
         data["NORM_ACC"] = self.NORM_ACC
         data["VERBOSE"] = self.VERBOSE
@@ -49,14 +52,16 @@ class configuration:
             json.dump(data, outfile)
         return None
 
-    def calibrate(self, math):
-        flag1 = self.calibrateTrig(math)
-        flag2 = self.calibrateLn(math)
-        return flag1 or flag2
+    def calibrate(self, math, menu):
+        flag1 = self.calibrateTrig(math, menu)
+        flag2 = self.calibrateLn(math, menu)
+        flag3 = self.calibrateRoot(math, menu)
+        return flag1 or flag2 or flag3
         # return flag1 or flag2 or ... 
 
-    def calibrateLn(self, math):
+    def calibrateLn(self, math, menu):
         current = math.nearestPerfectLn(self.LN_BREAK)
+        startTime = datetime.datetime.now()
         for index in range(1, self.LN_LIMIT):
             current = current + 2 * (self.LN_BREAK- math.exp(current))/(self.LN_BREAK+math.exp(current))
             if helpjen.isNan(current):
@@ -66,8 +71,14 @@ class configuration:
                     return False
                 else:
                     return True
+            now = datetime.datetime.now()
+            if self.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.LAG)):
+                menu.warn("Calibrating Natural Log", "confijen.calibrateLn")
+                menu.warn(f'Current Natural Log Iteration Threshold: {index}', "confijen.calibrateLn")  
+                startTime = datetime.datetime.now()    
 
-    def calibrateTrig(self, math):
+    def calibrateTrig(self, math, menu):
+        startTime = datetime.datetime.now()
         for index in range(1, self.TRIG_LIMIT):
             try:
                 float(math.power(4, index)*math.power(math.factorial(index), 2)*(2*index+1))
@@ -80,6 +91,14 @@ class configuration:
                     return False
                 else:
                     return True
+            now = datetime.datetime.now()
+            if self.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.LAG)):
+                menu.warn("Calibrating Trig Series Approximation", "confijen.calibrateTrig")
+                menu.warn(f'Current Trig Iteration Threshold: {index}', "confijen.calibrateTrig")
+                startTime = datetime.datetime.now()
+
+    def calibrateRoot(self, math, menu):
+        return False
 
     def switchTechnique(self, arg):
         return self.TECHNIQUES.get(arg, "nothing")

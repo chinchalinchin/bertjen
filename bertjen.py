@@ -219,7 +219,7 @@ class bertjen:
         # NATURAL LOG APPROXIMATION  #
         ##############################
         elif input == 13:
-            self.menu.subtitle("Newton's Method Natural Log Approximation")
+            self.menu.subtitle("Halley's Method Natural Log Approximation")
             # INPUT
             n = self.menu.getFloat("Please Enter Number")
             # COMPUTATION
@@ -468,7 +468,7 @@ class bertjen:
         elif input == 26:
             self.menu.subtitle("Calibrate System Settings")
             self.menu.bullet("Bertjen Info")
-            self.menu.command("Trig Series Max Loop Ierations", self.conf.TRIG_ACC)
+            self.menu.command("Trig Series Max Loop Iterations", self.conf.TRIG_ACC)
             self.menu.command("Ln Series Max Loop Iterations", self.conf.LN_ACC)
             self.menu.bullet("System Info")
             self.menu.command("Float Max", sys.float_info.max)
@@ -478,7 +478,7 @@ class bertjen:
             if calibrateFlag:
                 changedFlag = False
                 try:
-                    changedFlag = self.conf.calibrate(self.math)
+                    changedFlag = self.conf.calibrate(self.math, self.menu)
                 except Exception as e:
                     self.menu.warn(str(e), "confijen.calibrate")
                 if changedFlag:
@@ -488,12 +488,22 @@ class bertjen:
                     self.menu.command("Ln Series Max Loop Ierations", self.conf.LN_ACC)
                 else:
                     self.menu.warn("Bertjen Info Unchanged!", "confijen.calibrate")
+        #
+        #
+        #
+        elif input == 28:
+            self.menu.subtitle("Save Bertjen Configuration")
+            saveFlag = self.menu.getBinaryDecision("Save", "Forget")
+            if saveFlag:
+                self.conf.saveConfiguration()
+                self.menu.warn("Configuration Saved To File", "config.json")
+            else:
+                self.menu.warn("Configuration Not Saved", "config.json")
         ########
         # QUIT #
         ########
         elif input == 99:
             self.alive = False
-            self.conf.saveConfiguration()
         #############
         # NOT FOUND #
         #############

@@ -274,9 +274,16 @@ class mathbert:
         sum = 0
         if self.conf.VERBOSE:
             self.menu.warn(f'Max # Of Iterations: {str(self.conf.LPI_ACC)}', "liebPi")
+        startTime = datetime.datetime.now()
         for index in range(0, self.conf.LPI_ACC):
             old = sum
             sum = sum + self.power(-1, index)/(2*index+1)
+            now = datetime.datetime.now()
+            if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
+                    self.menu.warn("Still Computing", "liebPi")
+                    self.menu.warn(f'Iteration {str(index)}', "liebPi")
+                    self.menu.warn(f'Current Value = {str(sum)}', "liebPi")
+                    startTime = datetime.datetime.now()
             if old == sum:
                 if self.conf.VERBOSE:
                     self.menu.warn(f'Halted After {str(index)} Iterations', "liebPi")

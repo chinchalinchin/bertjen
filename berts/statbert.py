@@ -73,6 +73,8 @@ class statbert:
                 LHint = 0.5
                 RHint = 0.5
                 Sint = 0.5
+                MDint = 0.5
+                TPint = 0.5
             elif x < mu:
                 if self.conf.VERBOSE:
                     self.menu.warn("No Symmetry Found", "normalIntegral")
@@ -80,6 +82,8 @@ class statbert:
                 LHint = 0
                 RHint = 0
                 Sint = 0
+                MDint = 0
+                TPint = 0
                 if(x<start):
                     raise Exception("Probability Negligible")
 
@@ -117,11 +121,59 @@ class statbert:
                         return current
                 return current
             # Apply Midpoint Approximation
-            elif self.conf.getIntegrationTechnique() == "MIDPOINT":
-                return 0
-            # Apply Trapezoid Approximation
             elif self.conf.getIntegrationTechnique() == "TRAPEZOID":
-                return 0
+                if self.conf.VERBOSE:
+                    self.menu.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
+                    TPX1 = 0
+                    previousTPcont0 = 1
+                for index in range(1, self.conf.NORM_ACC):
+                    old = current
+                    TPX0 = start + delta*(index - 1)
+                    TPcont0 = self.normalDensity(TPX0, mu, sigma)*delta
+                    if(TPX1 != previousTPcont0):
+                        TPX1 = start + delta*index
+                        TPcont1 = self.normalDensity(TPX1, mu, sigma)*delta
+                    TPcont = (TPcont1 + TPcont0)/2
+                    TPint = TPint + TPcont
+                    TPcont1 = TPcont0
+                    previousMDcont0 = TPcont0
+                    current = TPint
+
+                    now = datetime.datetime.now()
+                    if (self.conf.VERBOSE and now-startTime>datetime.timedelta(seconds=self.conf.LAG)):
+                        self.menu.warn("Still Computing", "normalIntegral")
+                        self.menu.warn(f'Iteration {str(index)}', "normalIntegral")
+                        self.menu.warn(f'Current TRAP Estimate: {str(TPint)}', "normalIntegral")
+                        startTime = datetime.datetime.now()
+                    if(old == current):
+                        if self.conf.VERBOSE:
+                            self.menu.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
+                        return current
+                return current
+            # Apply Trapezoid Approximation
+            elif self.conf.getIntegrationTechnique() == "MIDPOINT":
+                if self.conf.VERBOSE:
+                    self.menu.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
+                for index in range(0, self.conf.NORM_ACC):
+                    old = current
+
+                    MDX = start + delta*(index + 0.5)
+                    MDcont = self.normalDensity(MDX, mu, sigma)*delta
+                    MDint = MDint + MDcont
+
+                    current = MDint
+
+                    now = datetime.datetime.now()
+                    if (self.conf.VERBOSE and now-startTime>datetime.timedelta(seconds=self.conf.LAG)):
+                        self.menu.warn("Still Computing", "normalIntegral")
+                        self.menu.warn(f'Iteration {str(index)}', "normalIntegral")
+                        self.menu.warn(f'Current MID Estimate: {str(MDint)}', "normalIntegral")
+                        startTime = datetime.datetime.now()
+                    if(old == current):
+                        if self.conf.VERBOSE:
+                            self.menu.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
+                        return current
+                return current
             # Apply Simpson's Approxmation
             elif self.conf.getIntegrationTechnique() == "SIMPSON":
                 if self.conf.VERBOSE:
