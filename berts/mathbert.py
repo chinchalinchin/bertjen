@@ -9,6 +9,7 @@ class mathbert:
         self.newt_pi_store = None
         self.e_store = None
 
+
     # Count Integer Function
     def countFormula(self, n):
         count = n*(n+1)/2
@@ -68,6 +69,7 @@ class mathbert:
     # Taylor Sum Approximation of Sine
     def sin(self, x):
         sum = 0
+        x = self.unrevolve(x)
         if self.conf.VERBOSE:
             self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "sin")
         startTime = datetime.datetime.now()
@@ -97,6 +99,7 @@ class mathbert:
     # Taylor Series Cosine Approximation
     def cos(self, x):
         sum = 0
+        x = self.unrevolve(x)
         if self.conf.VERBOSE:
             self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "cos")
         startTime = datetime.datetime.now()
@@ -133,6 +136,43 @@ class mathbert:
             sine = self.sin(x)
             tangent = sine/cosine
             return tangent
+
+    # Secant Function Using Cosine Taylor Series
+    def sec(self, x):
+        x = self.unrevolve(x)
+        pi = self.preferredPi()
+        if(x == pi/2):
+            raise Exception(f'Secant Undefined At {self.conf.getSymbol("pi")}/2')
+        elif( x == -pi/2):
+            raise Exception(f'Secant Undefined At -{self.conf.getSymbol("pi")}/2')
+        else:
+            cosine = self.cos(x)
+            if(cosine==0):
+                raise Exception(f'Secant Undefined At Cos({str(x)}) = 0')
+            return 1/cosine
+
+    # Cosecant Function Using Sine Taylor Series
+    def csc(self, x):
+        x = self.unrevolve(x)
+        pi = self.preferredPi()
+        if(x == pi):
+            raise Exception(f'Cosecant Undefined At {self.conf.getSymbol("pi")}')
+        elif(x == -pi):
+            raise Exception(f'Cosecant Undefinted At -{self.conf.getSymbol("pi")}')
+        else:
+            sine = self.sin(x)
+            if(sine ==0):
+                raise Exception(f'Cosecant Undefined At Sin({str(x)}) = 0')
+            else:
+                return 1/sine
+
+    # Cotangent Function Using Tangent Taylor Series
+    def cot(self, x):
+        tangent = self.tan(x)
+        if(tangent ==0):
+            raise Exception(f'Cotangent Undefined At Tan({str(x)}) = 0')
+        else:
+            return 1/tangent
 
     # Taylor Series Arc Sine Approximatoin
     def arcsin(self, x):
@@ -324,6 +364,11 @@ class mathbert:
    
     # HELPER FUNCTIONS
       
+    # Preferred Pi
+    def preferredPi(self):
+        #TODO: Config preferred by with confijen and config.json
+        return self.newtPi()
+
     # Find Nearest Square
     def nearestPerfectRoot(self, n):
         num = int(n)
@@ -362,3 +407,26 @@ class mathbert:
         coeff = coeff / self.factorial(k)
         return coeff
 
+    # Remove multiple of 2*pi from an argument
+    def unrevolve(self, x):
+        twopi = 2*self.preferredPi()
+        # Add pi
+        if x < -twopi:
+            while(x<-twopi):
+                x = x + twopi
+            return x
+        # Substract pi
+        elif x > twopi:
+            while(x>twopi):
+                x = x - twopi
+            return x
+        else:
+            return x
+
+    def degToRad(self, deg):
+        pi = self.preferredPi()
+        return deg*pi/180
+
+    def radToDeg(self, rad):
+        pi = self.preferredPi()
+        return rad()*180/pi

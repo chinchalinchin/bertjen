@@ -48,7 +48,7 @@ class statbert:
             if(self.norm_root_store == None):
                 if self.conf.EXTRA_VERBOSE:
                     self.printer.warn("No Normal Root Found, Calculating Normal Root Constant", "normalDensity")
-                self.norm_root_store = self.math.newtRoot(2*self.math.newtPi())
+                self.norm_root_store = self.math.newtRoot(2*self.math.preferredPi())
             elif self.conf.EXTRA_VERBOSE:
                 self.printer.warn("Using Normal Root Constant Stored From Previous Calculations", "normalDensity")
             term = self.math.exp(exponent)/(sigma*self.norm_root_store)

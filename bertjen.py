@@ -13,7 +13,31 @@ import helpjen
 
 class bertjen:
 
-    # todo: degree/radian setting
+    # ADDING NEW FUNCTIONS:
+    # 1: add function title to printjen.printMenu
+    # 2: add function name to menujen.switcher and menujen.unswitcher 
+    #   dictionaries
+    # 3: add title to menujen.getFunctionTitle
+    # 4: add description to menujen.getFunctionDetails
+    # 5: add function to menujen input groupings based on input type,
+    #   class type and output type
+    #   -primary groupings: singleArg, doubleArg, tripleArg, specialArg
+    #   -secondary groupings: intArg, floatArg, boolArg, stringArg,
+    #                         compoundArg
+    #   -non-hierarchical groupings: trigFunc, normalFunc, binomialFunc,
+    #                                noOutputFunc
+    #       A: If special input, ensure menujen.getMenuInput 
+    #           properly filters input
+    # 6: Add to manual call in bertjen.doManual
+    # 7: Add to function call list in bertjen.callFunction
+    #       A: Add to Computation
+    #       B: Add to Exception Handling (if applicable)
+    #       C: Add to Output Formatting
+    #       D: Add to Output or Prevent Output
+    #
+    # TODO: degree/radian setting
+    # TODO: function recursion, i.e. cos(newtPi()) or 'cos npi' from line
+
     def __init__(self):
         self.printer = printjen()
         self.conf = configuration()
@@ -49,7 +73,7 @@ class bertjen:
         # 1 : COMPUTATION
         #################
         if self.conf.EXTRA_VERBOSE:
-            self.printer.warn(f'Step 1: Computation Of {self.menu.unswitch(args[0])}')
+            self.printer.warn(f'Step 1: Computation Of {self.menu.unswitch(args[0])}', "callFunction")
         try:
             # COUNT
             if(args[0] == 0):
@@ -107,6 +131,15 @@ class bertjen:
             # ARCTAN
             elif(args[0] == 21):
                 result = self.math.atan(float(args[1]))
+            # SEC
+            elif(args[0] == 30):
+                result = self.math.sec(float(args[1]))
+            # CSC
+            elif(args[0] == 31):
+                result = self.math.csc(float(args[1]))
+            # COT
+            elif(args[0] == 32):
+                result = self.math.cot(float(args[1]))
             # BINPMF
             elif(args[0] == 24):
                 result = self.stat.binomialMass(int(args[1]), float(args[2]), int(args[3]))
@@ -126,11 +159,14 @@ class bertjen:
             # BERTJEN CALIBRATE
             elif(args[0] == 26):
                 bertFlag = self.conf.calibrate(self.math, self.printer)
+            # ANGLE
+            elif(args[0] == 33):
+                angleFlag = self.conf.setAngleUnits(int(args[1]))
         # 1A : EXCEPTIONS
         ################
         except Exception as e:
             if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Step 1A : Exception Handling For {self.menu.unswitch(args[0])}')
+                self.printer.warn(f'Step 1A : Exception Handling For {self.menu.unswitch(args[0])}', "callFunction")
             # COUNT
             if(args[0] == 0):
                 self.printer.warn(str(e), "mathbert.countFormula")
@@ -185,6 +221,15 @@ class bertjen:
             # ARCTAN
             elif(args[0] == 21):
                 self.printer.warn(str(e), "mathbert.atan")
+            # SEC
+            elif(args[0] == 30):
+                self.printer.warn(str(e), "mathbert.sec")
+            # CSC
+            elif(args[0] == 31):
+                self.printer.warn(str(e), "mathbert.csc")
+            # COT
+            elif(args[0] == 32):
+                self.printer.warn(str(e), "mathbert.cot")
             # BINPMF
             elif(args[0] == 24):
                 self.printer.warn(str(e), "mathbert.binomialMass")
@@ -215,6 +260,7 @@ class bertjen:
         pi = self.conf.getSymbol("pi")
         mu = self.conf.getSymbol("mu")
         sq = self.conf.getSymbol("sq")
+        delta = self.conf.getSymbol("delta")
         # COUNT
         if(args[0] == 0):
             outString = f'{capSigma} {str(args[1])} = {str(result)}'
@@ -246,7 +292,7 @@ class bertjen:
         # BLACKSCHOLES
         elif(args[0] ==12):
             option = "Call" if args[7] else "Put"
-            argument = f'S={str(args[1])}, K={str(args[2])}, r={str(args[3])}, d={str(args[4])}'
+            argument = f'S={str(args[1])}, K={str(args[2])}, r={str(args[3])}, {delta}={str(args[4])}'
             argument = argument + f', {sigma}={str(args[5])}, t={str(args[6])}'
             outString = f'{option}({argument}) = {str(result)}'
         # LN
@@ -273,6 +319,15 @@ class bertjen:
         # ARCTAN
         elif(args[0] == 21):
             outString = f'arctan({str(args[1])}) = {str(result)}'
+        # SEC
+        elif(args[0] == 30):
+            outString = f'sec({str(args[1])}) = {str(result)}'
+        # CSC
+        elif(args[0] == 31):
+            outString = f'csc({str(args[1])}) = {str(result)}'
+        # COT
+        elif(args[0] == 32):
+            outString = f'cot({str(args[1])}) = {str(result)}'
         # BINPMF
         elif(args[0] == 24):
             outString = f'Binomial\'(n={str(args[1])},p={str(args[2])},x={str(args[3])}) = {str(result)}'
@@ -308,9 +363,14 @@ class bertjen:
         elif(args[0] == 26):
             if bertFlag:
                 self.printer.warn("Bertjen Info Changed!", "confijen.calibrate")
-                self.menu.printBertjenDetails()
             else:
-                self.printer.warn("Bertjen Info Unchanged!", "confijen.calibrate")                
+                self.printer.warn("Bertjen Info Unchanged!", "confijen.calibrate")
+        # ANGLE 
+        elif(args[0] == 33):
+            if angleFlag:
+                self.printer.warn(f'Angle Unit Setting Changed: {self.conf.getAngleUnits()}', "confijen.ANGLE_UNITS")
+            else:
+                self.printer.warn(f'Angle Unit Setting Unchanged: {self.conf.getAngleUnits()}', "confijen.ANGLE_UNITS")                
         # HELP
         elif(args[0] == 29):
             self.menu.printFunctionDetails(self.menu.switch(args[1]))
@@ -322,56 +382,51 @@ class bertjen:
         args = []
         args.append(switchIn)
         self.menu.printFunctionTitle(switchIn)
-        # COUNT 
-        if switchIn == 0:
-            n = self.menu.getInt("Please Enter Number of Terms")
-            args.append(n)
-        # EXP
-        elif switchIn == 2:
-            ex = self.menu.getFloat("Please Enter Exponent")
-            args.append(ex)
-        # FACT
-        elif switchIn == 3:
+        # COUNT, FACT
+        if switchIn == 0 or switchIn == 3:
             n = self.menu.getInt("Please Enter A Number")
             args.append(n)
-        # PRINT MENU
-        elif switchIn == 5:
-            self.menu.printMenu()
-        # NORMCDF
-        elif switchIn == 6:
-            mu = self.menu.getFloat("Please Enter Mean")
-            sigma = self.menu.getFloat("Please Enter Sigma")
-            x = self.menu.getFloat("Please Enter X")
+        # EXP, NEWTROOT, LN, COS, SIN, TAN, ACOS, ASIN, ATAN, SEC, CSC, COT
+        elif switchIn == 2 or switchIn == 11 or switchIn == 13 or self.menu.isTrigFunction(switchIn):
+            x = self.menu.getFloat("Please Enter A Number")
             args.append(x)
-            args.append(mu)
-            args.append(sigma)
-        # NORMPDF
-        elif switchIn == 7:
-            mu = self.menu.getFloat("Please Enter Mean")
-            sigma = self.menu.getFloat("Please Enter Sigma")
-            x = self.menu.getFloat("Please Enter X")
-            args.append(x)
-            args.append(mu)
-            args.append(sigma)
+        # BINROOT, LOG
+        elif switchIn == 15 or switchIn == 27:
+            x1 = self.menu.getFloat("Please Enter A Number")
+            x2 = self.menu.getFloat("Please Enter A Number")
+            args.append(x1)
+            args.append(x2)
         # POWER
         elif switchIn == 9:
             b = self.menu.getFloat("Please Enter Base b: ")
             a = self.menu.getFloat("Please Enter Exponent a: ")
             args.append(b)
             args.append(a)
-        # NEWTROOT
-        elif switchIn == 11:
-            n = self.menu.getFloat("Please Enter Number")
+        # NORMCDF, NORMPDF
+        elif self.menu.isNormalFunction(switchIn):
+            mu = self.menu.getFloat(f'Please Enter {self.conf.getSymbol("mu")}')
+            sigma = self.menu.getFloat(f'Please Enter {self.conf.getSymbol("sigma")}')
+            x = self.menu.getFloat("Please Enter X")
+            args.append(x)
+            args.append(mu)
+            args.append(sigma)
+        # BINPMF, BINCDF
+        elif self.menu.isBinomialFunction(switchIn):
+            n = self.menu.getInt("Please Enter Number Of Trials")
+            p = self.menu.getFloat("Please Enter Probability Of Success")
+            x = self.menu.getInt("Please Enter Desired Probability Mass")
             args.append(n)
+            args.append(p)
+            args.append(x)
         # BLACKSCHOLES
         elif switchIn == 12:
             opt = self.menu.getBinaryDecision("Call", "Put")
-            s = self.menu.getFloat("Spot Price")
-            k = self.menu.getFloat("Strike Price")
-            r = self.menu.getFloat("Continuous Risk Free Rate")
-            d = self.menu.getFloat("Continuous Dividend Rate")
-            o = self.menu.getFloat("Observed Volatility")
-            t = self.menu.getFloat("Time To Expiration")
+            s = self.menu.getFloat("Spot Price, S")
+            k = self.menu.getFloat("Strike Price, K")
+            r = self.menu.getFloat("Continuous Risk Free Rate, r")
+            d = self.menu.getFloat(f'Continuous Dividend Rate, {self.conf.getSymbol("delta")}')
+            o = self.menu.getFloat(f'Observed Volatility, {self.conf.getSymbol("sigma")}')
+            t = self.menu.getFloat("Time To Expiration, t")
             args.append(s)
             args.append(k)
             args.append(r)
@@ -379,98 +434,49 @@ class bertjen:
             args.append(o)
             args.append(t)
             args.append(opt)
-        # LN
-        elif switchIn == 13:
-            n = self.menu.getFloat("Please Enter Number")
-            args.append(n)
-        # BINROOT
-        elif switchIn == 15:
-            n = self.menu.getFloat("Please Enter Number")
-            r = self.menu.getFloat("Please Enter Root")
-            args.append(n)
-            args.append(r)
-        # COS
-        elif switchIn == 16:
-            n = self.menu.getFloat("Please Enter Number (In Radians)")
-            args.append(n)
-        # SIN
-        elif switchIn == 17:
-            n = self.menu.getFloat("Please Enter Number (In Radians)")
-            args.append(n)
-        # ASIN
-        elif switchIn == 18:
-            n = self.menu.getFloat("Please Enter Number")
-            args.append(n)
-        # TAN
-        elif switchIn == 19:
-            n = self.menu.getFloat("Please Enter Number (In Radians)")
-            args.append(n)
-        # ACOS
-        elif switchIn == 20:
-            n = self.menu.getFloat("Please Enter Number")
-            args.append(n)
-        # ATAN
-        elif switchIn == 21:
-            n = self.menu.getFloat("Please Enter Number")
-            args.append(n)
-        # BINPMF
-        elif switchIn == 24:
-            n = self.menu.getInt("Please Enter Number Of Trials")
-            p = self.menu.getFloat("Please Enter Probability Of Success")
-            x = self.menu.getInt("Please Enter Desired Probability Mass")
-            args.append(n)
-            args.append(p)
-            args.append(x)
-        # BINCDF
-        elif switchIn == 25:
-            n = self.menu.getInt("Please Enter Number Of Trials")
-            p = self.menu.getFloat("Please Enter Probability Of Success")
-            x = self.menu.getInt("Please Enter Desired Probability Mass")
-            args.append(n)
-            args.append(p)
-            args.append(x)
-        # LOG
-        elif switchIn == 27:
-            a = self.menu.getFloat("Please Enter Base")
-            x = self.menu.getFloat("Please Enter Number")
-            args.append(x)
-            args.append(a)
+        ## ADMIN COMMANDS
+        # PRINT MENU
+        elif switchIn == 5:
+            self.printer.printMenu()
+        # HELP
+        elif switchIn == 29:
+            func = self.menu.getFunctionIndex()
+            self.menu.printFunctionDetails(func)
         # INTEGRAl SET
         elif switchIn == 22:
-            self.menu.printIntegrationDetails(self.conf)
-            n = self.menu.getTechnique(self.conf)
+            self.menu.printIntegrationDetails()
+            n = self.menu.getTechnique()
             changedFlag = self.conf.setIntegrationTechnique(n)
             if changedFlag:
                 self.printer.warn(f'Integration Technique Changed: {self.conf.getIntegrationTechnique()}',
-                                 "confijen.integrationTechnique")
+                                 "confijen.INTEGRATION_CHOICE")
             else:
                 self.printer.warn(f'Integration Technique Unchanged: {self.conf.getIntegrationTechnique()}', 
-                                "confijen.integrationTechnique")
+                                "confijen.INTEGRATION_CHOICE")
         # VERBOSE SET
         elif switchIn == 23:
-            self.menu.printVerboseDetails(self.conf)
+            self.menu.printVerboseDetails()
             self.printer.bullet("Verbose?")
             verboseFlag = self.menu.getBinaryDecision("Yes", "No")
             changedFlag = self.conf.setVerbose(verboseFlag)
             if changedFlag:
                 self.printer.warn(f'Verbose Setting Changed: {"Yes" if verboseFlag else "No"}', 
-                                "confijen.verbose")
+                                "confijen.VERBOSE")
             else:
                 self.printer.warn(f'Verbose Setting Unchanged: {"Yes" if verboseFlag else "No"}', 
-                                "confijen.verbose")
-            self.menu.printExtraVerboseDetails(self.conf)
+                                "confijen.VERBOSE")
             self.printer.bullet("Extra Verbose?")
             extraVerboseFlag = self.menu.getBinaryDecision("Yes", "No")
             changedFlag = self.conf.setExtraVerbose(extraVerboseFlag)
             if changedFlag:
                 self.printer.warn(f'Extra Verbose Setting Changed: {"Yes" if extraVerboseFlag else "No"}', 
-                                "confijen.extraVerbose")
+                                "confijen.EXTRA_VERBOSE")
             else:
                 self.printer.warn(f'Extra Verbose Setting Unchanged: {"Yes" if extraVerboseFlag else "No"}', 
-                                "confijen.extraVerbose")
+                                "confijen.EXTRA_VERBOSE")
         # BERTJEN CALIBRATE
         elif switchIn == 26:
-            self.menu.printBertjenDetails(self.conf)
+            self.menu.printBertjenDetails()
             self.printer.bullet("Calibrate Bertjen To System?")
             calibrateFlag = self.menu.getBinaryDecision("Yes", "No")
             if calibrateFlag:
@@ -493,10 +499,17 @@ class bertjen:
                 self.printer.warn("Configuration Saved To File", "config.json")
             else:
                 self.printer.warn("Configuration Not Saved", "config.json")
-        # HELP
-        elif switchIn == 29:
-            func = self.menu.getFunctionIndex()
-            self.menu.printFunctionDetails(func)
+        # ANGLE
+        elif switchIn == 33:
+            self.menu.printAngleDetails()
+            n = self.menu.getAngleUnit()
+            changedFlag = self.conf.setAngleUnits(n)
+            if changedFlag:
+                self.printer.warn(f'Angle Setting Changed: {self.conf.getAngleUnits()}',
+                                 "confijen.ANGLE_UNITS")
+            else:
+                self.printer.warn(f'Integration Technique Unchanged: {self.conf.getAngleUnits()}', 
+                                "confijen.ANGLE_UNITS")
         # QUIT
         elif switchIn == 99:
             self.alive = False
@@ -506,7 +519,6 @@ class bertjen:
         # IF NOT CONFIGURE FUNCTION, CALL FUNCTION
         if(switchIn != 99 and switchIn != 28 and (not self.menu.isNoOutput(switchIn))):
             self.callFunction(args)
-        self.printer.divider()
 
 ########################################################################
 #                              MAIN                                    #

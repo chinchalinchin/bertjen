@@ -36,6 +36,12 @@ class printjen():
         self.command("ASIN", "Taylor Series Arcsine Approximation")
         # SINGLE ARGUMENT
         self.command("ATAN", "Taylor Series Arctangent Approximation")
+        # SINGLE ARGUMENT
+        self.command("SEC", "Taylor Series Secant Approximation")
+        # SINGLE ARGUMENT
+        self.command("CSC", "Taylor Series Cosecant Approximation")
+        # SINGLE ARUGMENT
+        self.command("COT", "Taylor Series Cotangent Approximation")
         # NO ARGUMENT
         self.command("LPI", "Liebniz Series Pi Approximation")
         # NO ARGUMENT
@@ -72,6 +78,8 @@ class printjen():
         self.command("I", "Integration Technique Settings")
         # DOUBLE ARGUMENT
         self.command("V", "Verbose Settings")
+        # SINGLE ARGUMENT 
+        self.command("ANG", "Angle Unit Settings")
         # NO ARGUMENT
         self.command("M", "Print Help Menu")
         # SINGLE ARGUMENT

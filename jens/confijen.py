@@ -15,11 +15,18 @@ class configuration:
             2:"TRAPEZOID",
             3: "SIMPSON"
         }
+        self.ANGLE_UNITS = {
+            0: "RADIANS",
+            1: "DEGREES",
+            2: "GRADIANS"
+        }
         self.SYMBOLS = {
             "cap_sigma": '\u03A3',
             "sigma" :  '\u03C3',
             "pi": '\u03C0',
             "mu" :'\u03BC',
+            "delta":'\u03B4',
+            "theta": '\u03F4',
             "sq": '\u221A'
         }
         self.configure()
@@ -39,6 +46,7 @@ class configuration:
             self.EXTRA_VERBOSE = data['EXTRA_VERBOSE']
             self.LAG = data['LAG']
             self.INTEGRATION_CHOICE= data['INTEGRATION_CHOICE']
+            self.ANGLE_CHOICE = data['ANGLE_UNITS']
 
     def saveConfiguration(self):
         data = {}
@@ -55,6 +63,7 @@ class configuration:
         data["EXTRA_VERBOSE"] =self.EXTRA_VERBOSE
         data["LAG"] = self.LAG
         data["INTEGRATION_CHOICE"]= self.INTEGRATION_CHOICE
+        data["ANGLE_UNITS"] = self.ANGLE_UNITS
         with open('config.json', 'w') as outfile:
             json.dump(data, outfile)
         return None
@@ -107,21 +116,40 @@ class configuration:
     def calibrateRoot(self, math, printer):
         return False
 
+    def switchUnits(self, arg):
+        return self.ANGLE_UNITS.get(arg, "nothing")
+
     def switchTechnique(self, arg):
         return self.TECHNIQUES.get(arg, "nothing")
 
     def getIntegrationTechnique(self):
         return self.switchTechnique(self.INTEGRATION_CHOICE)
 
+    def getAngleUnits(self):
+        return self.switchUnits(self.ANGLE_CHOICE)
+
     def getSymbol(self, sym):
         return self.SYMBOLS.get(sym, "not found")
 
     def setIntegrationTechnique(self, arg):
-        if(arg != self.INTEGRATION_CHOICE):
-            self.INTEGRATION_CHOICE = arg
-            return True
-        else: 
+        if(self.switchTechnique(arg) == "nothing"):
             return False
+        else:
+            if(arg != self.INTEGRATION_CHOICE):
+                self.INTEGRATION_CHOICE = arg
+                return True
+            else: 
+                return False
+
+    def setAngleUnits(self, arg):
+        if(self.switchUnits(arg) == "nothing"):
+            return False
+        else:
+            if(arg != self.ANGLE_CHOICE):
+                self.ANGLE_CHOICE = arg
+                return True
+            else:
+                return False
 
     def getVerbose(self):
         return self.VERBOSE

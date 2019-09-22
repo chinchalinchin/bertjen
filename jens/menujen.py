@@ -16,6 +16,8 @@ class menujen:
             "ACOS": 20, "ATAN": 21, "I": 22, "V": 23,
             "BINPMF": 24, "BINCDF":25, "B": 26,
             "LOG": 27, "SAV": 28, "H": 29,
+            "SEC": 30, "CSC": 31, "COT": 32,
+            "ANG": 33,
             "Q" : 99,
         }
         self.unswitcher = {
@@ -27,6 +29,8 @@ class menujen:
             20: "ACOS", 21: "ATAN", 22: "I", 23: "V",
             24: "BINPMF", 25: "BINCDF", 26: "B",
             27: "LOG", 28: "SAV", 29: "H",
+            30: "SEC", 31: "CSC", 32: "COT",
+            33: "ANG",
             99: "Q" 
         }
     
@@ -113,8 +117,17 @@ class menujen:
         # SAVE
         elif(which == 28):
             self.printer.subtitle("Save Bertjen Configuration")
+        # HELP
         elif(which == 29):
             self.printer.subtitle("Help Function")
+        elif(which == 30):
+            self.printer.subtitle("Taylor Series Secant Approximation")
+        elif(which == 31):
+            self.printer.subtitle("Taylor Series Cosecant Approximation")
+        elif(which == 32):
+            self.printer.subtitle("Taylor Series Cotangent Approximation")
+        elif(which == 33):
+            self.printer.subtitle("Angle Unit Settings")
 
     def printFunctionDetails(self, which):
         self.printFunctionTitle(which)
@@ -188,11 +201,11 @@ class menujen:
             self.printer.subtitle("Arguments")
             self.printer.argument("S", "Spot price", "float")
             self.printer.argument("K", "Strike price", "float")
-            self.printer.argument("r", "Continuously Compounded Interest Rate, Annualized As A Decimal", "float")
-            self.printer.argument("d", "Continuously Compounded Dividend Rate, Annualized As A Decimal", "float")
-            self.printer.argument(f'{self.conf.getSymbol("sigma")}', "Annualized Implied Volatility, As A Decimal", "float")
-            self.printer.argument("t", "Time to expiration in years", "float")
-            self.printer.argument("opt", "Type of option", "CALL/PUT")
+            self.printer.argument("r", "Interest rate, annual continuous", "float")
+            self.printer.argument(f'{self.conf.getSymbol("delta")}', "Dividend rate, annual continuous", "float")
+            self.printer.argument(f'{self.conf.getSymbol("sigma")}', "Implied volatility, annual", "float")
+            self.printer.argument("t", "Time to expiration, years", "float")
+            self.printer.argument("opt", "Type of option", "string: 'Call'/'Put'")
         # LN
         elif(which == 13):
             self.printer.line("Approximates natural log of input --x using Halley's method")
@@ -301,33 +314,70 @@ class menujen:
             self.printer.line("Provides an explanation for a given function --f")
             self.printer.subtitle("Arguments")
             self.printer.argument("f", "Function whose description is required", "string")
+        # SEC
+        elif(which == 30):
+            self.printer.line("Approximates the secant of an angle --x using a Taylor")
+            self.printer.line("series.")
+            self.printer.subtitle("Arguments")
+            self.printer.argument("x", "Angle whose secant is required", "float")
+            self.printer.subtitle("Notes")
+            self.printer.warn("Secant calls cosine approximation", "mathbert.sec")
+        # CSC
+        elif(which == 31):
+            self.printer.line("Approximates the cosecant of an angle --x using a Taylor")
+            self.printer.line("series.")
+            self.printer.subtitle("Arguments")
+            self.printer.argument("x", "Angle whose cosecant is required", "float")
+            self.printer.subtitle("Notes")
+            self.printer.warn("Cosecant calls sine approximation", "mathbert.csc")
+        # COT
+        elif(which == 32):
+            self.printer.line("Approximates the cotangent of an angle --x using a Taylor")
+            self.printer.line("series.")
+            self.printer.subtitle("Arguments")
+            self.printer.argument("x", "Angle whose cotangent is required", "float")
+            self.printer.subtitle("Notes")
+            self.printer.warn("Cotangent calls tangent approximation", "mathbert.cot")
+        # ANG
+        elif(which == 33):
+            self.printer.line("Configures Bertjen Angle Unit Measures")
+            self.subtitle("Arguments")
+            self.printer.argument(f'{self.conf.getSymbol("theta")}', "Angle unit measure", "int" )
+            self.printer.subtitle("Notes")
+            self.printer.warn("Check Angle Settings with 'Ang' to see units", "confijen")
         self.printer.divider()
 
-    def printBertjenDetails(self, conf):
+    def printBertjenDetails(self):
         self.printer.bullet("Bertjen Info")
-        self.printer.command("Trig Series Max Loop Iterations", conf.TRIG_ACC)
-        self.printer.command("Ln Series Max Loop Iterations", conf.LN_ACC)
+        self.printer.command("Trig Series Max Loop Iterations", self.conf.TRIG_ACC)
+        self.printer.command("Ln Series Max Loop Iterations", self.conf.LN_ACC)
         self.bullet("System Info")
         self.printer.command("Float Max", sys.float_info.max)
         self.printer.command("Float Min", sys.float_info.min)
 
-    def printVerboseDetails(self, conf):
-        self.printer.bullet("Simple Verbose Setting")
+    def printVerboseDetails(self):
+        self.printer.bullet("Verbose Settings")
         self.printer.command("Current Simple Verbose Setting", 
-                                "Yes" if conf.getVerbose() else "No")
-
-    def printExtraVerboseDetails(self, conf):
-        self.printer.bullet("Extra Verbose Setting")
+                                "Yes" if self.conf.getVerbose() else "No")
         self.printer.command("Current Extra Verbose Setting", 
-                                "Yes" if conf.getExtraVerbose() else "No")  
-                            
-    def printIntegrationDetails(self, conf):
+                                "Yes" if self.conf.getExtraVerbose() else "No")
+
+    def printIntegrationDetails(self):
         self.printer.bullet("Available Techniques")
         self.printer.bullet("Option : Technique")
-        for key, value in conf.TECHNIQUES.items():
-            self.command(f'Option {key}', f'{value}')
+        for key, value in self.conf.TECHNIQUES.items():
+            self.command(f'{key}', f'{value}')
         self.printer.divider()
         self.printer.command("Current Integration Technique", str(self.conf.getIntegrationTechnique()))
+        self.printer.divider()
+
+    def printAngleDetails(self):
+        self.printer.bullet("Available Units")
+        self.printer.bullet("Option : Unit")
+        for key, value in self.conf.ANGLE_UNITS.items():
+            self.printer.command(f'{key}', f'{value}')
+        self.printer.divider()
+        self.printer.command("Current Angle Unit", str(self.conf.getAngleUnits()))
         self.printer.divider()
 
     # Formatted Time Output
@@ -346,12 +396,14 @@ class menujen:
     # SINGLE ARG : 
     #   COUNT(0), EXP(2), FACT(3), NEWTROOT(11), LN(13)
     #   COS(16), SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21)
-    #    INTEGRALSET(22), BERTJEN(26), HELP(29)     
+    #   INTEGRALSET(22), BERTJEN(26), HELP(29), SEC(30)
+    #   CSC(31), COT(32), ANG(33)
     def isSingleArg(self, firstIn):
         return (firstIn == 0 or firstIn == 2 or firstIn == 3 or firstIn == 11
                 or firstIn == 13 or firstIn == 16 or firstIn == 17 or firstIn == 18
                 or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 22
-                or firstIn == 26 or firstIn == 29)
+                or firstIn == 26 or firstIn == 29 or firstIn == 30 or firstIn == 31
+                or firstIn == 32 or firstIn == 33)
     
     # DOUBLE ARG: 
     #   BINROOT(15), POWER(9), VERB(23), LOG(27)
@@ -367,20 +419,22 @@ class menujen:
     #   BLACKSCHOLES(12)
     def isSpecialArg(self, firstIn):
         return (firstIn == 12)
-        
+ 
     # FLOAT ARG: 
     #   EXP(2), NEWTROOT(11), LN(13), COS(16)
     #   SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21),
-    #   BINROOT(15), LOG(27), NORMCDF(6), NORMPDF(7)
+    #   BINROOT(15), LOG(27), NORMCDF(6), NORMPDF(7),
+    #   SEC(30), CSC(31), COT(32)
     def isFloatArg(self, firstIn):
         return (firstIn == 2 or firstIn == 11 or firstIn == 13 or firstIn == 16 or firstIn == 17 
                 or firstIn == 18 or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 15
-                or firstIn == 27 or firstIn == 6 or firstIn == 7)
+                or firstIn == 27 or firstIn == 6 or firstIn == 7 or firstIn == 30 or firstIn == 31
+                or firstIn == 32)
 
     # INT ARG : 
     #   COUNT(0), FACT(3), INTEGRALSET(22)
     def isIntArg(self, firstIn):
-        return (firstIn == 0 or firstIn == 3 or firstIn == 22)
+        return (firstIn == 0 or firstIn == 3 or firstIn == 22 or firstIn == 33)
 
     # BOOL ARG: 
     #   VERB(23), BERTJEN(26)
@@ -399,8 +453,28 @@ class menujen:
     def isCompoundArg(self, firstIn):
         return (firstIn == 9 or firstIn == 12 or firstIn == 24 or firstIn == 25)
 
+    # NO OUTPUT FUNCTION : 
     def isNoOutput(self, firstIn):
-        return (firstIn == 26 or firstIn == 23 or firstIn == 22 or firstIn == 29)
+        return (firstIn == 26 or firstIn == 23 or firstIn == 22 or firstIn == 29
+                or firstIn == 5 or firstIn == 33)
+
+    # TRIG FUNCTIONS:
+    #   COS(16), SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21)
+    #   SEC(30), CSC(31), COT(32)
+    def isTrigFunction(self, firstIn):
+        return (firstIn == 16 or firstIn == 17 or firstIn == 19 or firstIn == 20
+                or firstIn == 18 or firstIn == 21 or firstIn == 30 or firstIn == 31
+                or firstIn == 32)
+
+    # BINOMIAL FUNCTIONS:
+    #   BINPMF(24), BINCDF(25)
+    def isBinomialFunction(self, firstIn):
+        return firstIn == 24 or firstIn == 25
+
+    # NORMAL FUNCTIONS:
+    #   NORMCDF(6), NORMPDF(7)
+    def isNormalFunction(self, firstIn):
+        return firstIn == 6 or firstIn ==7
 
     # Retrieve Valid Menu Input From User
     def getMenuInput(self):
@@ -476,6 +550,7 @@ class menujen:
                                 # STEP 2B-1-2a: VERIFY FLOAT INPUT
                                 if(floatArg):
                                     if(not helpjen.isFloat(menput[1])):
+                                        self.printer.warn("Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getFloat("Please Enter A Single Number")
                                         return menput
                                     else:
@@ -483,6 +558,7 @@ class menujen:
                                 # STEP 2B-1-2b: VERIFY INT INPUT
                                 elif(intArg):
                                     if(not helpjen.isInt(menput[1])):
+                                        self.printer.warn("Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getInt("Please Enter A Single Number")
                                         return menput
                                     else:
@@ -491,6 +567,7 @@ class menujen:
                                 elif(boolArg):
                                     if(firstIn == 26):
                                         if(menput[1].upper() != "YES" and menput[1].upper() != "NO"):
+                                            self.printer.warn("Argument Not Understood", "menujen.getMenuInput")
                                             self.printer.line("Calibrate Bertjen?")
                                             menput[1] = self.getBinaryDecision("Yes", "No")
                                             return menput
@@ -502,6 +579,7 @@ class menujen:
                                 elif(stringArg):
                                     if( firstIn == 29):
                                         if(self.switch(menput[1]) == "nothing"):
+                                            self.printer.warn("Input Not Understood", "menujen.getMenuInput")
                                             self.getFunctionIndex()
                                             return menput
                                         else:
@@ -558,24 +636,30 @@ class menujen:
                                 # STEP 2B-2-2a: VERIFY FLOAT INPUT
                                 if(floatArg):
                                     if(not helpjen.isFloat(menput[1])):
+                                        self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getFloat("Please Enter A Single Number For 1st Argument")
                                     if(not helpjen.isFloat(menput[2])):
+                                        self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                         menput[2] = self.getFloat("Please Enter A Single Number For 2nd Argument")
                                     return menput
                                 # STEP 2B-2-2b: VERIFY INT INPUT
                                 elif(intArg):
                                     if(not helpjen.isInt(menput[1])):
+                                        self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getInt("Please Enter A Single Number For 1st Argument")
                                     if(not helpjen.isInt(menput[2])):
+                                        self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                         menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
                                     return menput
                                 # STEP 2B-2-2c: VERIFY BOOL INPUT
                                 elif(boolArg):
                                     if(firstIn == 23):
                                         if(menput[1].upper() != "YES" and menput[1].upper() != "NO"):
+                                            self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                             self.printer.line("Verbose?")
                                             menput[1] = self.getBinaryDecision("Yes", "No")
                                         if(menput[2].upper() != "YES" and menput[2].upper() != "NO"):
+                                            self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                             self.printer.line("Extra Verbose?")
                                             menput[2] = self.getBinaryDecision("Yes", "No")
                                         return menput
@@ -588,10 +672,10 @@ class menujen:
                                 elif(compoundArg):
                                     if(firstIn == 9):
                                         if(not helpjen.isFloat(menput[1])):
-                                            self.printer.line("Base")
+                                            self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                             menput[1] = self.getFloat("Please Enter A Single Number For 1st Argument")
                                         if(not helpjen.isInt(menput[2])):
-                                            self.printer.line("Exponent?")
+                                            self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                             menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
                                             return menput
                                         else:
@@ -642,19 +726,25 @@ class menujen:
                                 # STEP 2B-3-2a: VERIFY FLOAT INPUT
                                 if(floatArg):
                                     if(not helpjen.isFloat(menput[1])):
+                                        self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getFloat("Please Enter A Single Number For 1st Argument")
                                     if(not helpjen.isFloat(menput[2])):
+                                        self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                         menput[2] = self.getFloat("Please Enter A Single Number For 2nd Argument")
                                     if(not helpjen.isFloat(menput[3])):
+                                        self.printer.warn("3rd Argument Not Understood", "menujen.getMenuInput")
                                         menput[3] = self.getFloat("Please Enter A Single Number For 3rd Argument")
                                     return menput
                                 # STEP 2B-3-2b: VERIFY INT INPUT
                                 elif(intArg):
                                     if(not helpjen.isInt(menput[1])):
+                                        self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getInt("Please Enter A Single Number For 1st Argument")
                                     if(not helpjen.isInt(menput[2])):
+                                        self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                         menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
                                     if(not helpjen.isInt(menput[3])):
+                                        self.printer.warn("3rd Argument Not Understood", "menujen.getMenuInput")
                                         menput[3] = self.getInt("Please Enter A Single Number For 3rd Argument")
                                     return menput
                                 # STEP 2B-3-2c: VERIFY BOOL INPUT
@@ -666,10 +756,13 @@ class menujen:
                                 # STEP 2B-3-2e: VERIFY COMPOUND INPUT
                                 elif(compoundArg):
                                     if(not helpjen.isInt(menput[1])):
+                                        self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getInt("Please Enter A Single Number For n")
                                     if(not helpjen.isFloat(menput[2])):
+                                        self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                         menput[2] = self.getFloat("Please Enter A Single Number For p")
                                     if(not helpjen.isInt(menput[3])):
+                                        self.printer.warn("3rd Argument Not Understood", "menujen.getMenuInput")
                                         menput[3] = self.getInt("Please Enter A Single Number For x")
                                     return menput
                     
@@ -688,8 +781,8 @@ class menujen:
                                     menput[1] = self.getFloat("Please Enter A Single Number for S")
                                     menput[2] = self.getFloat("Please Enter  A Single Number For K")
                                     menput[3] = self.getFloat("Please Enter  A Single Number For r")
-                                    menput[4] = self.getFloat("Please Enter A Single Number for d")
-                                    menput[5] = self.getFloat("Please Enter  A Single Number For o")
+                                    menput[4] = self.getFloat(f'Please Enter A Single Number for {self.conf.getSymbol("delta")}')
+                                    menput[5] = self.getFloat(f'Please Enter  A Single Number For o {self.getSymbol("sigma")}')
                                     menput[6] = self.getFloat("Please Enter  A Single Number For t")
                                     self.printer.line("Call Or Put?")
                                     menput[7] = self.getBinaryDecision("Call", "Put")
@@ -699,18 +792,25 @@ class menujen:
                             #   STEP 2B-3: CHECK INPUT TYPE FOR 3 ARG FUNCTIONS
                                 else:
                                     if(not helpjen.isFloat(menput[1])):
+                                        self.printer.warn("S Not Understood", "menujen.getMenuInput")
                                         menput[1] = self.getFloat("Please Enter A Single Number For S")
                                     if(not helpjen.isFloat(menput[2])):
+                                        self.printer.warn("K Not Understood", "menujen.getMenuInput")
                                         menput[2] = self.getFloat("Please Enter A Single Number For K")
                                     if(not helpjen.isFloat(menput[3])):
+                                        self.printer.warn("r Not Understood", "menujen.getMenuInput")
                                         menput[3] = self.getFloat("Please Enter A Single Number For r")
                                     if(not helpjen.isFloat(menput[4])):
-                                        menput[4] = self.getFloat("Please Enter A Single Number For d")
+                                        self.printer.warn(f'{self.conf.getSymbol("delta")} Not Understood', "menujen.getMenuInput")
+                                        menput[4] = self.getFloat(f'Please Enter A Single Number For {self.conf.getSymbol("delta")}')
                                     if(not helpjen.isFloat(menput[5])):
-                                        menput[5] = self.getFloat("Please Enter A Single Number For o")
+                                        self.printer.warn(f'{self.conf.getSymbol("sigma")} Not Understood', "menujen.getMenuInput")
+                                        menput[5] = self.getFloat(f'Please Enter A Single Number For {self.conf.getSymbol("sigma")}')
                                     if(not helpjen.isFloat(menput[6])):
+                                        self.printer.warn("t Not Understood", "menujen.getMenuInput")
                                         menput[6] = self.getFloat("Please Enter A Single Number For t")
                                     if(menput[7].upper() != "CALL" and menput[7].upper() != "PUT"):
+                                        self.printer.warn("Option Not Understood", "menujen.getMenuInput")
                                         self.printer.line("Call or Put?")
                                         menput[7] = self.getBinaryDecision("Call", "Put")
                                     return menput
@@ -772,15 +872,15 @@ class menujen:
             self.printer.command("Input", falseOpt)
             return False
 
-    def getTechnique(self, conf):
+    def getTechnique(self):
         self.printer.line("Select A Technique")
         numput = "not a technique"
         while(not helpjen.isInt(numput)):
             numput = input("<< ")
             if(helpjen.isInt(numput)):
-                if(conf.switchTechnique(int(numput)) == "nothing"):
+                if(self.conf.switchTechnique(int(numput)) == "nothing"):
                     self.printer.warn("Not A Technique!", "getTechnique")
-                    self.printer.numput = "not a technique"
+                    numput = "not a technique"
                 else:
                     self.printer.command("Input", numput)
                     return int(numput)
@@ -789,3 +889,17 @@ class menujen:
                 numput = "not a technique"
         return int(numput)
     
+    def getAngleUnit(self):
+        self.printer.line("Select A Unit Measure")
+        numput = "nothing"
+        while(not helpjen.isInt(numput)):
+            numput = input("<< ")
+            if(helpjen.isInt(numput)):
+                if(self.conf.switchUnits(int(numput))=="nothing"):
+                    self.printer.warn("Not A Unit Measure", "getAngleUnit")
+                    numput = "not a technique"
+                else:
+                    self.printer.command("Input", numput)
+                    return int(numput)
+            else:
+                self.printer.warn("Command Not Understood. Try Again.", "getAngleUnit")
