@@ -341,7 +341,7 @@ class menujen:
         # ANG
         elif(which == 33):
             self.printer.line("Configures Bertjen Angle Unit Measures")
-            self.subtitle("Arguments")
+            self.printer.subtitle("Arguments")
             self.printer.argument(f'{self.conf.getSymbol("theta")}', "Angle unit measure", "int" )
             self.printer.subtitle("Notes")
             self.printer.warn("Check Angle Settings with 'Ang' to see units", "confijen")
@@ -351,7 +351,7 @@ class menujen:
         self.printer.bullet("Bertjen Info")
         self.printer.command("Trig Series Max Loop Iterations", self.conf.TRIG_ACC)
         self.printer.command("Ln Series Max Loop Iterations", self.conf.LN_ACC)
-        self.bullet("System Info")
+        self.printer.bullet("System Info")
         self.printer.command("Float Max", sys.float_info.max)
         self.printer.command("Float Min", sys.float_info.min)
 
@@ -366,7 +366,7 @@ class menujen:
         self.printer.bullet("Available Techniques")
         self.printer.bullet("Option : Technique")
         for key, value in self.conf.TECHNIQUES.items():
-            self.command(f'{key}', f'{value}')
+            self.printer.command(f'{key}', f'{value}')
         self.printer.divider()
         self.printer.command("Current Integration Technique", str(self.conf.getIntegrationTechnique()))
         self.printer.divider()
@@ -580,7 +580,7 @@ class menujen:
                                     if(firstIn == 29):
                                         if(self.switch(menput[1]) == "nothing"):
                                             self.printer.warn("Input Not Understood", "menujen.getMenuInput")
-                                            menput[1] = self.getFunctionIndex()
+                                            menput[1] = self.unswitch(self.getFunctionIndex())
                                             return menput
                                         else:
                                             return menput
@@ -851,8 +851,8 @@ class menujen:
             stput =  input("<< ").upper()
             stput = self.switch(stput)
             if(stput != "nothing"):
-                self.printer.command("Input", stput)
-                return self.unswitch(stput)
+                self.printer.command("Input", self.unswitch(stput))
+                return stput
             else:
                 self.printer.warn("Not A Function!", "getFunctionIndex")
 

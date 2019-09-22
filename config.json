@@ -1,13 +1,1 @@
-{"SERIES_ACC": 100, 
-    "TRIG_ACC": 84, 
-    "NPI_ACC": 100, 
-    "LPI_ACC": 10000, 
-    "SQ_ACC": 500, 
-    "ROOT_ACC": 100, 
-    "LN_ACC": 649, 
-    "NORM_ACC": 10000, 
-    "VERBOSE": false, 
-    "EXTRA_VERBOSE": false, 
-    "LAG": 2, 
-    "INTEGRATION_CHOICE": 1,
-    "ANGLE_UNITS": 0}
+{"SERIES_ACC": 100, "TRIG_ACC": 84, "NPI_ACC": 100, "LPI_ACC": 10000, "SQ_ACC": 500, "ROOT_ACC": 100, "LN_ACC": 649, "NORM_ACC": 10000, "VERBOSE": false, "EXTRA_VERBOSE": false, "LAG": 2, "INTEGRATION_CHOICE": 0, "ANGLE_UNITS": {"0": "RADIANS", "1": "DEGREES", "2": "GRADIANS"}}
