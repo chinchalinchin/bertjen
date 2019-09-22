@@ -148,16 +148,16 @@ class bertjen:
                 result = self.math.sin(float(args[1]))
             # ARCSIN
             elif(args[0] == 18):
-                result = self.math.asin(float(args[1]))
+                result = self.math.arcsin(float(args[1]))
             # TAN
             elif(args[0] == 19):
                 result = self.math.tan(float(args[1]))
             # ARCCOS
             elif(args[0] == 20):
-                result = self.math.acos(float(args[1]))
+                result = self.math.arccos(float(args[1]))
             # ARCTAN
             elif(args[0] == 21):
-                result = self.math.atan(float(args[1]))
+                result = self.math.arctan(float(args[1]))
             # SEC
             elif(args[0] == 30):
                 result = self.math.sec(float(args[1]))

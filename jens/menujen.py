@@ -229,6 +229,7 @@ class menujen:
             self.printer.argument("x", "Angle whose cosine is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
+            self.printer.warn("Defaults to radians", "mathbert.cos")
         # SIN
         elif(which == 17):
             self.printer.line("Approximates the sine of input --x using a Taylor series")
@@ -236,6 +237,7 @@ class menujen:
             self.printer.argument("x", "Angle whose sine is to be found" , "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
+            self.printer.warn("Defaults to radians", "mathbert.sin")
         # ASIN
         elif(which == 18):
             self.printer.line("Approximates the arc sine of input --x using a Taylor series")
@@ -243,6 +245,7 @@ class menujen:
             self.printer.argument("x", "Scalar whose arc sine is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
+            self.printer.warn("Defaults to radians", "mathbert.asin")
         # TAN
         elif(which == 19):
             self.printer.line("Approximates the tangent of input --x using a Taylor series")
@@ -250,6 +253,7 @@ class menujen:
             self.printer.argument("x", "Angle whose tangent is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
+            self.printer.warn("Defaults to radians", "mathbert.tan")
         # ACOS
         elif(which == 20):
             self.printer.line("Approximates the arc cosine of input --x using a Taylor series")
@@ -257,6 +261,7 @@ class menujen:
             self.printer.argument("x", "Scalar whose arc cosine is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
+            self.printer.warn("Defaults to radians", "mathbert.acos")
         # ATAN
         elif(which == 21):
             self.printer.line("Approximates the arc tangent of input --x using a Taylor series")
@@ -264,6 +269,7 @@ class menujen:
             self.printer.argument("x", "Scalar whose arc tangent is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
+            self.printer.warn("Defaults to radians", "mathbert.tan")
         # BINPMF
         elif(which == 24):
             self.printer.line("Computes the binomial probability mass --x P(X=x) for a")
@@ -287,7 +293,7 @@ class menujen:
             self.printer.line("Computes the logarithm of --x for a given base --b")
             self.printer.line("using the change of base formula and the Halley's method")
             self.printer.line("approximation for natural logs")
-            # INTEGRAL SET
+        # INTEGRAL SET
         elif(which == 22):
             self.printer.line("Configures the integration technique used to approximate integrals")
             self.printer.subtitle("Arguments")
@@ -322,6 +328,7 @@ class menujen:
             self.printer.argument("x", "Angle whose secant is required", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Secant calls cosine approximation", "mathbert.sec")
+            self.printer.warn("Defaults to radians", "mathbert.sec")
         # CSC
         elif(which == 31):
             self.printer.line("Approximates the cosecant of an angle --x using a Taylor")
@@ -330,6 +337,7 @@ class menujen:
             self.printer.argument("x", "Angle whose cosecant is required", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Cosecant calls sine approximation", "mathbert.csc")
+            self.printer.warn("Defaults to radians", "mathbert.csc")
         # COT
         elif(which == 32):
             self.printer.line("Approximates the cotangent of an angle --x using a Taylor")
@@ -338,6 +346,7 @@ class menujen:
             self.printer.argument("x", "Angle whose cotangent is required", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Cotangent calls tangent approximation", "mathbert.cot")
+            self.printer.warn("Defaults to radians", "mathbert.cot")
         # ANG
         elif(which == 33):
             self.printer.line("Configures Bertjen Angle Unit Measures")

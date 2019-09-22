@@ -8,7 +8,8 @@ class mathbert:
         self.printer = myPrinter
         self.newt_pi_store = None
         self.e_store = None
-
+        self.newtroot_2_store = None
+        self.newtroot_3_store= None
 
     # Count Integer Function
     def countFormula(self, n):
@@ -67,9 +68,55 @@ class mathbert:
             return self.e_store
 
     # Taylor Sum Approximation of Sine
+    ## Defaults to radians
     def sin(self, x):
-        sum = 0
+
+        # Look for special angles
         x = self.unrevolve(x)
+        if(self.conf.ANGLE_CHOICE==0):
+            half_rev = self.preferredPi()
+            sixth_rev = self.preferredPi()/3
+            eighth_rev = self.preferredPi()/4
+            twelveth_rev =self.preferredPi()/6
+        elif(self.conf.ANGLE_CHOICE==1):
+            half_rev = 180
+            sixth_rev = 60
+            eighth_rev = 45
+            twelveth_rev = 30
+
+        # SIN of 180, -180, 0, 360, -360
+        if(x == half_rev or x == -half_rev or x==0 or x==2*half_rev or x == -2*half_rev):
+            return 0
+        # SIN of 90, -270
+        elif(x== half_rev/2 or x ==-3*half_rev/2):
+            return 1
+        # SIN of -90, 270
+        elif(x == 3*half_rev/2 or x == -half_rev/2):
+            return -1
+        # SIN OF 60, -300, 120, -240
+        elif(x == sixth_rev or x == -5*sixth_rev or x == 2*sixth_rev or x == -4*sixth_rev):
+            return self.newtRoot(3)/2
+        # SIN OF -60, 300, -120, 240
+        elif(x == -sixth_rev or x == 5*sixth_rev or x == -2*sixth_rev or x ==4*sixth_rev):
+            return -self.newtRoot(3)/2
+        # SIN OF 45, -315, 135, -225
+        elif(x == eighth_rev or x == -7*eighth_rev or x == 3*eighth_rev or x == -5*eighth_rev):
+            return self.newtRoot(2)/2
+        # SIN OF -45, 315, -135, 225
+        elif(x == -eighth_rev or x == 7*eighth_rev or x == -3*eighth_rev or x == 5*eighth_rev):
+            return -self.newtRoot(2)/2
+        # SIN OF 30, -330
+        # SIN OF -30, 330
+        # SIN OF 150, -210
+        # SIN OF -150, 210
+
+
+        # Infinte Series Assumes Radians   
+        if(self.conf.ANGLE_CHOICE == 1):
+            x = self.degToRad(x)
+        
+        # Approximate
+        sum = 0
         if self.conf.VERBOSE:
             self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "sin")
         startTime = datetime.datetime.now()
@@ -98,8 +145,31 @@ class mathbert:
 
     # Taylor Series Cosine Approximation
     def cos(self, x):
+
+        if(self.conf.ANGLE_CHOICE==0):
+            half_rev = self.preferredPi()
+            sixth_rev = self.preferredPi()/3
+            eighth_rev = self.preferredPi()/4
+            twelveth_rev =self.preferredPi()/6
+        elif(self.conf.ANGLE_CHOICE==1):
+            half_rev = 180
+            sixth_rev = 60
+            eighth_rev = 45
+            twelveth_rev = 30
+
+        if(x == half_rev or x == -half_rev):
+            return -1
+        elif(x== half_rev/2 or x ==-3*half_rev/2 or x == 3*half_rev/2 or x == -half_rev/2):
+            return 0
+        elif(x==0 or x==2*half_rev or x == -2*half_rev):
+            return 1
+
+        # Infinite series assumes radians
+        if(self.conf.ANGLE_CHOICE == 1):
+            x = self.degToRad(x)
+
+        # Approximate
         sum = 0
-        x = self.unrevolve(x)
         if self.conf.VERBOSE:
             self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "cos")
         startTime = datetime.datetime.now()
@@ -139,37 +209,47 @@ class mathbert:
 
     # Secant Function Using Cosine Taylor Series
     def sec(self, x):
-        x = self.unrevolve(x)
-        pi = self.preferredPi()
-        if(x == pi/2):
-            raise Exception(f'Secant Undefined At {self.conf.getSymbol("pi")}/2')
-        elif( x == -pi/2):
-            raise Exception(f'Secant Undefined At -{self.conf.getSymbol("pi")}/2')
-        else:
-            cosine = self.cos(x)
-            if(cosine==0):
-                raise Exception(f'Secant Undefined At Cos({str(x)}) = 0')
-            return 1/cosine
+        unrX = self.unrevolve(x)
+        if(self.conf.ANGLE_CHOICE == 0):
+            pi = self.preferredPi()
+            if(unrX == pi/2):
+                raise Exception(f'Secant Undefined At {self.conf.getSymbol("pi")}/2 rad')
+            elif(unrX == -pi/2):
+                raise Exception(f'Secant Undefined At -{self.conf.getSymbol("pi")}/2 rad')
+        elif(self.conf.ANGLE_CHOICE == 1):
+            if(unrX == 90):
+                raise Exception(f'Secant Undefined At 90 deg')
+            elif(unrX == -90):
+                raise Exception(f'Secant Undefined At -90 deg')
+        cosine = self.cos(x)
+        if(cosine==0):
+            raise Exception(f'Secant Undefined At Cos({str(x)}) = 0')
+        return 1/cosine
 
     # Cosecant Function Using Sine Taylor Series
     def csc(self, x):
-        x = self.unrevolve(x)
-        pi = self.preferredPi()
-        if(x == pi):
-            raise Exception(f'Cosecant Undefined At {self.conf.getSymbol("pi")}')
-        elif(x == -pi):
-            raise Exception(f'Cosecant Undefinted At -{self.conf.getSymbol("pi")}')
+        unrX = self.unrevolve(x)
+        if(self.conf.ANGLE_CHOICE == 0):
+            pi = self.preferredPi()
+            if(unrX == pi):
+                raise Exception(f'Cosecant Undefined At {self.conf.getSymbol("pi")} rad')
+            elif(unrX == -pi):
+                raise Exception(f'Cosecant Undefinted At -{self.conf.getSymbol("pi")} rad')
+        elif(self.conf.ANGLE_CHOICE == 1):
+            if(unrX == 180):
+                raise Exception(f'Cosecant Undefined At 180 deg')
+            elif(unrX == -180):
+                raise Exception(f'Cosecant Undefinted At -180 deg')
+        sine = self.sin(x)
+        if(sine ==0):
+            raise Exception(f'Cosecant Undefined At Sin({str(x)}) = 0')
         else:
-            sine = self.sin(x)
-            if(sine ==0):
-                raise Exception(f'Cosecant Undefined At Sin({str(x)}) = 0')
-            else:
-                return 1/sine
+            return 1/sine
 
     # Cotangent Function Using Tangent Taylor Series
     def cot(self, x):
         tangent = self.tan(x)
-        if(tangent ==0):
+        if(tangent == 0):
             raise Exception(f'Cotangent Undefined At Tan({str(x)}) = 0')
         else:
             return 1/tangent
@@ -197,7 +277,11 @@ class mathbert:
                 if(old == sum):
                     if self.conf.VERBOSE:
                         self.printer.warn(f'Halted After {str(index)} Iterations', "arcsin")
+                    if(self.conf.ANGLE_CHOICE == 1):
+                        sum = self.radToDeg(sum)
                     return sum
+            if(self.conf.ANGLE_CHOICE == 1):
+                sum = self.radToDeg(sum)
             return sum
 
     # Taylor Series Arc Cosine Approximation
@@ -205,9 +289,14 @@ class mathbert:
         if(x > 1 or x < -1):
             raise Exception("Outside Of Function Range")
         else:
-            pi = self.newtPi()
-            arcosine = pi/2 - self.arcsin(x)
+            if(self.conf.ANGLE_CHOICE == 0):
+                pi = self.newtPi()
+                shift = pi/2
+            elif(self.conf.ANGLE_CHOICE == 1):
+                shift = 90
+            arcosine = shift - self.arcsin(x)
             return arcosine
+                       
 
     # Taylor Series Arc Tangent Approximation
     def arctan(self, x):
@@ -229,11 +318,28 @@ class mathbert:
             if(old == sum):
                 if self.conf.VERBOSE:
                     self.printer.warn(f'Halted After {str(index)} Iterations', "arctan")
+                if(self.conf.ANGLE_CHOICE == 1):
+                    sum = self.radToDeg(sum)
                 return sum
+        if(self.conf.ANGLE_CHOICE == 1):
+            sum = self.radToDeg(sum)
         return sum
 
     # Newton's Method Square Root Approximation
     def newtRoot(self, n):
+        if self.conf.VERBOSE:
+            self.printer.warn("Checking Stores For Common Roots")
+        if(n==2 and self.newtroot_2_store != None):
+            if self.conf.VERBOSE:
+                self.printer.warn(f'Using {self.conf.getSymbol("sq")}2 Stored From Previous Calculations',
+                                    "mathbert.newtRoot")
+            return self.newtroot_2_store
+        elif(n==3 and self.newtroot_3_store != None):
+            if self.conf.VERBOSE:
+                self.printer.warn(f'Using {self.conf.getSymbol("sq")}3 Stored From Previous Calculations',
+                                    "mathbert.newtRoot")
+            return self.newtroot_3_store
+
         if self.conf.VERBOSE:
             self.printer.warn("Max # Of Iterations: " + str(self.conf.SQ_ACC), "newtRoot")
         current = self.nearestPerfectRoot(n)
@@ -243,13 +349,17 @@ class mathbert:
             current = 0.5*(old+n/old)
             now = datetime.datetime.now()
             if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                self.printer.warn("Still Computing", "newtRoot")
-                self.printer.warn(f'Iteration {str(index)}', "newtRoot")
-                self.printer.warn(f'Current Value {str(current)}', "newtRoot")
+                self.printer.warn("Still Computing", "mathbert.newtRoot")
+                self.printer.warn(f'Iteration {str(index)}', "mathbert.newtRoot")
+                self.printer.warn(f'Current Value {str(current)}', "mathbert.newtRoot")
                 startTime = datetime.datetime.now()
             if(old == current):
                 if self.conf.VERBOSE:
-                    self.printer.warn(f'Halted After {str(index)} Iterations', "newtRoot")
+                    self.printer.warn(f'Halted After {str(index)} Iterations', "mathbert.newtRoot")
+                if(n==2):
+                    self.newtroot_2_store = current
+                elif(n==3):
+                    self.newtroot_3_store = current
                 return current
         return current
 
@@ -340,26 +450,26 @@ class mathbert:
     # Newton's Approximation of Pi
     def newtPi(self):
         if self.conf.EXTRA_VERBOSE:
-            self.printer.warn("Checking Store for Pi", "newtPi")
+            self.printer.warn("Checking Store for Pi", "mathbert.newtPi")
         if self.newt_pi_store == None:
             if self.conf.EXTRA_VERBOSE:
-                self.printer.warn("No Pi Store Found, Calculating Pi", "newtPi")
+                self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.newtPi")
             sum = 0
             if self.conf.VERBOSE:
-                self.printer.warn(f'Max # Of Iterations: {str(self.conf.NPI_ACC)}', "newtPi")
+                self.printer.warn(f'Max # Of Iterations: {str(self.conf.NPI_ACC)}', "mathbert.newtPi")
             for index in range(0, self.conf.NPI_ACC):
                 old = sum
                 sum = sum + self.power(2, index)*self.power(self.factorial(index),2)/self.factorial(2*index+1)
                 if old == sum:
                     if self.conf.VERBOSE:
-                        self.printer.warn(f'Halted After {str(index)} Iterations', "newtPi")
+                        self.printer.warn(f'Halted After {str(index)} Iterations', "mathbert.newtPi")
                     self.newt_pi_store = 2*sum
                     return 2*sum
             self.newt_pi_store = 2*sum
             return 2*sum
         else:
             if self.conf.VERBOSE:
-                self.printer.warn("Using Pi Stored From Previous Calculations", "newtPi")
+                self.printer.warn("Using Pi Stored From Previous Calculations", "mathbert.newtPi")
             return self.newt_pi_store
    
     # HELPER FUNCTIONS
@@ -409,16 +519,23 @@ class mathbert:
 
     # Remove multiple of 2*pi from an argument
     def unrevolve(self, x):
-        twopi = 2*self.preferredPi()
-        # Add pi
-        if x < -twopi:
-            while(x<-twopi):
-                x = x + twopi
+        # Determine single revolution measure
+        ## 2*pi rads
+        revolution = 0
+        if(self.conf.ANGLE_CHOICE == 0):
+            revolution = 2*self.preferredPi()
+        ## 360 degs
+        elif(self.conf.ANGLE_CHOICE == 1):
+            revolution = 360
+        # Add revolution
+        if x < -revolution:
+            while(x<-revolution):
+                x = x + revolution
             return x
-        # Substract pi
-        elif x > twopi:
-            while(x>twopi):
-                x = x - twopi
+        # Substract revolution
+        elif x > revolution:
+            while(x>revolution):
+                x = x - revolution
             return x
         else:
             return x
@@ -429,4 +546,4 @@ class mathbert:
 
     def radToDeg(self, rad):
         pi = self.preferredPi()
-        return rad()*180/pi
+        return rad*180/pi

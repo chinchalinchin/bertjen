@@ -63,7 +63,7 @@ class configuration:
         data["EXTRA_VERBOSE"] =self.EXTRA_VERBOSE
         data["LAG"] = self.LAG
         data["INTEGRATION_CHOICE"]= self.INTEGRATION_CHOICE
-        data["ANGLE_UNITS"] = self.ANGLE_UNITS
+        data["ANGLE_UNITS"] = self.ANGLE_CHOICE
         with open('config.json', 'w') as outfile:
             json.dump(data, outfile)
         return None
