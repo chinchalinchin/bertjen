@@ -16,3 +16,15 @@ def isInt(s):
 
 def isNan(num):
     return num != num
+
+def switchYesOrNo(test):
+        if(test.upper() == "YES"):
+            return True
+        else:
+            return False
+
+def switchToBool(trueOpt, falseOpt, test):
+    if(test.upper() == trueOpt.upper()):
+        return True
+    else:
+        return False

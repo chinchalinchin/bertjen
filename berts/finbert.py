@@ -2,11 +2,11 @@ import datetime
 
 class finbert:
 
-    def __init__(self, myConfig, myMenu, myMath, myStat):
+    def __init__(self, myConfig, myPrinter, myMath, myStat):
         self.conf = myConfig
         self.math = myMath
         self.stat = myStat
-        self.menu = myMenu
+        self.printer = myPrinter
 
     # Black Scholes Formula
     def BSF(self, s, k, r, d, o, t, opt):
@@ -22,39 +22,39 @@ class finbert:
                 else:
                     return 0  
         if self.conf.VERBOSE:
-            self.menu.warn("Calculating Black Scholes Parameters", "BSF")
+            self.printer.warn("Calculating Black Scholes Parameters", "BSF")
         d1 = self.d1(s,k,r,d,o,t)
         if self.conf.VERBOSE:
-            self.menu.warn(f'Black Scholes D1: {d1}', "BSF")
+            self.printer.warn(f'Black Scholes D1: {d1}', "BSF")
         d2 = self.d2(s,k,r,d,o,t)
         if self.conf.VERBOSE:
-            self.menu.warn(f'Black Scholes D2: {d2}', "BSF")
+            self.printer.warn(f'Black Scholes D2: {d2}', "BSF")
         dS = s * self.math.exp(-r*t)
         if self.conf.VERBOSE:
-            self.menu.warn(f'Discounted Spot Price: {dS}', "BSF")
+            self.printer.warn(f'Discounted Spot Price: {dS}', "BSF")
         dK = k * self.math.exp(-d*t)
         if self.conf.VERBOSE:
-            self.menu.warn(f'Discounted Strike Price: {dK}', 'BSF')
+            self.printer.warn(f'Discounted Strike Price: {dK}', 'BSF')
         value = 0
         Probd1 = 0
         Probd2 = 0
         if self.conf.VERBOSE:
-            self.menu.warn("Calculating Risk Free Probabilities", "BSF")
+            self.printer.warn("Calculating Risk Free Probabilities", "BSF")
         if opt:
             Probd1 = self.stat.normalDistribution(d1, 0, 1)
             if self.conf.VERBOSE:
-                self.menu.warn(f'P(d1)={Probd1}', "BSF")
+                self.printer.warn(f'P(d1)={Probd1}', "BSF")
             Probd2 = self.stat.normalDistribution(d2, 0, 1)
             if self.conf.VERBOSE:
-                self.menu.warn(f'P(d2)={Probd2}', "BSF")
+                self.printer.warn(f'P(d2)={Probd2}', "BSF")
             value = dS*Probd1-dK*Probd2
         else:
             Probd1 = self.stat.normalDistribution(-d1, 0, 1)
             if self.conf.VERBOSE:
-                self.menu.warn(f'P(-d1)={Probd1}', "BSF")
+                self.printer.warn(f'P(-d1)={Probd1}', "BSF")
             Probd2 = self.stat.normalDistribution(-d2, 0, 1)
             if self.conf.VERBOSE:
-                self.menu.warn(f'P(-d2)={Probd1}', "BSF")
+                self.printer.warn(f'P(-d2)={Probd1}', "BSF")
             value = dK*Probd2 - dS*Probd1
         return value
 

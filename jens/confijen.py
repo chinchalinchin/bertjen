@@ -52,14 +52,14 @@ class configuration:
             json.dump(data, outfile)
         return None
 
-    def calibrate(self, math, menu):
-        flag1 = self.calibrateTrig(math, menu)
-        flag2 = self.calibrateLn(math, menu)
-        flag3 = self.calibrateRoot(math, menu)
+    def calibrate(self, math, printer):
+        flag1 = self.calibrateTrig(math, printer)
+        flag2 = self.calibrateLn(math, printer)
+        flag3 = self.calibrateRoot(math, printer)
         return flag1 or flag2 or flag3
         # return flag1 or flag2 or ... 
 
-    def calibrateLn(self, math, menu):
+    def calibrateLn(self, math, printer):
         current = math.nearestPerfectLn(self.LN_BREAK)
         startTime = datetime.datetime.now()
         for index in range(1, self.LN_LIMIT):
@@ -73,11 +73,11 @@ class configuration:
                     return True
             now = datetime.datetime.now()
             if self.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.LAG)):
-                menu.warn("Calibrating Natural Log", "confijen.calibrateLn")
-                menu.warn(f'Current Natural Log Iteration Threshold: {index}', "confijen.calibrateLn")  
+                printer.warn("Calibrating Natural Log", "confijen.calibrateLn")
+                printer.warn(f'Current Natural Log Iteration Threshold: {index}', "confijen.calibrateLn")  
                 startTime = datetime.datetime.now()    
 
-    def calibrateTrig(self, math, menu):
+    def calibrateTrig(self, math, printer):
         startTime = datetime.datetime.now()
         for index in range(1, self.TRIG_LIMIT):
             try:
@@ -93,11 +93,11 @@ class configuration:
                     return True
             now = datetime.datetime.now()
             if self.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.LAG)):
-                menu.warn("Calibrating Trig Series Approximation", "confijen.calibrateTrig")
-                menu.warn(f'Current Trig Iteration Threshold: {index}', "confijen.calibrateTrig")
+                printer.warn("Calibrating Trig Series Approximation", "confijen.calibrateTrig")
+                printer.warn(f'Current Trig Iteration Threshold: {index}', "confijen.calibrateTrig")
                 startTime = datetime.datetime.now()
 
-    def calibrateRoot(self, math, menu):
+    def calibrateRoot(self, math, printer):
         return False
 
     def switchTechnique(self, arg):

@@ -2,10 +2,10 @@ import datetime
 
 class statbert:
 
-    def __init__(self, myConfig, myMenu, myMath):
+    def __init__(self, myConfig, myPrinter, myMath):
         self.conf = myConfig
         self.math = myMath
-        self.menu = myMenu
+        self.printer = myPrinter
         self.norm_root_store = None
 
     def binomialMass(self, n, p, x):
@@ -41,13 +41,13 @@ class statbert:
         else:
             exponent = -1*self.math.power((x - mu)/sigma, 2)/2
             if self.conf.EXTRA_VERBOSE:
-                self.menu.warn("Checking Store For Normal Root Constant", "normalDensity")
+                self.printer.warn("Checking Store For Normal Root Constant", "normalDensity")
             if(self.norm_root_store == None):
                 if self.conf.EXTRA_VERBOSE:
-                    self.menu.warn("No Normal Root Found, Calculating Normal Root Constant", "normalDensity")
+                    self.printer.warn("No Normal Root Found, Calculating Normal Root Constant", "normalDensity")
                 self.norm_root_store = self.math.newtRoot(2*self.math.newtPi())
             elif self.conf.EXTRA_VERBOSE:
-                self.menu.warn("Using Normal Root Constant Stored From Previous Calculations", "normalDensity")
+                self.printer.warn("Using Normal Root Constant Stored From Previous Calculations", "normalDensity")
             term = self.math.exp(exponent)/(sigma*self.norm_root_store)
             return term
         
@@ -57,18 +57,18 @@ class statbert:
             raise Exception("Variance Undefined")
         else:
             if self.conf.VERBOSE:
-                self.menu.warn(f'Current Integration Technique: {self.conf.getIntegrationTechnique()}', "normalIntegral")
+                self.printer.warn(f'Current Integration Technique: {self.conf.getIntegrationTechnique()}', "normalIntegral")
                 
             # Determine if symmetry can be used
             if self.conf.VERBOSE:
-                self.menu.warn("Looking For Symmetry To Simplify Calculation", "normalIntegral")
+                self.printer.warn("Looking For Symmetry To Simplify Calculation", "normalIntegral")
             if x == mu:
                 if self.conf.VERBOSE:
-                    self.menu.warn("Symmetry Found, Returning Known Value", "normalIntegral")
+                    self.printer.warn("Symmetry Found, Returning Known Value", "normalIntegral")
                 return 0.5
             elif x > mu:
                 if self.conf.VERBOSE:
-                    self.menu.warn("Symmetry Found, Setting Start Point To Mean", "normalIntegral")
+                    self.printer.warn("Symmetry Found, Setting Start Point To Mean", "normalIntegral")
                 start = mu
                 LHint = 0.5
                 RHint = 0.5
@@ -77,7 +77,7 @@ class statbert:
                 TPint = 0.5
             elif x < mu:
                 if self.conf.VERBOSE:
-                    self.menu.warn("No Symmetry Found", "normalIntegral")
+                    self.printer.warn("No Symmetry Found", "normalIntegral")
                 start = mu - 5 * sigma
                 LHint = 0
                 RHint = 0
@@ -94,7 +94,7 @@ class statbert:
             # Apply Lefthand and Righthand Approximation
             if self.conf.getIntegrationTechnique() == "ENDPOINT":
                 if self.conf.VERBOSE:
-                    self.menu.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
+                    self.printer.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
                 for index in range(0, self.conf.NORM_ACC):
                     old = current
                     
@@ -110,20 +110,20 @@ class statbert:
                     
                     now = datetime.datetime.now()
                     if (self.conf.VERBOSE and now-startTime>datetime.timedelta(seconds=self.conf.LAG)):
-                        self.menu.warn("Still Computing", "normalIntegral")
-                        self.menu.warn(f'Iteration {str(index)}', "normalIntegral")
-                        self.menu.warn(f'Current LH Estimate: {str(LHint)}', "normalIntegral")
-                        self.menu.warn(f'Current RH Estimate: {str(RHint)}', "normalIntegral")
+                        self.printer.warn("Still Computing", "normalIntegral")
+                        self.printer.warn(f'Iteration {str(index)}', "normalIntegral")
+                        self.printer.warn(f'Current LH Estimate: {str(LHint)}', "normalIntegral")
+                        self.printer.warn(f'Current RH Estimate: {str(RHint)}', "normalIntegral")
                         startTime = datetime.datetime.now()
                     if(old == current):
                         if self.conf.VERBOSE:
-                            self.menu.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
+                            self.printer.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
                         return current
                 return current
             # Apply Midpoint Approximation
             elif self.conf.getIntegrationTechnique() == "TRAPEZOID":
                 if self.conf.VERBOSE:
-                    self.menu.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
+                    self.printer.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
                     TPX1 = 0
                     previousTPcont0 = 1
                 for index in range(1, self.conf.NORM_ACC):
@@ -141,19 +141,19 @@ class statbert:
 
                     now = datetime.datetime.now()
                     if (self.conf.VERBOSE and now-startTime>datetime.timedelta(seconds=self.conf.LAG)):
-                        self.menu.warn("Still Computing", "normalIntegral")
-                        self.menu.warn(f'Iteration {str(index)}', "normalIntegral")
-                        self.menu.warn(f'Current TRAP Estimate: {str(TPint)}', "normalIntegral")
+                        self.printer.warn("Still Computing", "normalIntegral")
+                        self.printer.warn(f'Iteration {str(index)}', "normalIntegral")
+                        self.printer.warn(f'Current TRAP Estimate: {str(TPint)}', "normalIntegral")
                         startTime = datetime.datetime.now()
                     if(old == current):
                         if self.conf.VERBOSE:
-                            self.menu.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
+                            self.printer.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
                         return current
                 return current
             # Apply Trapezoid Approximation
             elif self.conf.getIntegrationTechnique() == "MIDPOINT":
                 if self.conf.VERBOSE:
-                    self.menu.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
+                    self.printer.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC)}', "normalIntegral")
                 for index in range(0, self.conf.NORM_ACC):
                     old = current
 
@@ -165,19 +165,19 @@ class statbert:
 
                     now = datetime.datetime.now()
                     if (self.conf.VERBOSE and now-startTime>datetime.timedelta(seconds=self.conf.LAG)):
-                        self.menu.warn("Still Computing", "normalIntegral")
-                        self.menu.warn(f'Iteration {str(index)}', "normalIntegral")
-                        self.menu.warn(f'Current MID Estimate: {str(MDint)}', "normalIntegral")
+                        self.printer.warn("Still Computing", "normalIntegral")
+                        self.printer.warn(f'Iteration {str(index)}', "normalIntegral")
+                        self.printer.warn(f'Current MID Estimate: {str(MDint)}', "normalIntegral")
                         startTime = datetime.datetime.now()
                     if(old == current):
                         if self.conf.VERBOSE:
-                            self.menu.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
+                            self.printer.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
                         return current
                 return current
             # Apply Simpson's Approxmation
             elif self.conf.getIntegrationTechnique() == "SIMPSON":
                 if self.conf.VERBOSE:
-                    self.menu.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC/2)}', "normalIntegral")
+                    self.printer.warn(f'Max # Of Iterations: {str(self.conf.NORM_ACC/2)}', "normalIntegral")
                 f0 = self.normalDensity(start, mu, sigma)
                 fn = self.normalDensity(x, mu, sigma)
                 modDelta = delta /3
@@ -197,12 +197,12 @@ class statbert:
                     current = Sint
                     now = datetime.datetime.now()
                     if (self.conf.VERBOSE and now-startTime>datetime.timedelta(seconds=self.conf.LAG)):
-                        self.menu.warn("Still Computing", "normalIntegral")
-                        self.menu.warn(f'Iteration {str(index)}', "normalIntegral")
-                        self.menu.warn(f'Current Simpson Estimate: {str(current)}', "normalIntegral")
+                        self.printer.warn("Still Computing", "normalIntegral")
+                        self.printer.warn(f'Iteration {str(index)}', "normalIntegral")
+                        self.printer.warn(f'Current Simpson Estimate: {str(current)}', "normalIntegral")
                         startTime = datetime.datetime.now()
                     if(old == current):
                         if self.conf.VERBOSE:
-                            self.menu.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
+                            self.printer.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
                         return current
                 return current

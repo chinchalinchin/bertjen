@@ -1,11 +1,11 @@
 import datetime
 import helpjen
+import sys
 
 class menujen:
 
-    def __init__(self):
-        self.TITLE_LINE = "                The Bertjen Calculator                   "
-        self.SPACE_BUFFER = 2
+    def __init__(self, myPrinter):
+        self.printer = myPrinter
         self.switcher = {
             "CF": 0,"E": 2,"F": 3,"LPI":4, 
             "M": 5, "NORMCDF": 6, "NORMPDF": 7,
@@ -17,156 +17,341 @@ class menujen:
             "LOG": 27, "SAV": 28,
             "Q" : 99,
         }
+        self.unswitcher = {
+            0: "CF", 2: "E", 2: "LPI",
+            5: "M", 6: "NORMCDF", 7:"NORMPDF",
+            8: "NPI", 9: "P", 11: "SQ", 12: "BS",
+            13: "LN", 15: "ROOT", 16: "COS",
+            17: "SIN", 18: "ASIN", 19: "TAN",
+            20: "ACOS", 21: "ATAN", 22: "I", 23: "V",
+            24: "BINPMF", 25: "BINCDF", 26: "B",
+            27: "LOG", 28: "SAV",
+            99: "Q" 
+        }
     
     # Manual Switch
     def switch(self, arg):
         return self.switcher.get(arg, "nothing")
-
-    # Print Menu Options
-    def printMenu(self):
-        self.title()
-        
-        self.subtitle("Mathbert")
-        
-        self.subtitle("Mathbert Functions")
-        # SINGLE ARGUMENT
-        self.command("CF", "Count Function")
-        # SINGLE ARGUMENT
-        self.command("F", "Factorial Function")
-        # DOUBLE ARGUMENT 
-        self.command("P","Power Function")
-        # DOUBLE ARGUMENT 
-        self.command("LOG", "Logarithm Function")
-        
-        self.subtitle("Mathbert Approximations")
-        # SINGLE ARGUMENT
-        self.command("E","Taylor Series Exponential Approximation")
-        # SINGLE ARGUMENT
-        self.command("LN", "Halley's Method Natural Log Approximation")
-        # SINGLE ARGUMENT
-        self.command("COS", "Taylor Series Cosine Approximation")
-        # SINGLE ARGUMENT
-        self.command("SIN", "Taylor Series Sine Approximation")
-        # SINGLE ARGUMENT
-        self.command("TAN", "Taylor Series Tangent Approximation")
-        # SINGLE ARGUMENT
-        self.command("ACOS", "Taylor Series Arccosine Approximation")
-        # SINGLE ARGUMENT
-        self.command("ASIN", "Taylor Series Arcsine Approximation")
-        # SINGLE ARGUMENT
-        self.command("ATAN", "Taylor Series Arctangent Approximation")
-        # NO ARGUMENT
-        self.command("LPI", "Liebniz Series Pi Approximation")
-        # NO ARGUMENT
-        self.command("NPI", "Newton Series Pi Approximation")
-        # DOUBLE ARGUMENT 
-        self.command("ROOT", "Binomial Series Root Approximation")
-        # SINGLE ARGUMENT
-        self.command("SQ", "Newton's Method Square Root Approximation")
-        self.divider()
-        
-        self.subtitle("Statbert")
-        
-        self.subtitle("Statbert PDFs/PMFs")
-        # TRIPLE ARGUMENT 
-        self.command("NORMPDF","Normal Probability Density Function")
-        # TRIPLE ARGUMENT 
-        self.command("BINPMF", "Binomial Probability Mass Function")
-        
-        self.subtitle("Statbert CDFs")
-        # TRIPLE ARGUMENT 
-        self.command("NORMCDF", "Normal Cumulative Distribution Function")
-        # TRIPLE ARGUMENT 
-        self.command("BINCDF", "Binomial Cumulative Distribution Function")
-        self.divider()
-        
-        self.subtitle("Finbert")
-        
-        self.subtitle("Finbert Valuations")
-        self.command("BS", "Black Scholes Option Function")
-        self.divider()
-        
-        self.subtitle("Admin Commands")
-        # SINGLE ARGUMENT
-        self.command("I", "Integration Technique Settings")
-        # DOUBLE ARGUMENT
-        self.command("V", "Verbose Settings")
-        # NO ARGUMENT
-        self.command("M", "Print Help Menu")
-        # SINGLE ARGUMENT
-        self.command("B", "Calibrate Bertjen")
-        # NO ARGUMENT
-        self.command("SAV", "Save Bertjen Configuration")
-        # NO ARGUMENT
-        self.command("Q", "Quit")
-        self.divider()
-
-    def title(self):
-        print("*"*(len(self.TITLE_LINE)+2*self.SPACE_BUFFER))
-        print(str(self.TITLE_LINE).upper())
-        print("*"*(len(self.TITLE_LINE) + 2*self.SPACE_BUFFER))
-
-    def subtitle(self, msg):
-        leftover = len(self.TITLE_LINE) - len(msg) + self.SPACE_BUFFER
-        if leftover < 0:
-            print(str(msg))
-        else:
-            if leftover%2 == 0:
-                space = int(leftover/2)
-                print(f'{"*"*space} {str(msg).upper()} {"*"*space}')
-            else:
-                left = int((leftover-1)/2)
-                right = int((leftover+1)/2)
-                print(f'{"*"*left} {str(msg).upper()} {"*"*right}')
-
-    def bullet(self, msg):
-        leftover = len(self.TITLE_LINE) - len(msg) + self.SPACE_BUFFER
-        if leftover%2 ==0:
-            multi = int(leftover/2)
-            print(f'{"_"*multi} {str(msg)} {"_"*multi}')
-        else:
-            left = int(leftover/2) + 1
-            right = int(leftover/2)
-            print(f'{"_"*left} {str(msg)} {"_"*right}')
-        
-    def line(self, msg):
-        print(f'>> {str(msg)}')
-
-    def divider(self):
-        print("*"*(len(self.TITLE_LINE) + 2*self.SPACE_BUFFER))
-        
-    def command(self, cmd, msg):
-        print(f'>> {str(cmd)} : {str(msg)}')
-
-    def argument(self, arg, msg):
-        return None
-
-    def warn(self, msg, comp):
-        print(f'>> {str(comp).upper()} !! {str(msg)} !! ')
-
-    # Print Formatted Output
-    def output(self,msg):
-        self.command("RESULT", msg)
     
+    def unswitch(self, arg):
+        return self.unswitcher.get(arg, "nothing")
+
+    def printFunctionTitle(self, which):
+        # COUNT
+        if(which == 0):
+            self.printer.subtitle("Sum Of First N Integers Function")
+        # EXP
+        elif(which == 2):
+            self.printer.subtitle("Taylor Series Exponential Approximation")
+        # FACT
+        elif(which == 3):
+            self.printer.subtitle("Factorial Function")
+        # LIEBPI
+        elif(which == 4):
+            self.printer.subtitle("Liebniz's Infinite Series Pi Approximation")
+        # NORMCDF
+        elif(which == 6):
+            self.printer.subtitle("Normal Cumulative Probability Distribution Function")
+        # NORMPDF
+        elif(which == 7):
+            self.printer.subtitle("Normal Probability Density Function")
+        # NEWTPI
+        elif(which == 8):
+            self.printer.subtitle("Newton's Infinite Series Pi Approximation")
+        # POWER
+        elif(which == 9):
+            self.printer.subtitle("Power Function")
+        # SQ
+        elif(which == 11):
+            self.printer.subtitle("Newton's Method Square Root Approximation")
+        # BLACKSCHOLES
+        elif(which == 12):
+            self.printer.subtitle("Black Scholes Option Value Functoin")
+        # LN
+        elif(which == 13):
+            self.printer.subtitle("Halley's Method Natural Log Approximation")
+        # BINROOT
+        elif(which == 15):
+            self.printer.subtitle("Binomial Series Root Approximation")
+        # COS
+        elif(which == 16):
+            self.printer.subtitle("Taylor Series Cosine Approximation")
+        # SIN
+        elif(which == 17):
+            self.printer.subtitle("Taylor Series Sine Approximation")
+        # ASIN
+        elif(which == 18):
+            self.printer.subtitle("Taylor Series Arc Sine Approximation")
+        # TAN
+        elif(which == 19):
+            self.printer.subtitle("Taylor Series Tangent Approximation")
+        # ACOS
+        elif(which == 20):
+            self.printer.subtitle("Taylor Series Arc Cosine Approximation")
+        # ATAN
+        elif(which == 21):
+            self.printer.subtitle("Taylor Series Arc Tangent Approximation")
+        # INTEGRAL SET
+        elif(which == 22):
+            self.printer.subtitle("Integral Approximation Technique")
+        # VERB SET
+        elif(which == 23):
+            self.printer.subtitle("Verbose Settings")
+        # BINPMF
+        elif(which == 24):
+            self.printer.subtitle("Binomial Probability Mass Function")
+        # BINCDF
+        elif(which == 25):
+            self.printer.subtitle("Binomial Cumulative Probability Distribution Function")
+        # BERTJEN CALIBRATE
+        elif(which == 26):
+            self.printer.subtitle("Bertjen Settings Calibration")
+        # LOG
+        elif(which == 27):
+            self.printer.subtitle("Logarithm Function")
+        # SAVE
+        elif(which == 28):
+            self.printer.subtitle("Save Bertjen Configuration")
+
+    def printFunctionDetails(self, which):
+         # COUNT
+        if(which == 0):
+            self.printer.line("Sums up the first --n integers")
+            self.printer.argument("n", "Number of integers to be summed", "int")
+        # EXP
+        elif(which == 2):
+            self.printer.line("Raises e to the specific power --x")
+            self.printer.argument("x", "power e is raised to", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # FACT
+        elif(which == 3):
+            self.printer.line("Computes the factorial of the specified integer --n")
+            self.printer.argument("n", "Number of factorial", "int")
+        # LIEBPI
+        elif(which == 4):
+            self.printer.line("Approximates pi with Liebniz's infinite series approximation")
+            self.printer.argument("null", "n/a", "null")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # NORMCDF
+        elif(which == 6):
+            self.printer.line("Computes a normal probability --x P(X<x) for a given mean --m")
+            self.printer.line("and standard deviation --o")
+            self.printer.argument("x", "Desired probability", "float")
+            self.printer.argument("m", "Mean", "float")
+            self.printer.argument("o", "Standard Deviation", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # NORMPDF
+        elif(which == 7):
+            self.printer.line("Computes a normal density --x P(X=x) for a given mean --m")
+            self.printer.line("and standard deviation --o")
+            self.printer.argument("x", "Desired density", "float")
+            self.printer.argument("m", "Mean", "float")
+            self.printer.argument("o", "Standard Deviation", "float")
+        # NEWTPI
+        elif(which == 8):
+            self.printer.line("Approximates pi with Newton's infinte series approximation")
+            self.printer.argument("null", "n/a", "null")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # POWER
+        elif(which == 9):
+            self.printer.line("Raises a specified base --b to a specified power --a")
+            self.printer.argument("b", "Base", "float")
+            self.printer.argument("a", "Exponent", "int")
+        # SQ
+        elif(which == 11):
+            self.printer.line("Approximates the square root of input --x using Newton's Method")
+            self.printer.argument("x", "Root to be taken", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # BLACKSCHOLES
+        elif(which == 12):
+            self.printer.line("Uses the Black-Scholes formula to calculate the theoretical")
+            self.printer.line("value of an option given observed market data")
+            self.printer.argument("S", "Spot price", "float")
+            self.printer.argument("K", "Strike price", "float")
+            self.printer.argument("r", "Continuously Compounded Interest Rate, Annualized As A Decimal", "float")
+            self.printer.argument("d", "Continuously Compounded Dividend Rate, Annualized As A Decimal", "float")
+            self.printer.argument("o", "Annualized Implied Volatility, As A Decimal", "float")
+            self.printer.argument("t", "Time to expiration in years", "float")
+            self.printer.argument("opt", "Type of option", "CALL/PUT")
+        # LN
+        elif(which == 13):
+            self.printer.line("Approximates natural log of input --x using Halley's method")
+            self.printer.argument("x", "Natural log to be taken", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # BINROOT
+        elif(which == 15):
+            self.printer.line("Approximates the nth root --r of input --n using a binomial series")
+            self.printer.argument("x", "Number whose root is to be found", "float")
+            self.printer.argument("r" , "Root to be taken", "float")
+            self.printer.warn("Interval of Convergence [0, 2]", "mathbert.binRoot")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # COS
+        elif(which == 16):
+            self.printer.line("Approximates the cosine of input --x using a Taylor series")
+            self.printer.argument("x", "Angle whose cosine is to be found", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # SIN
+        elif(which == 17):
+            self.printer.line("Approximates the sine of input --x using a Taylor series")
+            self.printer.argument("x", "Angle whose sine is to be found" , "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # ASIN
+        elif(which == 18):
+            self.printer.line("Approximates the arc sine of input --x using a Taylor series")
+            self.printer.argument("x", "Scalar whose arc sine is to be found", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # TAN
+        elif(which == 19):
+            self.printer.line("Approximates the tangent of input --x using a Taylor series")
+            self.printer.argument("x", "Angle whose tangent is to be found", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # ACOS
+        elif(which == 20):
+            self.printer.line("Approximates the arc cosine of input --x using a Taylor series")
+            self.printer.argument("x", "Scalar whose arc cosine is to be found", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # ATAN
+        elif(which == 21):
+            self.printer.line("Approximates the arc tangent of input --x using a Taylor series")
+            self.printer.argument("x", "Scalar whose arc tangent is to be found", "float")
+            self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
+        # INTEGRAL SET
+        elif(which == 22):
+            self.printer.line("Configures the integration technique used to approximate integrals")
+            self.printer.argument("t", "Technique to be used", "int")
+            self.printer.warn("Check Integration Settings with 'I' to see integration techniques", "confijen")
+        # VERB SET
+        elif(which == 23):
+            self.printer.line("Configures the verbose settings for Bertjen")
+            self.printer.argument("v", "Verbose setting", "YES/NO")
+            self.printer.argument("x", "Extra verbose setting", "YES/NO")
+            self.printer.warn("Check Verbose Settings with 'V'", "confijen")
+        # BINPMF
+        elif(which == 24):
+            self.printer.line("Computes the binomial probability mass --x P(X=x) for a")
+            self.printer.line("given binomial distribution with probability of success")
+            self.printer.line("--p and number of trials --n")
+            self.printer.argument("n", "Number of trials", "int")
+            self.printer.argument("p", "Probability of success", "float")
+            self.printer.argument("x", "Desired probability mass")
+        # BINCDF
+        elif(which == 25):
+            self.printer.line("Computes the binomial cumulative probability--x P(X<=x) for a")
+            self.printer.line("given binomial distribution with probability of success")
+            self.printer.line("--p and number of trials --n")
+            self.printer.argument("n", "Number of trials", "int")
+            self.printer.argument("p", "Probability of success", "float")
+            self.printer.argument("x", "Desired cumulative probability")
+        # BERTJEN CALIBRATE
+        elif(which == 26):
+            self.printer.line("Calibrates Bertjen to System settings")
+            self.printer.line("c", "Configure Bertjen", "YES/NO")
+        # LOG
+        elif(which == 27):
+            self.printer.line("Computes the logarithm of --x for a given base --b")
+            self.printer.line("using the change of base formula and the Halley's method")
+            self.printer.line("approximation for natural logs")
+        # SAVE
+        elif(which == 28):
+            self.printer.line("Saves the current Bertjen configuration")
+
+    def printBertjenDetails(self, conf):
+        self.printer.bullet("Bertjen Info")
+        self.printer.command("Trig Series Max Loop Iterations", conf.TRIG_ACC)
+        self.printer.command("Ln Series Max Loop Iterations", conf.LN_ACC)
+        self.bullet("System Info")
+        self.printer.command("Float Max", sys.float_info.max)
+        self.printer.command("Float Min", sys.float_info.min)
+
+    def printVerboseDetails(self, conf):
+        self.printer.bullet("Simple Verbose Setting")
+        self.printer.command("Current Simple Verbose Setting", 
+                                "Yes" if conf.getVerbose() else "No")
+
+    def printExtraVerboseDetails(self, conf):
+        self.printer.bullet("Extra Verbose Setting")
+        self.printer.command("Current Extra Verbose Setting", 
+                                "Yes" if conf.getExtraVerbose() else "No")  
+                            
+    def printIntegrationDetails(self, conf):
+        self.printer.bullet("Available Techniques")
+        self.printer.bullet("Option : Technique")
+        for key, value in conf.TECHNIQUES.items():
+            self.command(f'Option {key}', f'{value}')
+        self.printer.divider()
+        self.printer.command("Current Integration Technique", str(self.conf.getIntegrationTechnique()))
+        self.printer.divider()
+
     # Formatted Time Output
     def time(self, flag, start):
         if flag:
-            self.command("TIME START", 
+            self.printer.command("TIME START", 
                         str(datetime.datetime.now().strftime("%H: %M: %S.%f")[:-4]))
             return datetime.datetime.now()
         else:
             end = datetime.datetime.now()
-            self.command("TIME END", 
+            self.printer.command("TIME END", 
                         str(end.strftime("%H: %M: %S.%f")[:-4]))
-            self.command("TIME DIFF", 
+            self.printer.command("TIME DIFF", 
                         str(end - start) + " sec")
-            
+    
+    # SINGLE ARG : 
+    #   COUNT(0), EXP(2), FACT(3), NEWTROOT(11), LN(13)
+    #   COS(16), SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21)
+    #    INTEGRALSET(22), BERTJEN(26)       
+    def isSingleArg(self, firstIn):
+        return (firstIn == 0 or firstIn == 2 or firstIn == 3 or firstIn == 11
+                or firstIn == 13 or firstIn == 16 or firstIn == 17 or firstIn == 18
+                or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 22
+                or firstIn == 26)
+    
+    # DOUBLE ARG: 
+    #   BINROOT(15), POWER(9), VERB(23), LOG(27)
+    def isDoubleArg(self, firstIn):
+        return (firstIn == 15 or firstIn == 9 or firstIn == 23 or firstIn == 27)
+    
+    # TRIPLE ARG: 
+    #   NORMCDF(6), NORMPDF(7), BINPMF(24), BINCDF(25) 
+    def isTripleArg(self, firstIn):
+        return (firstIn ==  6 or firstIn == 7 or firstIn == 24 or firstIn == 25)
+
+    # SPECIAL ARG:
+    #   BLACKSCHOLES(12)
+    def isSpecialArg(self, firstIn):
+        return (firstIn == 12)
+        
+    # FLOAT ARG: 
+    #   EXP(2), NEWTROOT(11), LN(13), COS(16)
+    #   SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21),
+    #   BINROOT(15), LOG(27), NORMCDF(6), NORMPDF(7)
+    def isFloatArg(self, firstIn):
+        return (firstIn == 2 or firstIn == 11 or firstIn == 13 or firstIn == 16 or firstIn == 17 
+                or firstIn == 18 or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 15
+                or firstIn == 27 or firstIn == 6 or firstIn == 7)
+
+    # INT ARG : 
+    #   COUNT(0), FACT(3), INTEGRALSET(22)
+    def isIntArg(self, firstIn):
+        return (firstIn == 0 or firstIn == 3 or firstIn == 22)
+
+    # BOOL ARG: 
+    #   VERB(23), BERTJEN(26)
+    def isBoolArg(self, firstIn):
+        return (firstIn == 26 or firstIn == 23)
+
+    # COMPOUND ARG : 
+    #   POWER(9), BLACKSCHOLES(12), BINPMF(24)
+    #   BINCDF(25)
+    # TODO: BINCDF AND BINPMF ARE COMPOUND, DUMBASS!
+    def isCompoundArg(self, firstIn):
+        return (firstIn == 9 or firstIn == 12 or firstIn == 24 or firstIn == 25)
+
     # Retrieve Valid Menu Input From User
-    def getMenuInput(self,):
+    def getMenuInput(self):
         menput = []
-        menput[0] = "nothing"
+        menput.append("nothing")
         while(self.switch(menput[0]) == "nothing"):
-            self.line("Make A Selection")
+            self.printer.line("Make A Selection")
             # GET INPUT
             menput = input("<< ").upper().split()
             ####################
@@ -175,46 +360,25 @@ class menujen:
             # STEP 1: VERIFY FIRST INPUT CONTAINS FUNCTION
             firstIn = self.switch(menput[0])
             if(firstIn == "nothing"):
-                self.warn("Selection not found!", "menujen.getMenuInput")
+                self.printer.warn("Selection not found!", "menujen.getMenuInput")
             ######################
             # STEP 2: VERIFY INPUT
             else:
                 args = len(menput)
+                # DO FUNCTION MANUALLY THROUGH COMMAND LINE INTERFACE
                 if(args == 1):
                     return menput
                 else:
                     ###########################################
                     # PRE- STEP 2: GROUP INT BY NUMBER AND TYPE
-                    # 1 ARG : 
-                    #   COUNT(0), EXP(2), FACT(3), NEWTROOT(11), LN(13)
-                    #   COS(16), SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21)
-                    #    INTEGRALSET(22), BERTJEN(26)
-                    singleArg = (firstIn == 0 or firstIn == 2 or firstIn == 3 or firstIn == 11
-                            or firstIn == 13 or firstIn == 16 or firstIn == 17 or firstIn == 18
-                            or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 22
-                            or firstIn == 26)
-                    # 2 ARG: 
-                    #   BINROOT(15), POWER(9), VERB(23), LOG(27)
-                    doubleArg = firstIn == 15 or firstIn == 9 or firstIn == 23 or firstIn == 27
-                    # 3 ARG: 
-                    #   NORMCDF(6), NORMPDF(7), BINPMF(24), BINCDF(25)
-                    tripleArg = firstIn ==  6 or firstIn == 7 or firstIn == 24 or firstIn == 25
-                    # FLOAT: 
-                    #   EXP(2), NEWTROOT(11), LN(13), COS(16)
-                    #   SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21),
-                    #   BINROOT(15), LOG(27)
-                    floatArg = (firstIn == 2 or firstIn == 11 or firstIn == 13 or firstIn == 16 or firstIn == 17 
-                                or firstIn == 18 or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 15
-                                or firstIn == 27)
-                    # DUAL ARG : 
-                    #   POWER(9)
-                    dualArg = firstIn == 9
-                    # INT ARG : 
-                    #   COUNT(0), FACT(3), INTEGRALSET(22)
-                    intArg = firstIn == 0 or firstIn == 3 or firstIn == 22
-                    # BOOL ARG: 
-                    #   VERB(23), BERTJEN(26)
-                    boolArg = firstIn == 26 or firstIn == 23
+                    singleArg = self.isSingleArg(firstIn)
+                    doubleArg = self.isDoubleArg(firstIn)
+                    tripleArg = self.isTripleArg(firstIn)
+                    specialArg = self.isSpecialArg(firstIn)
+                    floatArg = self.isFloatArg(firstIn)
+                    intArg = self.isIntArg(firstIn)
+                    boolArg = self.isBoolArg(firstIn)
+                    compoundArg = self.isCompoundArg(firstIn)
                     
                     if(singleArg):
                         ############################################################
@@ -223,8 +387,8 @@ class menujen:
                         if(args > 2):
                             menput = [None]*2
                             menput[0] = firstIn
-                            self.warn("Too Many Arguments", "menujen.getMenuInput")
-                            self.bullet("Provide 1 Argument Only")
+                            self.printer.warn("Argument Mismatch", "menujen.getMenuInput")
+                            self.printer.bullet("Provide 1 Argument Only")
                             # STEP 2A-1-1a: GET FLOAT INPUT FOR FLOAT VALUED FUNCTIONS
                             if(floatArg):
                                 menput[1] = self.getFloat("Please Enter A Single Number")
@@ -237,7 +401,7 @@ class menujen:
                             elif(boolArg):
                                 # BERTJEN
                                 if(firstIn == 26):
-                                    self.line("Calibrate Bertjen?")
+                                    self.printer.line("Calibrate Bertjen?")
                                     menput[1] = self.getBinaryDecision("Yes", "No")
                                     return menput
                         ####################################            
@@ -261,8 +425,8 @@ class menujen:
                             # STEP 2B-1-2c: VERIFY BOOL INPUT
                             elif(boolArg):
                                 if(firstIn == 26):
-                                    if(menput[1].upper() != "YES" or menput[1].upper() != "NO"):
-                                        self.line("Calibrate Bertjen?")
+                                    if(menput[1].upper() != "YES" and menput[1].upper() != "NO"):
+                                        self.printer.line("Calibrate Bertjen?")
                                         menput[1] = self.getBinaryDecision("Yes", "No")
                                         return menput
                                     else:
@@ -276,11 +440,11 @@ class menujen:
                         ############################################################
                         # STEP 2A: VERIFY NUMBER OF ARGUMENTS DOESN'T EXCEED MAXIMUM
                         #   STEP 2A-2 : THROW AWAY EXTRA ARGUMENTS FOR 2 ARG FUNCTIONS
-                        if(args > 3):
+                        if(args > 3 or args < 3):
                             menput = [None]*3
                             menput[0] = firstIn
-                            self.warn("Too Many Arguments", "menujen.getMenuInput")
-                            self.bullet("Provide 2 Arguments Only")
+                            self.printer.warn("Argument Mismatch", "menujen.getMenuInput")
+                            self.printer.bullet("Provide 2 Arguments Only")
                             # STEP 2A-2-1a: GET FLOAT INPUT FOR FLOAT VALUED FUNCTIONS
                             if(floatArg):
                                 menput[1] = self.getFloat("Please Enter A Single Number for 1st Argument")
@@ -295,18 +459,18 @@ class menujen:
                             elif(boolArg):
                                 # VERBOSE
                                 if(firstIn == 23):
-                                    self.line("Verbose?")
+                                    self.printer.line("Verbose?")
                                     menput[1] = self.getBinaryDecision("Yes", "No")
-                                    self.line("Extra Verbose?")
+                                    self.printer.line("Extra Verbose?")
                                     menput[2] = self.getBinaryDecision("Yes", "No")
                                     return menput
-                            # STEP 2A-2-1d: GET DUAL INPUT FOR DUAL VALUED FUNCTIONS
-                            elif(dualArg):
+                            # STEP 2A-2-1d: GET COMPOUND INPUT FOR COMPOUND VALUED FUNCTIONS
+                            elif(compoundArg):
                                 # POWER
                                 if(firstIn == 9):
-                                    self.line("Base?")
+                                    self.printer.line("Base?")
                                     menput[1] = self.getFloat("Please Enter A Single Number For 1st Argument")
-                                    self.line("Exponent?")
+                                    self.printer.line("Exponent?")
                                     menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
                                     return menput
                                 else:
@@ -322,33 +486,33 @@ class menujen:
                                 if(not helpjen.isFloat(menput[2])):
                                     menput[2] = self.getFloat("Please Enter A Single Number For 2nd Argument")
                                 return menput
-                            # STEP 2B-2-2b: VERIFY FLOAT INPUT
+                            # STEP 2B-2-2b: VERIFY INT INPUT
                             elif(intArg):
                                 if(not helpjen.isInt(menput[1])):
                                     menput[1] = self.getInt("Please Enter A Single Number For 1st Argument")
                                 if(not helpjen.isInt(menput[2])):
                                     menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
                                 return menput
-                            # STEP 2B-2-2c: VERIFY FLOAT INPUT
+                            # STEP 2B-2-2c: VERIFY BOOL INPUT
                             elif(boolArg):
                                 if(firstIn == 23):
-                                    if(menput[1].upper() != "YES" or menput[1].upper() != "NO"):
-                                        self.line("Verbose?")
+                                    if(menput[1].upper() != "YES" and menput[1].upper() != "NO"):
+                                        self.printer.line("Verbose?")
                                         menput[1] = self.getBinaryDecision("Yes", "No")
-                                    if(menput[2].upper() != "YES" or menput[2].upper() != "NO"):
-                                        self.line("Extra Verbose?")
+                                    if(menput[2].upper() != "YES" and menput[2].upper() != "NO"):
+                                        self.printer.line("Extra Verbose?")
                                         menput[2] = self.getBinaryDecision("Yes", "No")
                                     return menput
                                 else:
                                     return menput
-                            # STEP 2B-2-2d: VERIFY FLOAT INPUT
-                            elif(dualArg):
+                            # STEP 2B-2-2d: VERIFY COMPOUND INPUT
+                            elif(compoundArg):
                                 if(firstIn == 9):
                                     if(not helpjen.isFloat(menput[1])):
-                                        self.line("Base")
+                                        self.printer.line("Base")
                                         menput[1] = self.getFloat("Please Enter A Single Number For 1st Argument")
                                     if(not helpjen.isInt(menput[2])):
-                                        self.line("Exponent?")
+                                        self.printer.line("Exponent?")
                                         menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
                                         return menput
                                     else:
@@ -358,77 +522,168 @@ class menujen:
                         ############################################################
                         # STEP 2A: VERIFY NUMBER OF ARGUMENTS DOESN'T EXCEED MAXIMUM
                         #   STEP 2A-3 : THROW AWAY EXTRA ARGUMENTS FOR 3 ARG FUNCTIONS
-                        if(args>4):
-                            return None
+                        if(args>4 or args<4):
+                            menput = [None]*4
+                            menput[0] = firstIn
+                            self.printer.warn("Argument Mismatch", "menujen.getMenuInput")
+                            self.printer.bullet("Provide 3 Arguments Only")
+                            
+                            # STEP 2A-3-1a: GET COMPOUND INPUT FOR COMPOUND VALUED FUNCTIONS
+                            if(floatArg):
+                                menput[1] = self.getFloat("Please Enter A Single Number for 1st Argument")
+                                menput[2] = self.getFloat("Please Enter  A Single Number For 2nd Argument")
+                                menput[3] = self.getFloat("Please Enter  A Single Number For 3rd Argument")
+                                return menput
+                                
+                            # STEP 2A-3-1b: GET COMPOUND INPUT FOR COMPOUND VALUED FUNCTIONS
+                            elif(intArg):
+                                menput[1] = self.getInt("Please Enter A Single Number for 1st Argument")
+                                menput[2] = self.getInt("Please Enter  A Single Number For 2nd Argument")
+                                menput[3] = self.getInt("Please Enter  A Single Number For 3rd Argument")
+                                return menput
+                                
+                            # STEP 2A-3-1c: GET COMPOUND INPUT FOR COMPOUND VALUED FUNCTIONS
+                            elif(boolArg):
+                                return menput
+                            # STEP 2A-2-1d: GET COMPOUND INPUT FOR COMPOUND VALUED FUNCTIONS
+                            elif(compoundArg):
+                                if(firstIn == 25 or firstIn == 24):
+                                    menput[1] = self.getInt("Please Enter A Single Number for n")
+                                    menput[2] = self.getFloat("Please Enter A Single Number For p")
+                                    menput[3] = self.getInt("Please Enter  A Single Number For x")
+                                    return menput
+                            return menput
+                        #################################### 
+                        # STEP 2B: VERIFY INPUT MATCHES TYPE
+                        #   STEP 2B-3: CHECK INPUT TYPE FOR 3 ARG FUNCTIONS
                         else:
-                            return None
+                            # STEP 2B-3-2a: VERIFY FLOAT INPUT
+                            if(floatArg):
+                                if(not helpjen.isFloat(menput[1])):
+                                    menput[1] = self.getFloat("Please Enter A Single Number For 1st Argument")
+                                if(not helpjen.isFloat(menput[2])):
+                                    menput[2] = self.getFloat("Please Enter A Single Number For 2nd Argument")
+                                if(not helpjen.isFloat(menput[3])):
+                                    menput[3] = self.getFloat("Please Enter A Single Number For 3rd Argument")
+                                return menput
+                            # STEP 2B-3-2b: VERIFY INT INPUT
+                            elif(intArg):
+                                if(not helpjen.isInt(menput[1])):
+                                    menput[1] = self.getInt("Please Enter A Single Number For 1st Argument")
+                                if(not helpjen.isInt(menput[2])):
+                                    menput[2] = self.getInt("Please Enter A Single Number For 2nd Argument")
+                                if(not helpjen.isInt(menput[3])):
+                                    menput[3] = self.getInt("Please Enter A Single Number For 3rd Argument")
+                                return menput
+                            # STEP 2B-3-2c: VERIFY BOOL INPUT
+                            elif(boolArg):
+                                return menput
+                            # STEP 2B-3-2d: VERIFY COMPOUND INPUT
+                            elif(compoundArg):
+                                if(not helpjen.isInt(menput[1])):
+                                    menput[1] = self.getInt("Please Enter A Single Number For n")
+                                if(not helpjen.isFloat(menput[2])):
+                                    menput[2] = self.getFloat("Please Enter A Single Number For p")
+                                if(not helpjen.isInt(menput[3])):
+                                    menput[3] = self.getInt("Please Enter A Single Number For x")
+                                return menput
+                   
+                    elif(specialArg):
+                        ############################################################
+                        # STEP 2A: VERIFY NUMBER OF ARGUMENTS DOESN'T EXCEED MAXIMUM
+                        #   STEP 2A-S : THROW AWAY EXTRA ARGUMENTS FOR 3 ARG FUNCTIONS
 
-
-                    # BLACKSCHOLES
-                    elif(self.switch(menput[0]) == 12):
-                        return None
-                    
-                    I
-                    for index in range(0, args):
-                        if(not helpjen.isFloat(menput[index])):
-                            warning = f'{index}st Argument' if index == 1 else f'{index}th Argument'
-                            self.warn(f'{warning} Not Understood. Please Enter Another Argument', "menujen.getMenuInput")
-                            menput[index] = self.getFloat("Please Enter Another Number")
-                    return menput
+                        # BLACKSCHOLES
+                        if (firstIn == 12):
+                            if(args > 8 or args < 8):
+                                menput = [None]*8
+                                menput[0] = firstIn
+                                self.printer.warn("Too Many Arguments", "menujen.getMenuInput")
+                                self.printer.bullet("Provide 7 Arguments Only")
+                                menput[1] = self.getFloat("Please Enter A Single Number for S")
+                                menput[2] = self.getFloat("Please Enter  A Single Number For K")
+                                menput[3] = self.getFloat("Please Enter  A Single Number For r")
+                                menput[4] = self.getFloat("Please Enter A Single Number for d")
+                                menput[5] = self.getFloat("Please Enter  A Single Number For o")
+                                menput[6] = self.getFloat("Please Enter  A Single Number For t")
+                                self.printer.line("Call Or Put?")
+                                menput[7] = self.getBinaryDecision("Call", "Put")
+                                return menput
+                        #################################### 
+                        # STEP 2B: VERIFY INPUT MATCHES TYPE
+                        #   STEP 2B-3: CHECK INPUT TYPE FOR 3 ARG FUNCTIONS
+                            else:
+                                if(not helpjen.isFloat(menput[1])):
+                                    menput[1] = self.getFloat("Please Enter A Single Number For S")
+                                if(not helpjen.isFloat(menput[2])):
+                                    menput[2] = self.getFloat("Please Enter A Single Number For K")
+                                if(not helpjen.isFloat(menput[3])):
+                                    menput[3] = self.getFloat("Please Enter A Single Number For r")
+                                if(not helpjen.isFloat(menput[4])):
+                                    menput[4] = self.getFloat("Please Enter A Single Number For d")
+                                if(not helpjen.isFloat(menput[5])):
+                                    menput[5] = self.getFloat("Please Enter A Single Number For o")
+                                if(not helpjen.isFloat(menput[6])):
+                                    menput[6] = self.getFloat("Please Enter A Single Number For t")
+                                if(menput[7].upper() != "CALL" and menput[7].upper() != "PUT"):
+                                    self.printer.line("Call or Put?")
+                                    menput[7] = self.getBinaryDecision("Call", "Put")
+                                return menput
             
     # Retrieve Valid Integer Input From User
     def getInt(self, msg):
-        self.line(msg)
+        self.printer.line(msg)
         numput = "not a number"
         while(not helpjen.isFloat(numput)):
             numput = input("<< ")
             if(helpjen.isFloat(numput)):
-                self.command("Input", numput)
+                self.printer.command("Input", numput)
                 return int(numput)
             else:
                 self.warn("Not a number!", "getInt")
 
     # Retrieve Valid Float Input From User
     def getFloat(self,msg):
-        self.line(msg)
+        self.printer.line(msg)
         numput = "not a number"
         while(not helpjen.isFloat(numput)):
             numput = input("<< ")
             if(helpjen.isFloat(numput)):
-                self.command("Input",numput)
+                self.printer.command("Input",numput)
                 return float(numput)
             else:
-                self.warn("Not a number!", "getFloat")
+                self.printer.warn("Not a number!", "getFloat")
 
     def getBinaryDecision(self, trueOpt, falseOpt):
-        self.line(f'{trueOpt} or {falseOpt}?')
+        self.printer.line(f'{trueOpt} or {falseOpt}?')
         opt = "not an option"
         trueUp = trueOpt.upper()
         falseUp = falseOpt.upper()
         while(opt != trueUp and opt != falseUp):
             opt = input("<< ").upper()
             if(opt != trueUp and opt != falseUp):
-                self.warn("Not An Option!", "getBinaryDecision")
+                self.printer.warn("Not An Option!", "getBinaryDecision")
         if opt == trueUp:
-            self.command("Input", trueOpt)
+            self.printer.command("Input", trueOpt)
             return True
         else:
-            self.command("Input", falseOpt)
+            self.printer.command("Input", falseOpt)
             return False
 
     def getTechnique(self, conf):
-        self.line("Select A Technique")
+        self.printer.line("Select A Technique")
         numput = "not a technique"
         while(not helpjen.isInt(numput)):
             numput = input("<< ")
             if(helpjen.isInt(numput)):
                 if(conf.switchTechnique(int(numput)) == "nothing"):
-                    self.warn("Not A Technique!", "getTechnique")
-                    self.numput = "not a technique"
+                    self.printer.warn("Not A Technique!", "getTechnique")
+                    self.printer.numput = "not a technique"
                 else:
-                    self.command("Input", numput)
+                    self.printer.command("Input", numput)
                     return int(numput)
             else:
-                self.warn("Command Not Understood. Try Again.", "getTechnique")
+                self.printer.warn("Command Not Understood. Try Again.", "getTechnique")
                 numput = "not a technique"
         return int(numput)
+    
