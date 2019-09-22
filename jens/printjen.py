@@ -79,13 +79,13 @@ class printjen():
         # DOUBLE ARGUMENT
         self.command("V", "Verbose Settings")
         # SINGLE ARGUMENT 
-        self.command("ANG", "Angle Unit Settings")
+        self.command("N", "Angle Unit Settings")
         # NO ARGUMENT
-        self.command("M", "Print Help Menu")
+        self.command("S", "Save Bertjen Configuration")
         # SINGLE ARGUMENT
         self.command("B", "Calibrate Bertjen")
         # NO ARGUMENT
-        self.command("SAV", "Save Bertjen Configuration")
+        self.command("M", "Print Menu")
         # SINGLE ARGUMENT
         self.command("H", "Help Function")
         # NO ARGUMENT

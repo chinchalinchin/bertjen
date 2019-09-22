@@ -311,7 +311,7 @@ class bertjen:
         # NORMCDF
         elif(args[0] == 6):
             Zscore = self.stat.standardize(float(args[1]), float(args[2]), float(args[3]))
-            outString = f'Normal(x={str(args[1])},{mu}={str(args[2])}, {sigma}={str(args[3])}) = P(Z<{str(Zscore)}) = {str(result)}'
+            outString = f'Normal(x={str(args[1])}, {mu}={str(args[2])}, {sigma}={str(args[3])}) = P(Z<{str(Zscore)}) = {str(result)}'
         # NORMPDF
         elif(args[0] == 7):
             Zscore = self.stat.standardize(float(args[1]), float(args[2]), float(args[3]))

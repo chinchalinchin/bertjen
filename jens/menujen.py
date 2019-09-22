@@ -15,9 +15,9 @@ class menujen:
             "SIN": 17, "ASIN": 18, "TAN": 19, 
             "ACOS": 20, "ATAN": 21, "I": 22, "V": 23,
             "BINPMF": 24, "BINCDF":25, "B": 26,
-            "LOG": 27, "SAV": 28, "H": 29,
+            "LOG": 27, "S": 28, "H": 29,
             "SEC": 30, "CSC": 31, "COT": 32,
-            "ANG": 33,
+            "N": 33,
             "Q" : 99,
         }
         self.unswitcher = {
@@ -28,9 +28,9 @@ class menujen:
             17: "SIN", 18: "ASIN", 19: "TAN",
             20: "ACOS", 21: "ATAN", 22: "I", 23: "V",
             24: "BINPMF", 25: "BINCDF", 26: "B",
-            27: "LOG", 28: "SAV", 29: "H",
+            27: "LOG", 28: "S", 29: "H",
             30: "SEC", 31: "CSC", 32: "COT",
-            33: "ANG",
+            33: "N",
             99: "Q" 
         }
     
@@ -388,6 +388,68 @@ class menujen:
         self.printer.divider()
         self.printer.command("Current Angle Unit", str(self.conf.getAngleUnits()))
         self.printer.divider()
+
+    def printStoreDetails(self, stores, actuals):
+        self.printer.subtitle("Pi Store")
+        act_pi = actuals['actual_pi']
+        n_pi = stores['newtpi_store']
+        l_pi = stores['liebpi_store']
+        self.printer.subtitle("Actual Value (As Calculated By Microsoft Calculator)")
+        self.printer.command("actual_pi", f'{act_pi}')
+        self.printer.subtitle("Approximations")
+        self.printer.command("newtpi_store", f'{str(n_pi)}')
+        self.printer.command("liebpi_store", f'{str(l_pi)}')
+        self.printer.subtitle("Errors")
+        if(n_pi>act_pi):
+            absErr = n_pi - act_pi
+        else:
+            absErr = act_pi - n_pi
+        self.printer.command("newtpi_store absolute error", f'{str(absErr)}')
+        self.printer.command("newtpi_store percentage error", f'{str(absErr*100/act_pi)}%')
+        if(l_pi>act_pi):
+            absErr = l_pi - act_pi
+        else:
+            absErr = act_pi - l_pi
+        self.printer.command("liebpi_store absolute error", f'{str(absErr)}')
+        self.printer.command("liebpi_store percentage error", f'{str(absErr*100/act_pi)}%')
+
+        self.printer.subtitle(f'{self.conf.getSymbol("sq")}2 Store')
+        act_sq_2 = actuals['actual_root_2']
+        n_sq_2 = stores['newtroot_2_store']
+        bin_sq_2 = stores['binroot_2_store']
+        self.printer.subtitle("Actual Value (As Calculated By Microsoft Calculator)")
+        self.printer.command("actual_root_2", f'{str(act_sq_2)}')
+        self.printer.subtitle("Approximations")
+        self.printer.command("newtroot_2_store", f'{str(n_sq_2)}')
+        self.printer.command("binroot_2_store", f'{str(bin_sq_2)}')
+        self.printer.subtitle("Errors")
+        if(n_sq_2>act_sq_2):
+            absErr = n_sq_2 - act_sq_2
+        else:
+            absErr = act_sq_2 - n_sq_2
+        self.printer.command("newtroot_2_store absolute error", f'{str(absErr)}')
+        self.printer.command("newtroot_2_store percentage error", f'{str(absErr*100/act_pi)}%')
+        if(bin_sq_2>act_sq_2):
+            absErr = bin_sq_2 - act_sq_2
+        else:
+            absErr = act_sq_2 - bin_sq_2
+        self.printer.command("liebpi_store absolute error", f'{str(absErr)}')
+        self.printer.command("liebpi_store percentage error", f'{str(absErr*100/act_pi)}%')
+
+        self.printer.subtitle(f'{self.conf.getSymbol("sq")}3 Store')
+        act_sq_3 = actuals['actual_root_3']
+        n_sq_3 = stores['newtroot_3_store']
+        self.printer.subtitle("Actual Value (As Calcualted By Microsoft Calculator)")
+        self.printer.command("actual_root_3", f'{str(act_sq_3)}') 
+        self.printer.subtitle("Approximations")
+        self.printer.command("newtroot_3_store", f'{str(n_sq_3)}')
+        self.printer.subtitle("Errors")
+        if(n_sq_3>act_sq_3):
+            absErr = n_sq_3 - act_sq_3
+        else:
+            absErr = act_sq_3 - n_sq_3
+        self.printer.command("newtroot_3_store absolute error", f'{str(absErr)}')
+        self.printer.command("newtroot_3_store percentage error", f'{str(absErr*100/act_pi)}%')
 
     # Formatted Time Output
     def time(self, flag, start):
