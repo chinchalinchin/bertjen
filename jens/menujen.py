@@ -852,7 +852,7 @@ class menujen:
             stput = self.switch(stput)
             if(stput != "nothing"):
                 self.printer.command("Input", stput)
-                return stput
+                return self.unswitch(stput)
             else:
                 self.printer.warn("Not A Function!", "getFunctionIndex")
 

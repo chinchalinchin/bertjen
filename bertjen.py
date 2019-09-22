@@ -373,7 +373,7 @@ class bertjen:
                 self.printer.warn(f'Angle Unit Setting Unchanged: {self.conf.getAngleUnits()}', "confijen.ANGLE_UNITS")                
         # HELP
         elif(args[0] == 29):
-            self.menu.printFunctionDetails(args[1])
+            self.menu.printFunctionDetails(self.menu.switch(args[1]))
         
         if(not noOutput):
             self.printer.output(outString)
