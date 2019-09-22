@@ -336,7 +336,7 @@ class bertjen:
             outString = f'ln({str(args[1])}) = {str(result)}'
         # BINROOT
         elif(args[0] == 15):
-            outString = f'({str(args[1])})^({str({args[2]})}) = {str(result)}'
+            outString = f'({str(args[1])})^({str(args[2])}) = {str(result)}'
         # COS
         elif(args[0] == 16):
             outString = f'cos({str(args[1])}) = {str(result)}'
