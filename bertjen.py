@@ -1,6 +1,9 @@
 import sys, os
 sys.path.append(os.path.join(sys.path[0], "jens"))
 sys.path.append(os.path.join(sys.path[0], "berts"))
+sys.path.append(os.path.join(sys.path[0], "lollys"))
+sys.path.append(os.path.join(sys.path[0], "gollys"))
+sys.path.append(os.path.join(sys.path[0], "troys"))
 
 from mathbert import mathbert
 from finbert import finbert
@@ -525,13 +528,15 @@ class bertjen:
                     self.printer.warn("Bertjen Info Unchanged!", "confijen.calibrate")
         # SAVE
         elif switchIn == 28:
-            self.printer.bullet("Save Or Forget?")
-            saveFlag = self.menu.getBinaryDecision("Save", "Forget")
+            self.printer.line("Save configuration to gollys/store.json?")
+            saveFlag = self.menu.getBinaryDecision("Yes", "No")
             if saveFlag:
                 self.conf.saveConfiguration(self.math)
                 self.printer.warn("Configuration Saved To File", "config.json")
+                self.printer.warn("Constant Store Saved To File", "store.json")
             else:
                 self.printer.warn("Configuration Not Saved", "config.json")
+                self.printer.warn("Constant Store Not Saved To File", "store.json")
         # ANGLE
         elif switchIn == 33:
             self.menu.printAngleDetails()

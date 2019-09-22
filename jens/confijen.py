@@ -17,8 +17,7 @@ class configuration:
         }
         self.ANGLE_UNITS = {
             0: "RADIANS",
-            1: "DEGREES",
-            2: "GRADIANS"
+            1: "DEGREES"
         }
         self.SYMBOLS = {
             "cap_sigma": '\u03A3',
@@ -32,7 +31,7 @@ class configuration:
         self.configure()
 
     def configure(self):
-        with open('config.json') as json_file:
+        with open('./jens/gollys/config.json') as json_file:
             data = json.load(json_file)
             self.SERIES_ACC = data['SERIES_ACC']
             self.TRIG_ACC = data['TRIG_ACC']
@@ -49,7 +48,12 @@ class configuration:
             self.ANGLE_CHOICE = data['ANGLE_UNITS']
 
     def retrieveConstantStore(self):
-        with open('store.json') as json_file:
+        with open('./jens/gollys/store.json') as json_file:
+            data = json.load(json_file)
+        return data
+
+    def retrieveActualStore(self):
+        with open('./jens/gollys/actual.json') as json_file:
             data = json.load(json_file)
         return data
 
@@ -69,7 +73,7 @@ class configuration:
         data["LAG"] = self.LAG
         data["INTEGRATION_CHOICE"]= self.INTEGRATION_CHOICE
         data["ANGLE_UNITS"] = self.ANGLE_CHOICE
-        with open('config.json', 'w') as outfile:
+        with open('./jens/gollys/config.json', 'w') as outfile:
             json.dump(data, outfile)
         data = {}
         data["e_store"] = myMath.e_store
@@ -78,7 +82,7 @@ class configuration:
         data["newtroot_2_store"] = myMath.newtroot_2_store
         data["newtroot_3_store"] = myMath.newtroot_3_store
         data["binroot_2_store"] = myMath.binroot_2_store
-        with open('store.json', 'w') as outfile:
+        with open('./jens/gollys/store.json', 'w') as outfile:
             json.dump(data, outfile)
 
     def calibrate(self, math, printer):

@@ -7,7 +7,7 @@ class mathbert:
         self.conf = myConfig
         self.printer = myPrinter
         self.initStores()
-        self.loadStores(self.conf.retrieveConstantStore())
+        self.loadStores(self.conf.retrieveConstantStore(), self.conf.retrieveActualStore())
 
     # Initialize Stores For Constants
     def initStores(self):
@@ -15,10 +15,10 @@ class mathbert:
         self.liebpi_store = None
         self.e_store = None
         self.newtroot_2_store = None
-        self.newtroot_3_store= None
+        self.newtroot_3_store = None
         self.binroot_2_store = None
 
-    def loadStores(self, stores):
+    def loadStores(self, stores, actuals):
         if(stores["e_store"]):
             self.e_store = float(stores['e_store'])
         if(stores["newtpi_store"]):
@@ -30,7 +30,17 @@ class mathbert:
         if(stores["newtroot_3_store"]):
             self.newtroot_3_store = float(stores['newtroot_3_store'])
         if(stores["binroot_2_store"]):
-            self.e_store = float(stores['binroot_2_store'])
+            self.binroot_2_store = float(stores['binroot_2_store'])
+        if(actuals['actual_root_2']):
+            self.actual_root_2 = float(actuals['actual_root_2'])
+        if(actuals["actual_pi"]):
+            self.actual_pi = float(actuals['actual_pi'])
+
+    # Calculate percentage and absolute error between bertjen calcuations 
+    # and actual values (as defined by the store.json)
+    def calculateStoreError(self):
+        # TODO: implement
+        return None
 
     # Count Integer Function
     def countFormula(self, n):
@@ -469,27 +479,29 @@ class mathbert:
     # Liebniz's Approximation Of Pi
     def liebPi(self):
         if self.conf.EXTRA_VERBOSE:
-            self.printer.warn("Checking Store for Pi", "mathbert.newtPi")
-        if self.newtpi_store == None:
+            self.printer.warn("Checking Store for Pi", "mathbert.liebPi")
+        if self.liebpi_store == None:
             if self.conf.EXTRA_VERBOSE:
-                self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.newtPi")
+                self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.liebPi")
             sum = 0
             if self.conf.VERBOSE:
-                self.printer.warn(f'Max # Of Iterations: {str(self.conf.LPI_ACC)}', "liebPi")
+                self.printer.warn(f'Max # Of Iterations: {str(self.conf.LPI_ACC)}', "mathbert.liebPi")
             startTime = datetime.datetime.now()
             for index in range(0, self.conf.LPI_ACC):
                 old = sum
                 sum = sum + self.power(-1, index)/(2*index+1)
                 now = datetime.datetime.now()
                 if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                        self.printer.warn("Still Computing", "liebPi")
-                        self.printer.warn(f'Iteration {str(index)}', "liebPi")
-                        self.printer.warn(f'Current Value = {str(sum)}', "liebPi")
+                        self.printer.warn("Still Computing", "mathbert.liebPi")
+                        self.printer.warn(f'Iteration {str(index)}', "mathbert.liebPi")
+                        self.printer.warn(f'Current Value = {str(sum)}', "mathbert.liebPi")
                         startTime = datetime.datetime.now()
                 if old == sum:
                     if self.conf.VERBOSE:
-                        self.printer.warn(f'Halted After {str(index)} Iterations', "liebPi")
+                        self.printer.warn(f'Halted After {str(index)} Iterations', "mathbert.liebPi")
+                    self.liebpi_store = 4*sum
                     return 4*sum
+            self.liebpi_store = 4*sum
             return 4*sum
         else:
             if self.conf.VERBOSE:
