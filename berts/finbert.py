@@ -58,9 +58,11 @@ class finbert:
             value = dK*Probd2 - dS*Probd1
         return value
 
+    # Annuity Immediate Formula
     def annuityImmediate(self, r, n):
         return None
 
+    # Annuity Due Fomrula
     def annuityDue(self, r, n):
         return None
 

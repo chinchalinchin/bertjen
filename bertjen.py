@@ -17,7 +17,7 @@ class bertjen:
     def __init__(self):
         self.printer = printjen()
         self.conf = configuration()
-        self.menu = menujen(self.printer)
+        self.menu = menujen(self.conf, self.printer)
         self.math = mathbert(self.conf, self.printer)
         self.stat = statbert(self.conf, self.printer, self.math)
         self.fin = finbert(self.conf, self.printer, self.math, self.stat)
@@ -25,30 +25,31 @@ class bertjen:
 
     def doProgram(self):
         self.printer.printMenu()
+        self.printer.line("Make A Selection")
         while self.alive:
             rawIn = self.menu.getMenuInput()
+            if(len(rawIn) == 0):
+                self.printer.warn("No Input Provided", "doProgram")
             if(len(rawIn) == 1):
                 if self.conf.EXTRA_VERBOSE:
-                    self.printer.warn(f'No Arguments Provided, Manually Stepping Through Program' ,"doProgram")
+                    self.printer.warn("No Argument Provided, Proceeding Through Function Manually", "doProgram")
                 switchIn = self.menu.switch(rawIn[0])
                 self.doManual(switchIn)
             else: 
                 if self.conf.EXTRA_VERBOSE:
-                    self.printer.warn("Arguments Provided In Line", "doProgram")
-                    self.printer.warn(f'Calling Function {str(rawIn[0])}' ,"doProgram")
+                    self.printer.warn("Argument Provided In Line", "doProgram")
                 rawIn[0] = self.menu.switch(rawIn[0])
                 self.callFunction(rawIn)
 
     def callFunction(self, args):
         result = "error"
-        if(args[0] != 26 and args[0] != 23 and args[0] != 22):
+        noOutput = self.menu.isNoOutput(args[0])
+        if(not noOutput):
             now = self.menu.time(True, None)
-
         # 1 : COMPUTATION
         #################
         if self.conf.EXTRA_VERBOSE:
-            self.printer.warn(f'Step 1 : Computation of {str(self.menu.unswitch(args[0]))}' ,"callFunction")
-
+            self.printer.warn(f'Step 1: Computation Of {self.menu.unswitch(args[0])}')
         try:
             # COUNT
             if(args[0] == 0):
@@ -79,8 +80,8 @@ class bertjen:
                 result = self.math.newtRoot(float(args[1]))
             # BLACKSCHOLES
             elif(args[0] ==12):
-                result = self.fin.BSF(float(args[1]), float(args[2]), float(args[3]), 
-                                        float(args[4]), float(args[5]), float(args[6]), 
+                result = self.fin.BSF(float(args[1]), float(args[2]), float(args[3]),
+                                        float(args[4]), float(args[5]), float(args[6]),
                                         helpjen.switchToBool("Call", "Put", args[7]))
             # LN
             elif(args[0] == 13):
@@ -125,11 +126,11 @@ class bertjen:
             # BERTJEN CALIBRATE
             elif(args[0] == 26):
                 bertFlag = self.conf.calibrate(self.math, self.printer)
-        # 2 : EXCEPTIONS
+        # 1A : EXCEPTIONS
         ################
         except Exception as e:
             if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Step 1A : Handle Exceptions For {str(self.menu.unswitch(args[0]))}' ,"callFunction")
+                self.printer.warn(f'Step 1A : Exception Handling For {self.menu.unswitch(args[0])}')
             # COUNT
             if(args[0] == 0):
                 self.printer.warn(str(e), "mathbert.countFormula")
@@ -203,20 +204,18 @@ class bertjen:
             elif(args[0] == 26):
                 self.printer.warn(str(e), "confijen.calibrate")
         
-        if(args[0] != 26 and args[0] != 23 and args[0] != 22):
+        if(not noOutput):
             self.menu.time(False, now)
 
-        # 3 : RESULTS
-        #############
+        # 2 : FORMAT RESULTS
+        ####################
         outString = "error"
-        capSigma = '\u03A3'
-        sigma = '\u03C3'
-        pi = '\u03C0'
-        mu = '\u03BC'
-        sq = '\u221A'
+        capSigma = self.conf.getSymbol("cap_sigma")
+        sigma = self.conf.getSymbol("sigma")
+        pi = self.conf.getSymbol("pi")
+        mu = self.conf.getSymbol("mu")
+        sq = self.conf.getSymbol("sq")
         # COUNT
-        if self.conf.EXTRA_VERBOSE:
-            self.printer.warn(f'Step 2 : Format Output For {str(self.menu.unswitch(args[0]))}' ,"callFunction")
         if(args[0] == 0):
             outString = f'{capSigma} {str(args[1])} = {str(result)}'
         elif(args[0] == 2):
@@ -229,10 +228,12 @@ class bertjen:
             outString = f'{pi} = {str(result)}'
         # NORMCDF
         elif(args[0] == 6):
-            outString = f'Normal({mu}={str(args[2])}, {sigma}={str(args[3])}, x={str(args[1])}) = {str(result)}'
+            Zscore = self.stat.standardize(float(args[1]), float(args[2]), float(args[3]))
+            outString = f'Normal(x={str(args[1])},{mu}={str(args[2])}, {sigma}={str(args[3])}) = P(Z<{str(Zscore)}) = {str(result)}'
         # NORMPDF
         elif(args[0] == 7):
-            outString = f'Normal\'({mu}={str(args[2])}, {sigma}={str(args[3])}, x={str(args[1])}) = {str(result)}'
+            Zscore = self.stat.standardize(float(args[1]), float(args[2]), float(args[3]))
+            outString = f'Normal\'(x={str(args[1])}, {mu}={str(args[2])}, {sigma}={str(args[3])}) = P(Z={str(Zscore)}) = {str(result)}'
         # NEWTPI
         elif(args[0 ]== 8):
             outString = f'{pi} = {str(result)}'
@@ -284,8 +285,6 @@ class bertjen:
         # INTEGRAL SET
         elif(args[0] == 22):
             if integralFlag:
-                if self.conf.EXTRA_VERBOSE:
-                    self.printer.warn(f'Step 3 : Print Output For {str(self.menu.unswitch(args[0]))}' ,"callFunction")
                 self.printer.warn(f'Integration Technique Changed: {self.conf.getIntegrationTechnique()}',
                                  "confijen.integrationTechnique")
             else:
@@ -293,8 +292,6 @@ class bertjen:
                                 "confijen.integrationTechnique")
         # VERB SET
         elif(args[0] == 23):
-            if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Step 3 : Print Output For {str(self.menu.unswitch(args[0]))}' ,"callFunction")
             if verbChangedFlag:
                 self.printer.warn(f'Verbose Setting Changed: {"Yes" if self.conf.getVerbose() else "No"}', 
                                 "confijen.verbose")
@@ -309,16 +306,16 @@ class bertjen:
                                 "confijen.extraVerbose")
         # BERTJEN CALIBRATE
         elif(args[0] == 26):
-            if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Step 3 : Print Output For {str(self.menu.unswitch(args[0]))}' ,"callFunction")
             if bertFlag:
                 self.printer.warn("Bertjen Info Changed!", "confijen.calibrate")
                 self.menu.printBertjenDetails()
             else:
                 self.printer.warn("Bertjen Info Unchanged!", "confijen.calibrate")                
-        if(args[0] != 26 and args[0] != 23 and args[0] != 22):
-            if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Step 3 : Print Output For {str(self.menu.unswitch(args[0]))}' ,"callFunction")
+        # HELP
+        elif(args[0] == 29):
+            self.menu.printFunctionDetails(self.menu.switch(args[1]))
+        
+        if(not noOutput):
             self.printer.output(outString)
 
     def doManual(self, switchIn):
@@ -339,7 +336,7 @@ class bertjen:
             args.append(n)
         # PRINT MENU
         elif switchIn == 5:
-            self.printer.printMenu()
+            self.menu.printMenu()
         # NORMCDF
         elif switchIn == 6:
             mu = self.menu.getFloat("Please Enter Mean")
@@ -440,7 +437,7 @@ class bertjen:
             args.append(a)
         # INTEGRAl SET
         elif switchIn == 22:
-            self.menu.printIntegrationDetails()
+            self.menu.printIntegrationDetails(self.conf)
             n = self.menu.getTechnique(self.conf)
             changedFlag = self.conf.setIntegrationTechnique(n)
             if changedFlag:
@@ -451,7 +448,7 @@ class bertjen:
                                 "confijen.integrationTechnique")
         # VERBOSE SET
         elif switchIn == 23:
-            self.menu.printVerboseDetails()
+            self.menu.printVerboseDetails(self.conf)
             self.printer.bullet("Verbose?")
             verboseFlag = self.menu.getBinaryDecision("Yes", "No")
             changedFlag = self.conf.setVerbose(verboseFlag)
@@ -461,7 +458,7 @@ class bertjen:
             else:
                 self.printer.warn(f'Verbose Setting Unchanged: {"Yes" if verboseFlag else "No"}', 
                                 "confijen.verbose")
-            self.menu.printExtraVerboseDetails()
+            self.menu.printExtraVerboseDetails(self.conf)
             self.printer.bullet("Extra Verbose?")
             extraVerboseFlag = self.menu.getBinaryDecision("Yes", "No")
             changedFlag = self.conf.setExtraVerbose(extraVerboseFlag)
@@ -473,7 +470,7 @@ class bertjen:
                                 "confijen.extraVerbose")
         # BERTJEN CALIBRATE
         elif switchIn == 26:
-            self.menu.printBertjenDetails()
+            self.menu.printBertjenDetails(self.conf)
             self.printer.bullet("Calibrate Bertjen To System?")
             calibrateFlag = self.menu.getBinaryDecision("Yes", "No")
             if calibrateFlag:
@@ -496,17 +493,18 @@ class bertjen:
                 self.printer.warn("Configuration Saved To File", "config.json")
             else:
                 self.printer.warn("Configuration Not Saved", "config.json")
+        # HELP
+        elif switchIn == 29:
+            func = self.menu.getFunctionIndex()
+            self.menu.printFunctionDetails(func)
         # QUIT
         elif switchIn == 99:
             self.alive = False
         # NOT FOUND
-        else:
+        elif switchIn != 4 and switchIn != 8:
             self.printer.warn("Error. Make Another Selection", "doProgram")
         # IF NOT CONFIGURE FUNCTION, CALL FUNCTION
-        if(switchIn != 99 and switchIn != 28 and switchIn != 26 
-            and switchIn != 23 and switchIn != 22 and switchIn != 5):
-            if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Calling Function {str(self.menu.unswitch(switchIn))}' ,"doProgram")
+        if(switchIn != 99 and switchIn != 28 and (not self.menu.isNoOutput(switchIn))):
             self.callFunction(args)
         self.printer.divider()
 

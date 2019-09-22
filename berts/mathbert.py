@@ -2,27 +2,19 @@ import datetime
 import helpjen
 
 class mathbert:
-    ########################################################################
-    ########################################################################
-    #                     CALCULATOR FUNCTIONS                             #
-    ########################################################################
-    ########################################################################
-    # MATHEMATICAL
-    ########################################################################
-    # Sum First N Natural Numbers Manually
-
+    
     def __init__(self, myConfig, myPrinter):
         self.conf = myConfig
         self.printer = myPrinter
         self.newt_pi_store = None
         self.e_store = None
 
-    # Sum First N Natural Numbers Formulaically
+    # Count Integer Function
     def countFormula(self, n):
         count = n*(n+1)/2
         return count
 
-    # Factorial of a Number
+    # Factorial Function
     def factorial(self, n):
         if(not helpjen.isInt(n)):
             raise Exception("Decimal Factorials Undefined, Consider Using Gamma Function")
@@ -33,7 +25,7 @@ class mathbert:
         else:
             return n*self.factorial(n-1)
 
-    # Power of a Base
+    # Power Function
     def power(self, x, a):
         multi = 1
         if(a != 0):
@@ -43,7 +35,7 @@ class mathbert:
         else:
             return 1
 
-    # Infinite Sum Approximation of Natural Exponent
+    # Taylor Sum Approximation of Natural Exponent
     def exp(self, a):
         if a != 1 or self.e_store == None:
             if self.conf.EXTRA_VERBOSE:
@@ -60,7 +52,7 @@ class mathbert:
                     self.printer.warn("Still Computing", "exp")
                     self.printer.warn(f'Iteration  {str(index)}', "exp")
                     self.printer.warn(f'Current Value {str(sum)}', "exp")
-                startTime = datetime.datetime.now()
+                    startTime = datetime.datetime.now()
                 if(old == sum):
                     if(a == 1):
                         self.e_store = sum
@@ -73,7 +65,7 @@ class mathbert:
         else:
             return self.e_store
 
-    # Infinite Sum Approximation of Sine
+    # Taylor Sum Approximation of Sine
     def sin(self, x):
         sum = 0
         if self.conf.VERBOSE:
@@ -93,10 +85,16 @@ class mathbert:
             if(old == sum):
                 if self.conf.VERBOSE:
                     self.printer.warn(f'Halted After {str(index)} Iterations', "sin")
-                return sum
-        return sum
+                if sum > 1 or sum < -1:
+                    raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+                else:
+                    return sum
+        if sum > 1 or sum < -1:
+            raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+        else:
+            return sum
 
-    # Infinite Series Cosine Approximation
+    # Taylor Series Cosine Approximation
     def cos(self, x):
         sum = 0
         if self.conf.VERBOSE:
@@ -116,10 +114,16 @@ class mathbert:
             if(old == sum):
                 if self.conf.VERBOSE:
                     self.printer.warn(f'Halted After {str(index)} Iterations', "cos")
-                return sum
-        return sum
+                if sum > 1 or sum < -1:
+                    raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+                else:
+                    return sum
+        if sum > 1 or sum < -1:
+            raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+        else:
+            return sum
 
-    # Infinite Series Tangent Approximation
+    # Taylor Series Tangent Approximation
     ## ( Technically )
     def tan(self, x):
         cosine = self.cos(x)
@@ -130,7 +134,7 @@ class mathbert:
             tangent = sine/cosine
             return tangent
 
-    # Infinite Series Arcsine Approximatoin
+    # Taylor Series Arc Sine Approximatoin
     def arcsin(self, x):
         if(x > 1 or x < -1):
             raise Exception("Outside Of Function Range")
@@ -156,6 +160,7 @@ class mathbert:
                     return sum
             return sum
 
+    # Taylor Series Arc Cosine Approximation
     def arccos(self, x):
         if(x > 1 or x < -1):
             raise Exception("Outside Of Function Range")
@@ -164,6 +169,7 @@ class mathbert:
             arcosine = pi/2 - self.arcsin(x)
             return arcosine
 
+    # Taylor Series Arc Tangent Approximation
     def arctan(self, x):
         sum = 0
         if self.conf.VERBOSE:
@@ -233,6 +239,7 @@ class mathbert:
                 return current
         return current
 
+    # Change Of Base Formula Using Taylor Series Exponential Approximation
     def log(self, x, a):
         if x == 0:
             raise Exception("Log Undefined At X = 1")
@@ -243,7 +250,7 @@ class mathbert:
             lnbase = self.naturalLog(a)
             return lnx/lnbase
 
-    # Newton's Method Natural Log Approximation
+    # Halley's Method Natural Log Approximation
     def naturalLog(self, n):
         if n == 0:
             raise Exception("Ln Undefined At X = 1")
@@ -315,7 +322,7 @@ class mathbert:
                 self.printer.warn("Using Pi Stored From Previous Calculations", "newtPi")
             return self.newt_pi_store
    
-    ########################################################################
+    # HELPER FUNCTIONS
       
     # Find Nearest Square
     def nearestPerfectRoot(self, n):
@@ -347,7 +354,7 @@ class mathbert:
                     elif index != 1:
                         return (index-1)
         
-    # Pochhammer Coefficient
+    # Pochhammer Coefficient For Binomial Series
     def pochhammer(self, r, k):
         coeff = 1
         for index in range(0,k):

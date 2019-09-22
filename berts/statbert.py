@@ -8,6 +8,7 @@ class statbert:
         self.printer = myPrinter
         self.norm_root_store = None
 
+    # Binomial Probability Mass Function
     def binomialMass(self, n, p, x):
         if n < 0 :
             raise Exception("Number Of Trials Not Understood")
@@ -22,6 +23,7 @@ class statbert:
             prob = success*failure*comb
         return prob
 
+    # Binomial Cumulative Probability Distribution
     def binomialDistribution(self, n, p, x):
         if n < 0 :
             raise Exception("Number Of Trials Not Understood")
@@ -35,6 +37,7 @@ class statbert:
                 sum = sum + self.binomialMass(n, p, index)
             return sum
 
+    # Normal Probability Density Function
     def normalDensity(self, x, mu, sigma):
         if sigma == 0:
             raise Exception("Variance Undefined")
@@ -51,6 +54,7 @@ class statbert:
             term = self.math.exp(exponent)/(sigma*self.norm_root_store)
             return term
         
+    # Normal Cumulative Probability Function
     def normalDistribution(self, x, mu, sigma):
         # No variance, no distribution
         if sigma == 0:
@@ -206,3 +210,6 @@ class statbert:
                             self.printer.warn(f'Halted After {str(index)} Iterations', "normalIntegral")
                         return current
                 return current
+
+    def standardize(self, x, mu, sigma):
+        return (x-mu)/sigma

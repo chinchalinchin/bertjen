@@ -15,6 +15,13 @@ class configuration:
             2:"TRAPEZOID",
             3: "SIMPSON"
         }
+        self.SYMBOLS = {
+            "cap_sigma": '\u03A3',
+            "sigma" :  '\u03C3',
+            "pi": '\u03C0',
+            "mu" :'\u03BC',
+            "sq": '\u221A'
+        }
         self.configure()
 
     def configure(self):
@@ -105,6 +112,9 @@ class configuration:
 
     def getIntegrationTechnique(self):
         return self.switchTechnique(self.INTEGRATION_CHOICE)
+
+    def getSymbol(self, sym):
+        return self.SYMBOLS.get(sym, "not found")
 
     def setIntegrationTechnique(self, arg):
         if(arg != self.INTEGRATION_CHOICE):

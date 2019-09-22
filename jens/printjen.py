@@ -78,6 +78,8 @@ class printjen():
         self.command("B", "Calibrate Bertjen")
         # NO ARGUMENT
         self.command("SAV", "Save Bertjen Configuration")
+        # SINGLE ARGUMENT
+        self.command("H", "Help Function")
         # NO ARGUMENT
         self.command("Q", "Quit")
         self.divider()
@@ -120,7 +122,7 @@ class printjen():
         print(f'>> {str(cmd)} : {str(msg)}')
 
     def argument(self, arg, msg, which):
-        print(f'--{arg} : {msg}, type: {which} ')
+        print(f'--{arg} : type : {which} :  {msg} ')
 
     def warn(self, msg, comp):
         print(f'>> {str(comp).upper()} !! {str(msg)} !! ')
