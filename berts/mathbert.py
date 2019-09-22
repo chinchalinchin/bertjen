@@ -6,10 +6,31 @@ class mathbert:
     def __init__(self, myConfig, myPrinter):
         self.conf = myConfig
         self.printer = myPrinter
-        self.newt_pi_store = None
+        self.initStores()
+        self.loadStores(self.conf.retrieveConstantStore())
+
+    # Initialize Stores For Constants
+    def initStores(self):
+        self.newtpi_store = None
+        self.liebpi_store = None
         self.e_store = None
         self.newtroot_2_store = None
         self.newtroot_3_store= None
+        self.binroot_2_store = None
+
+    def loadStores(self, stores):
+        if(stores["e_store"]):
+            self.e_store = float(stores['e_store'])
+        if(stores["newtpi_store"]):
+            self.newtpi_store = float(stores['newtpi_store'])
+        if(stores["liebpi_store"]):
+            self.liebpi_store = float(stores['liebpi_store'])
+        if(stores["newtroot_2_store"]):
+            self.newtroot_2_store = float(stores['newtroot_2_store'])
+        if(stores["newtroot_3_store"]):
+            self.newtroot_3_store = float(stores['newtroot_3_store'])
+        if(stores["binroot_2_store"]):
+            self.e_store = float(stores['binroot_2_store'])
 
     # Count Integer Function
     def countFormula(self, n):
@@ -70,8 +91,7 @@ class mathbert:
     # Taylor Sum Approximation of Sine
     ## Defaults to radians
     def sin(self, x):
-
-        # Look for special angles
+        # Get special angles
         x = self.unrevolve(x)
         if(self.conf.ANGLE_CHOICE==0):
             half_rev = self.preferredPi()
@@ -84,6 +104,7 @@ class mathbert:
             eighth_rev = 45
             twelveth_rev = 30
 
+        # Look for inputted special angle
         # SIN of 180, -180, 0, 360, -360
         if(x == half_rev or x == -half_rev or x==0 or x==2*half_rev or x == -2*half_rev):
             return 0
@@ -95,57 +116,59 @@ class mathbert:
             return -1
         # SIN OF 60, -300, 120, -240
         elif(x == sixth_rev or x == -5*sixth_rev or x == 2*sixth_rev or x == -4*sixth_rev):
-            return self.newtRoot(3)/2
+            return self.getPreferredRoot3()/2
         # SIN OF -60, 300, -120, 240
         elif(x == -sixth_rev or x == 5*sixth_rev or x == -2*sixth_rev or x ==4*sixth_rev):
-            return -self.newtRoot(3)/2
+            return -self.getPreferredRoot3()/2
         # SIN OF 45, -315, 135, -225
         elif(x == eighth_rev or x == -7*eighth_rev or x == 3*eighth_rev or x == -5*eighth_rev):
-            return self.newtRoot(2)/2
+            return self.getPreferredRoot2()/2
         # SIN OF -45, 315, -135, 225
         elif(x == -eighth_rev or x == 7*eighth_rev or x == -3*eighth_rev or x == 5*eighth_rev):
-            return -self.newtRoot(2)/2
-        # SIN OF 30, -330
-        # SIN OF -30, 330
-        # SIN OF 150, -210
-        # SIN OF -150, 210
-
-
-        # Infinte Series Assumes Radians   
-        if(self.conf.ANGLE_CHOICE == 1):
-            x = self.degToRad(x)
-        
-        # Approximate
-        sum = 0
-        if self.conf.VERBOSE:
-            self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "sin")
-        startTime = datetime.datetime.now()
-        for index in range(0, int(2*self.conf.TRIG_ACC)):
-            old = sum
-            num = self.power(-1, index)*self.power(x, 2*index+1)
-            den = self.factorial(2*index+1)
-            sum = sum + num/den
-            now = datetime.datetime.now()
-            if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                self.printer.warn("Still Computing", "sin")
-                self.printer.warn(f'Iteration  {str(index)}', "sin")
-                self.printer.warn(f'Current Value {str(sum)}', "sin")
-                startTime = datetime.datetime.now()
-            if(old == sum):
-                if self.conf.VERBOSE:
-                    self.printer.warn(f'Halted After {str(index)} Iterations', "sin")
-                if sum > 1 or sum < -1:
-                    raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
-                else:
-                    return sum
-        if sum > 1 or sum < -1:
-            raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+            return -self.getPreferredRoot2()/2
+        # SIN OF 30, -330, 150, -210
+        elif(x == twelveth_rev or x == -11*twelveth_rev or x == 5*twelveth_rev or x == -7*twelveth_rev):
+            return 0.5
+        # SIN OF -30, 330, -150, 210
+        elif(x== -twelveth_rev or x == 11*twelveth_rev or x == -5*twelveth_rev or x == 7*twelveth_rev):
+            return -0.5
         else:
-            return sum
+            # No special angle inputted, use approximation
+            # Infinte series assumes radians   
+            if(self.conf.ANGLE_CHOICE == 1):
+                x = self.degToRad(x)
+            
+            # Approximate
+            sum = 0
+            if self.conf.VERBOSE:
+                self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "sin")
+            startTime = datetime.datetime.now()
+            for index in range(0, int(2*self.conf.TRIG_ACC)):
+                old = sum
+                num = self.power(-1, index)*self.power(x, 2*index+1)
+                den = self.factorial(2*index+1)
+                sum = sum + num/den
+                now = datetime.datetime.now()
+                if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
+                    self.printer.warn("Still Computing", "sin")
+                    self.printer.warn(f'Iteration  {str(index)}', "sin")
+                    self.printer.warn(f'Current Value {str(sum)}', "sin")
+                    startTime = datetime.datetime.now()
+                if(old == sum):
+                    if self.conf.VERBOSE:
+                        self.printer.warn(f'Halted After {str(index)} Iterations', "sin")
+                    if sum > 1 or sum < -1:
+                        raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+                    else:
+                        return sum
+            if sum > 1 or sum < -1:
+                raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+            else:
+                return sum
 
     # Taylor Series Cosine Approximation
     def cos(self, x):
-
+        # Get special angles
         if(self.conf.ANGLE_CHOICE==0):
             half_rev = self.preferredPi()
             sixth_rev = self.preferredPi()/3
@@ -157,44 +180,50 @@ class mathbert:
             eighth_rev = 45
             twelveth_rev = 30
 
+        # Look for inputted special angles
+        # COS of 180, -180
         if(x == half_rev or x == -half_rev):
             return -1
+        # COS of 90, - 270, -90, 270
         elif(x== half_rev/2 or x ==-3*half_rev/2 or x == 3*half_rev/2 or x == -half_rev/2):
             return 0
+        # COS of 0, 360, -360
         elif(x==0 or x==2*half_rev or x == -2*half_rev):
             return 1
-
-        # Infinite series assumes radians
-        if(self.conf.ANGLE_CHOICE == 1):
-            x = self.degToRad(x)
-
-        # Approximate
-        sum = 0
-        if self.conf.VERBOSE:
-            self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "cos")
-        startTime = datetime.datetime.now()
-        for index in range(0, int(2*self.conf.TRIG_ACC)):
-            old = sum
-            num = self.power(-1, index)*self.power(x, 2*index)
-            den = self.factorial(2*index)
-            sum = sum + num/den
-            now = datetime.datetime.now()
-            if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                self.printer.warn("Still Computing", "cos")
-                self.printer.warn(f'Iteration {str(index)}', "cos")
-                self.printer.warn(f'Current Value {str(sum)}', "cos")
-                startTime = datetime.datetime.now()
-            if(old == sum):
-                if self.conf.VERBOSE:
-                    self.printer.warn(f'Halted After {str(index)} Iterations', "cos")
-                if sum > 1 or sum < -1:
-                    raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
-                else:
-                    return sum
-        if sum > 1 or sum < -1:
-            raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+        # TODO: Look for more special angles
         else:
-            return sum
+            # No special angle found, use approximation
+            # Infinite series assumes radians
+            if(self.conf.ANGLE_CHOICE == 1):
+                x = self.degToRad(x)
+
+            # Approximate
+            sum = 0
+            if self.conf.VERBOSE:
+                self.printer.warn(f'Max # Of Iterations: {str(2*self.conf.TRIG_ACC)}', "cos")
+            startTime = datetime.datetime.now()
+            for index in range(0, int(2*self.conf.TRIG_ACC)):
+                old = sum
+                num = self.power(-1, index)*self.power(x, 2*index)
+                den = self.factorial(2*index)
+                sum = sum + num/den
+                now = datetime.datetime.now()
+                if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
+                    self.printer.warn("Still Computing", "cos")
+                    self.printer.warn(f'Iteration {str(index)}', "cos")
+                    self.printer.warn(f'Current Value {str(sum)}', "cos")
+                    startTime = datetime.datetime.now()
+                if(old == sum):
+                    if self.conf.VERBOSE:
+                        self.printer.warn(f'Halted After {str(index)} Iterations', "cos")
+                    if sum > 1 or sum < -1:
+                        raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+                    else:
+                        return sum
+            if sum > 1 or sum < -1:
+                raise Exception(f'Not Enough Terms: {2*(self.conf.TRIG_ACC)} To Approximate Input: {x}')
+            else:
+                return sum
 
     # Taylor Series Tangent Approximation
     ## ( Technically )
@@ -368,6 +397,13 @@ class mathbert:
         if(x < 0 or x > 2):
             raise Exception("Outside Radius of Convergenece")
         if self.conf.VERBOSE:
+            self.printer.warn("Checking Stores For Common Roots")
+        if(x == 2 and r == 0.5 and self.binroot_2_store != None):
+            if self.conf.VERBOSE:
+                self.printer.warn(f'Using {self.conf.getSymbol("sq")}2 Stored From Previous Calculations',
+                                    "mathbert.binRoot")
+            return self.binroot_2_store
+        if self.conf.VERBOSE:
             self.printer.warn(f'Max # Of Iterations: {str(self.conf.ROOT_ACC)}', "binRoot")
         current = 0
         startTime = datetime.datetime.now()
@@ -386,7 +422,11 @@ class mathbert:
             if(old == current):
                 if self.conf.VERBOSE:
                     self.printer.warn(f'Halted After {str(index)} Iterations', "binRoot")
+                if(x == 2 and r == 0.5):
+                    self.binroot_2_store = current
                 return current
+        if(x == 2 and r == 0.5):
+            self.binroot_2_store = current
         return current
 
     # Change Of Base Formula Using Taylor Series Exponential Approximation
@@ -428,30 +468,39 @@ class mathbert:
 
     # Liebniz's Approximation Of Pi
     def liebPi(self):
-        sum = 0
-        if self.conf.VERBOSE:
-            self.printer.warn(f'Max # Of Iterations: {str(self.conf.LPI_ACC)}', "liebPi")
-        startTime = datetime.datetime.now()
-        for index in range(0, self.conf.LPI_ACC):
-            old = sum
-            sum = sum + self.power(-1, index)/(2*index+1)
-            now = datetime.datetime.now()
-            if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                    self.printer.warn("Still Computing", "liebPi")
-                    self.printer.warn(f'Iteration {str(index)}', "liebPi")
-                    self.printer.warn(f'Current Value = {str(sum)}', "liebPi")
-                    startTime = datetime.datetime.now()
-            if old == sum:
-                if self.conf.VERBOSE:
-                    self.printer.warn(f'Halted After {str(index)} Iterations', "liebPi")
-                return 4*sum
-        return 4*sum
+        if self.conf.EXTRA_VERBOSE:
+            self.printer.warn("Checking Store for Pi", "mathbert.newtPi")
+        if self.newtpi_store == None:
+            if self.conf.EXTRA_VERBOSE:
+                self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.newtPi")
+            sum = 0
+            if self.conf.VERBOSE:
+                self.printer.warn(f'Max # Of Iterations: {str(self.conf.LPI_ACC)}', "liebPi")
+            startTime = datetime.datetime.now()
+            for index in range(0, self.conf.LPI_ACC):
+                old = sum
+                sum = sum + self.power(-1, index)/(2*index+1)
+                now = datetime.datetime.now()
+                if (self.conf.VERBOSE and now-startTime > datetime.timedelta(seconds=self.conf.LAG)):
+                        self.printer.warn("Still Computing", "liebPi")
+                        self.printer.warn(f'Iteration {str(index)}', "liebPi")
+                        self.printer.warn(f'Current Value = {str(sum)}', "liebPi")
+                        startTime = datetime.datetime.now()
+                if old == sum:
+                    if self.conf.VERBOSE:
+                        self.printer.warn(f'Halted After {str(index)} Iterations', "liebPi")
+                    return 4*sum
+            return 4*sum
+        else:
+            if self.conf.VERBOSE:
+                self.printer.warn("Using Pi Stored From Previous Calculations", "mathbert.newtPi")
+            return self.liebpi_store
 
     # Newton's Approximation of Pi
     def newtPi(self):
         if self.conf.EXTRA_VERBOSE:
             self.printer.warn("Checking Store for Pi", "mathbert.newtPi")
-        if self.newt_pi_store == None:
+        if self.newtpi_store == None:
             if self.conf.EXTRA_VERBOSE:
                 self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.newtPi")
             sum = 0
@@ -463,21 +512,26 @@ class mathbert:
                 if old == sum:
                     if self.conf.VERBOSE:
                         self.printer.warn(f'Halted After {str(index)} Iterations', "mathbert.newtPi")
-                    self.newt_pi_store = 2*sum
+                    self.newtpi_store = 2*sum
                     return 2*sum
-            self.newt_pi_store = 2*sum
+            self.newtpi_store = 2*sum
             return 2*sum
         else:
             if self.conf.VERBOSE:
                 self.printer.warn("Using Pi Stored From Previous Calculations", "mathbert.newtPi")
-            return self.newt_pi_store
+            return self.newtpi_store
    
     # HELPER FUNCTIONS
       
     # Preferred Pi
     def preferredPi(self):
-        #TODO: Config preferred by with confijen and config.json
         return self.newtPi()
+
+    def preferredRoot2(self):
+        return self.newtRoot(2)
+
+    def preferredRoot3(self):
+        return self.newtRoot(3)
 
     # Find Nearest Square
     def nearestPerfectRoot(self, n):

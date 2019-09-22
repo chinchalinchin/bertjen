@@ -48,7 +48,12 @@ class configuration:
             self.INTEGRATION_CHOICE= data['INTEGRATION_CHOICE']
             self.ANGLE_CHOICE = data['ANGLE_UNITS']
 
-    def saveConfiguration(self):
+    def retrieveConstantStore(self):
+        with open('store.json') as json_file:
+            data = json.load(json_file)
+        return data
+
+    def saveConfiguration(self, myMath):
         data = {}
         # data['config'] = []
         data["SERIES_ACC"] = self.SERIES_ACC
@@ -66,7 +71,15 @@ class configuration:
         data["ANGLE_UNITS"] = self.ANGLE_CHOICE
         with open('config.json', 'w') as outfile:
             json.dump(data, outfile)
-        return None
+        data = {}
+        data["e_store"] = myMath.e_store
+        data["newtpi_store"] = myMath.newtpi_store
+        data["liebpi_store"] = myMath.liebpi_store
+        data["newtroot_2_store"] = myMath.newtroot_2_store
+        data["newtroot_3_store"] = myMath.newtroot_3_store
+        data["binroot_2_store"] = myMath.binroot_2_store
+        with open('store.json', 'w') as outfile:
+            json.dump(data, outfile)
 
     def calibrate(self, math, printer):
         flag1 = self.calibrateTrig(math, printer)

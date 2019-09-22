@@ -35,8 +35,14 @@ class bertjen:
     #       C: Add to Output Formatting
     #       D: Add to Output or Prevent Output
     #
-    # TODO: degree/radian setting, implement in trig functions
+    # TODO: create mathematical constant store in store.json
+    #       -introduce store function in confijen that receives
+    #       -mathbert and outputs stores to file.
+    #       -call at same time as sav function!
     # TODO: function recursion, i.e. cos(newtPi()) or 'cos npi' from line
+    # TODO: Config preferredPi, preferredRoot2, preferredRoot3
+    #        with confijen and config.json.
+    # TODO: Allow preferences to be set with new admin function
 
     def __init__(self):
         self.printer = printjen()
@@ -522,7 +528,7 @@ class bertjen:
             self.printer.bullet("Save Or Forget?")
             saveFlag = self.menu.getBinaryDecision("Save", "Forget")
             if saveFlag:
-                self.conf.saveConfiguration()
+                self.conf.saveConfiguration(self.math)
                 self.printer.warn("Configuration Saved To File", "config.json")
             else:
                 self.printer.warn("Configuration Not Saved", "config.json")
