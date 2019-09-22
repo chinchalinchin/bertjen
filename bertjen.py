@@ -35,7 +35,7 @@ class bertjen:
     #       C: Add to Output Formatting
     #       D: Add to Output or Prevent Output
     #
-    # TODO: degree/radian setting
+    # TODO: degree/radian setting, implement in trig functions
     # TODO: function recursion, i.e. cos(newtPi()) or 'cos npi' from line
 
     def __init__(self):
@@ -46,6 +46,33 @@ class bertjen:
         self.stat = statbert(self.conf, self.printer, self.math)
         self.fin = finbert(self.conf, self.printer, self.math, self.stat)
         self.alive = True
+
+    # Import mathbert from bertjen so it may be configured properly
+    def getMathbert(self):
+        myPrinter = printjen()
+        myConf = configuration()
+        # todo turn off verbose settings in configruation
+        myMath = mathbert(myConf, myPrinter)
+        return myMath
+    
+    # Import statbert from bertjen so it may be configured properly
+    def getStatbert(self):
+        myPrinter = printjen()
+        myConf = configuration()
+        # todo turn off verbose settings in configruation
+        myMath = mathbert(myConf, myPrinter)
+        myStat = statbert(myConf, myPrinter, myMath)
+        return myStat
+
+    # Import finbert from bertjen so it may be configured properly
+    def getFinbert(self):
+        myPrinter = printjen()
+        myConf = configuration()
+        # todo turn off verbose settings in configruation
+        myMath = mathbert(myConf, myPrinter)
+        myStat = statbert(myConf, myPrinter, myMath)
+        myFin = finbert(myConf, myPrinter, myMath, myStat)
+        return self.fin
 
     def doProgram(self):
         self.printer.printMenu()
