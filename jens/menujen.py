@@ -264,21 +264,6 @@ class menujen:
             self.printer.argument("x", "Scalar whose arc tangent is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # INTEGRAL SET
-        elif(which == 22):
-            self.printer.line("Configures the integration technique used to approximate integrals")
-            self.printer.subtitle("Arguments")
-            self.printer.argument("t", "Technique to be used", "int")
-            self.printer.subtitle("Notes")
-            self.printer.warn("Check Integration with 'I' to see integration techniques", "confijen")
-        # VERB SET
-        elif(which == 23):
-            self.printer.line("Configures the verbose settings for Bertjen")
-            self.printer.subtitle("Arguments")
-            self.printer.argument("v", "Verbose setting", "YES/NO")
-            self.printer.argument("x", "Extra verbose setting", "YES/NO")
-            self.printer.subtitle("Notes")
-            self.printer.warn("Check Verbose Settings with 'V'", "confijen")
         # BINPMF
         elif(which == 24):
             self.printer.line("Computes the binomial probability mass --x P(X=x) for a")
@@ -297,15 +282,30 @@ class menujen:
             self.printer.argument("n", "Number of trials", "int")
             self.printer.argument("p", "Probability of success", "float")
             self.printer.argument("x", "Desired cumulative probability", "int")
-        # BERTJEN CALIBRATE
-        elif(which == 26):
-            self.printer.line("Calibrates Bertjen to System settings")
-            self.printer.line("c", "Configure Bertjen", "YES/NO")
         # LOG
         elif(which == 27):
             self.printer.line("Computes the logarithm of --x for a given base --b")
             self.printer.line("using the change of base formula and the Halley's method")
             self.printer.line("approximation for natural logs")
+            # INTEGRAL SET
+        elif(which == 22):
+            self.printer.line("Configures the integration technique used to approximate integrals")
+            self.printer.subtitle("Arguments")
+            self.printer.argument("t", "Technique to be used", "int")
+            self.printer.subtitle("Notes")
+            self.printer.warn("Check Integration with 'I' to see integration techniques", "confijen")
+        # VERB SET
+        elif(which == 23):
+            self.printer.line("Configures the verbose settings for Bertjen")
+            self.printer.subtitle("Arguments")
+            self.printer.argument("v", "Verbose setting", "YES/NO")
+            self.printer.argument("x", "Extra verbose setting", "YES/NO")
+            self.printer.subtitle("Notes")
+            self.printer.warn("Check Verbose Settings with 'V'", "confijen")
+            # BERTJEN CALIBRATE
+        elif(which == 26):
+            self.printer.line("Calibrates Bertjen to System settings")
+            self.printer.line("c", "Configure Bertjen", "YES/NO")
         # SAVE
         elif(which == 28):
             self.printer.line("Saves the current Bertjen configuration")
@@ -475,6 +475,13 @@ class menujen:
     #   NORMCDF(6), NORMPDF(7)
     def isNormalFunction(self, firstIn):
         return firstIn == 6 or firstIn ==7
+
+    # ADMIN FUNCTIONS
+    #   MENU(5), INTEGRATION(22), VERBOSE(23), SAVE(28), HELP(29), 
+    #   ANG(33), QUIT(99)
+    def isAdminFunction(self, firstIn):
+        return (firstIn == 5 or firstIn == 22 or firstIn == 23 or firstIn == 28
+                or firstIn == 29 or firstIn == 33 or firstIn == 99)
 
     # Retrieve Valid Menu Input From User
     def getMenuInput(self):
