@@ -541,7 +541,7 @@ class menujen:
                                 # STEP 2A-1-1d: GET STRING INPUT FOR STRING VALUED FUNCTIONS
                                 elif(stringArg):
                                     if(firstIn == 29):
-                                        menput[1] = self.getFunctionIndex()
+                                        menput[1] = self.unswitch(self.getFunctionIndex())
                                         return menput
                             ####################################            
                             # STEP 2B: VERIFY INPUT MATCHES TYPE
@@ -577,10 +577,10 @@ class menujen:
                                         return menput
                                 # STEP 2B-1-2d: VERIFY STRING INPUT
                                 elif(stringArg):
-                                    if( firstIn == 29):
+                                    if(firstIn == 29):
                                         if(self.switch(menput[1]) == "nothing"):
                                             self.printer.warn("Input Not Understood", "menujen.getMenuInput")
-                                            self.getFunctionIndex()
+                                            menput[1] = self.getFunctionIndex()
                                             return menput
                                         else:
                                             return menput
@@ -848,7 +848,7 @@ class menujen:
         self.printer.line("Select A Function")
         stput = "nothing"
         while(stput == "nothing"):
-            stput =  input("<< ")
+            stput =  input("<< ").upper()
             stput = self.switch(stput)
             if(stput != "nothing"):
                 self.printer.command("Input", stput)
