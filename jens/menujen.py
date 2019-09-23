@@ -4,160 +4,97 @@ import sys
 
 class menujen:
 
-    def __init__(self, myConf, myPrinter):
+    def __init__(self, myConf, myPrinter, myIdent):
         self.conf = myConf
         self.printer = myPrinter
-        self.switcher = {
-            "CF": 0,"E": 2,"F": 3,"LPI":4, 
-            "M": 5, "NORMCDF": 6, "NORMPDF": 7,
-            "NPI": 8, "P": 9, "SQ": 11, "BS": 12,
-            "LN": 13, "ROOT": 15, "COS": 16, 
-            "SIN": 17, "ASIN": 18, "TAN": 19, 
-            "ACOS": 20, "ATAN": 21, "I": 22, "V": 23,
-            "BINPMF": 24, "BINCDF":25, "B": 26,
-            "LOG": 27, "S": 28, "H": 29,
-            "SEC": 30, "CSC": 31, "COT": 32,
-            "N": 33,
-            "Q" : 99,
-        }
-        self.unswitcher = {
-            0: "CF", 2: "E", 2: "LPI",
-            5: "M", 6: "NORMCDF", 7:"NORMPDF",
-            8: "NPI", 9: "P", 11: "SQ", 12: "BS",
-            13: "LN", 15: "ROOT", 16: "COS",
-            17: "SIN", 18: "ASIN", 19: "TAN",
-            20: "ACOS", 21: "ATAN", 22: "I", 23: "V",
-            24: "BINPMF", 25: "BINCDF", 26: "B",
-            27: "LOG", 28: "S", 29: "H",
-            30: "SEC", 31: "CSC", 32: "COT",
-            33: "N",
-            99: "Q" 
-        }
-    
-    # Manual Switch
-    def switch(self, arg):
-        return self.switcher.get(arg, "nothing")
-    
-    def unswitch(self, arg):
-        return self.unswitcher.get(arg, "nothing")
+        self.ident = myIdent
 
     def printFunctionTitle(self, which):
-        # COUNT
-        if(which == 0):
+        if(which == self.ident.switch("CF")):
             self.printer.subtitle("Sum Of First N Integers Function")
-        # EXP
-        elif(which == 2):
+        elif(which == self.ident.switch("E")):
             self.printer.subtitle("Taylor Series Exponential Approximation")
-        # FACT
-        elif(which == 3):
+        elif(which == self.ident.switch("F")):
             self.printer.subtitle("Factorial Function")
-        # LIEBPI
-        elif(which == 4):
+        elif(which == self.ident.switch("LPI")):
             self.printer.subtitle("Liebniz's Infinite Series Pi Approximation")
-        # NORMCDF
-        elif(which == 6):
+        elif(which == self.ident.switch("NORMCDF")):
             self.printer.subtitle("Normal Cumulative Probability Distribution Function")
-        # NORMPDF
-        elif(which == 7):
+        elif(which == self.ident.switch("NORMPDF")):
             self.printer.subtitle("Normal Probability Density Function")
-        # NEWTPI
-        elif(which == 8):
+        elif(which == self.ident.switch("NPI")):
             self.printer.subtitle("Newton's Infinite Series Pi Approximation")
-        # POWER
-        elif(which == 9):
+        elif(which == self.ident.switch("P")):
             self.printer.subtitle("Power Function")
-        # SQ
-        elif(which == 11):
+        elif(which == self.ident.switch("SQ")):
             self.printer.subtitle("Newton's Method Square Root Approximation")
-        # BLACKSCHOLES
-        elif(which == 12):
+        elif(which == self.ident.switch("BS")):
             self.printer.subtitle("Black Scholes Option Value Functoin")
-        # LN
-        elif(which == 13):
+        elif(which == self.ident.switch("LN")):
             self.printer.subtitle("Halley's Method Natural Log Approximation")
-        # BINROOT
-        elif(which == 15):
+        elif(which == self.ident.switch("ROOT")):
             self.printer.subtitle("Binomial Series Root Approximation")
-        # COS
-        elif(which == 16):
+        elif(which == self.ident.switch("COS")):
             self.printer.subtitle("Taylor Series Cosine Approximation")
-        # SIN
-        elif(which == 17):
+        elif(which == self.ident.switch("SIN")):
             self.printer.subtitle("Taylor Series Sine Approximation")
-        # ASIN
-        elif(which == 18):
+        elif(which == self.ident.switch("ASIN")):
             self.printer.subtitle("Taylor Series Arc Sine Approximation")
-        # TAN
-        elif(which == 19):
+        elif(which == self.ident.switch("TAN")):
             self.printer.subtitle("Taylor Series Tangent Approximation")
-        # ACOS
-        elif(which == 20):
+        elif(which == self.ident.switch("ACOS")):
             self.printer.subtitle("Taylor Series Arc Cosine Approximation")
-        # ATAN
-        elif(which == 21):
+        elif(which == self.ident.switch("ATAN")):
             self.printer.subtitle("Taylor Series Arc Tangent Approximation")
-        # INTEGRAL SET
-        elif(which == 22):
+        elif(which == self.ident.switch("I")):
             self.printer.subtitle("Integral Approximation Technique")
-        # VERB SET
-        elif(which == 23):
+        elif(which == self.ident.switch("V")):
             self.printer.subtitle("Verbose Settings")
-        # BINPMF
-        elif(which == 24):
+        elif(which == self.ident.switch("BINPMF")):
             self.printer.subtitle("Binomial Probability Mass Function")
-        # BINCDF
-        elif(which == 25):
+        elif(which == self.ident.switch("BINCDF")):
             self.printer.subtitle("Binomial Cumulative Probability Distribution Function")
-        # BERTJEN CALIBRATE
-        elif(which == 26):
+        elif(which == self.ident.switch("B")):
             self.printer.subtitle("Bertjen Settings Calibration")
-        # LOG
-        elif(which == 27):
+        elif(which == self.ident.switch("LOG")):
             self.printer.subtitle("Logarithm Function")
-        # SAVE
-        elif(which == 28):
+        elif(which == self.ident.switch("S")):
             self.printer.subtitle("Save Bertjen Configuration")
-        # HELP
-        elif(which == 29):
+        elif(which == self.ident.switch("H")):
             self.printer.subtitle("Help Function")
-        elif(which == 30):
+        elif(which == self.ident.switch("SEC")):
             self.printer.subtitle("Taylor Series Secant Approximation")
-        elif(which == 31):
+        elif(which == self.ident.switch("CSC")):
             self.printer.subtitle("Taylor Series Cosecant Approximation")
-        elif(which == 32):
+        elif(which == self.ident.switch("COT")):
             self.printer.subtitle("Taylor Series Cotangent Approximation")
-        elif(which == 33):
+        elif(which == self.ident.switch("N")):
             self.printer.subtitle("Angle Unit Settings")
 
     def printFunctionDetails(self, which):
         self.printFunctionTitle(which)
         self.printer.divider()
         self.printer.subtitle("Description")
-         # COUNT
-        if(which == 0):
+        if(which == self.ident.switch("CF")):
             self.printer.line("Sums up the first --n integers")
             self.printer.subtitle("Arguments")
             self.printer.argument("n", "Number of integers to be summed", "int")
-        # EXP
-        elif(which == 2):
+        elif(which == self.ident.switch("E")):
             self.printer.line("Raises e to the specific power --x")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "power e is raised to", "float")
             self.printer.warn("Check Bertjen Configuration with 'B' to see loop iteration settings", "confijen")
-        # FACT
-        elif(which == 3):
+        elif(which == self.ident.switch("F")):
             self.printer.line("Computes the factorial of the specified integer --n")
             self.printer.subtitle("Arguments")
             self.printer.argument("n", "Number of factorial", "int")
-        # LIEBPI
-        elif(which == 4):
+        elif(which == self.ident.switch("LPI")):
             self.printer.line("Approximates pi with Liebniz's infinite series approximation")
             self.printer.subtitle("Arguments")
             self.printer.argument("none", "n/a", "null")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # NORMCDF
-        elif(which == 6):
+        elif(which == self.ident.switch("NORMCDF")):
             self.printer.line(f'Computes a normal probability --x P(X<x) for a given mean')
             self.printer.line(f'--{self.conf.getSymbol("mu")} and standard deviation --{self.conf.getSymbol("sigma")}')
             self.printer.subtitle("Arguments")
@@ -166,36 +103,31 @@ class menujen:
             self.printer.argument(f'{self.conf.getSymbol("sigma")}', "Standard deviation", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # NORMPDF
-        elif(which == 7):
+        elif(which == self.ident.switch("NORMPDF")):
             self.printer.line(f'Computes a normal density --x P(X=x) for a given mean')
             self.printer.line(f'--{self.conf.getSymbol("mu")} and standard deviation --{self.conf.getSymbol("sigma")}')
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Desired density", "float")
             self.printer.argument(f'{self.conf.getSymbol("mu")}', "Mean", "float")
             self.printer.argument(f'{self.conf.getSymbol("sigma")}', "Standard deviation", "float")
-        # NEWTPI
-        elif(which == 8):
+        elif(which == self.ident.switch("NPI")):
             self.printer.line("Approximates pi with Newton's infinte series approximation")
             self.printer.subtitle("Arguments")
             self.printer.argument("none", "n/a", "null")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # POWER
-        elif(which == 9):
+        elif(which == self.ident.switch("P")):
             self.printer.line("Raises a specified base --b to a specified power --a")
             self.printer.subtitle("Arguments")
             self.printer.argument("b", "Base", "float")
             self.printer.argument("a", "Exponent", "int")
-        # SQ
-        elif(which == 11):
+        elif(which == self.ident.switch("SQ")):
             self.printer.line("Approximates the square root of input --x using Newton's Method")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Root to be taken", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # BLACKSCHOLES
-        elif(which == 12):
+        elif(which == self.ident.switch("BS")):
             self.printer.line("Uses the Black-Scholes formula to calculate the theoretical")
             self.printer.line("value of an option given observed market data")
             self.printer.subtitle("Arguments")
@@ -206,15 +138,13 @@ class menujen:
             self.printer.argument(f'{self.conf.getSymbol("sigma")}', "Implied volatility, annual", "float")
             self.printer.argument("t", "Time to expiration, years", "float")
             self.printer.argument("opt", "Type of option", "string: 'Call'/'Put'")
-        # LN
-        elif(which == 13):
+        elif(which == self.ident.switch("LN")):
             self.printer.line("Approximates natural log of input --x using Halley's method")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Natural log to be taken", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # BINROOT
-        elif(which == 15):
+        elif(which == self.ident.switch("ROOT")):
             self.printer.line("Approximates the nth root --r of input --n using a binomial series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Number whose root is to be found", "float")
@@ -222,56 +152,49 @@ class menujen:
             self.printer.subtitle("Notes")
             self.printer.warn("Interval of Convergence [0, 2]", "mathbert.binRoot")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
-        # COS
-        elif(which == 16):
+        elif(which == self.ident.switch("COS")):
             self.printer.line("Approximates the cosine of input --x using a Taylor series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Angle whose cosine is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
             self.printer.warn("Defaults to radians", "mathbert.cos")
-        # SIN
-        elif(which == 17):
+        elif(which == self.ident.switch("SIN")):
             self.printer.line("Approximates the sine of input --x using a Taylor series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Angle whose sine is to be found" , "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
             self.printer.warn("Defaults to radians", "mathbert.sin")
-        # ASIN
-        elif(which == 18):
+        elif(which == self.ident.switch("ASIN")):
             self.printer.line("Approximates the arc sine of input --x using a Taylor series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Scalar whose arc sine is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
             self.printer.warn("Defaults to radians", "mathbert.asin")
-        # TAN
-        elif(which == 19):
+        elif(which == self.ident.switch("TAN")):
             self.printer.line("Approximates the tangent of input --x using a Taylor series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Angle whose tangent is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
             self.printer.warn("Defaults to radians", "mathbert.tan")
-        # ACOS
-        elif(which == 20):
+        elif(which == self.ident.switch("ACOS")):
             self.printer.line("Approximates the arc cosine of input --x using a Taylor series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Scalar whose arc cosine is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
             self.printer.warn("Defaults to radians", "mathbert.acos")
-        # ATAN
-        elif(which == 21):
+        elif(which == self.ident.switch("ATAN")):
             self.printer.line("Approximates the arc tangent of input --x using a Taylor series")
             self.printer.subtitle("Arguments")
             self.printer.argument("x", "Scalar whose arc tangent is to be found", "float")
             self.printer.subtitle("Notes")
             self.printer.warn("Check config with 'B' to see iteration settings", "confijen")
             self.printer.warn("Defaults to radians", "mathbert.tan")
-        # BINPMF
-        elif(which == 24):
+        elif(which == self.ident.switch("BINPMF")):
             self.printer.line("Computes the binomial probability mass --x P(X=x) for a")
             self.printer.line("given binomial distribution with probability of success")
             self.printer.line("--p and number of trials --n")
@@ -279,8 +202,7 @@ class menujen:
             self.printer.argument("n", "Number of trials", "int")
             self.printer.argument("p", "Probability of success", "float")
             self.printer.argument("x", "Desired probability mass", "int")
-        # BINCDF
-        elif(which == 25):
+        elif(which == self.ident.switch("BINCDF")):
             self.printer.line("Computes the binomial cumulative probability--x P(X<=x)")
             self.printer.line("for a given binomial distribution with probability of")
             self.printer.line("success --p and number of trials --n")
@@ -288,40 +210,33 @@ class menujen:
             self.printer.argument("n", "Number of trials", "int")
             self.printer.argument("p", "Probability of success", "float")
             self.printer.argument("x", "Desired cumulative probability", "int")
-        # LOG
-        elif(which == 27):
+        elif(which == self.ident.switch("LOG")):
             self.printer.line("Computes the logarithm of --x for a given base --b")
             self.printer.line("using the change of base formula and the Halley's method")
             self.printer.line("approximation for natural logs")
-        # INTEGRAL SET
-        elif(which == 22):
+        elif(which == self.ident.switch("I")):
             self.printer.line("Configures the integration technique used to approximate integrals")
             self.printer.subtitle("Arguments")
             self.printer.argument("t", "Technique to be used", "int")
             self.printer.subtitle("Notes")
             self.printer.warn("Check Integration with 'I' to see integration techniques", "confijen")
-        # VERB SET
-        elif(which == 23):
+        elif(which == self.ident.switch("V")):
             self.printer.line("Configures the verbose settings for Bertjen")
             self.printer.subtitle("Arguments")
             self.printer.argument("v", "Verbose setting", "YES/NO")
             self.printer.argument("x", "Extra verbose setting", "YES/NO")
             self.printer.subtitle("Notes")
             self.printer.warn("Check Verbose Settings with 'V'", "confijen")
-            # BERTJEN CALIBRATE
-        elif(which == 26):
+        elif(which == self.ident.switch("B")):
             self.printer.line("Calibrates Bertjen to System settings")
             self.printer.line("c", "Configure Bertjen", "YES/NO")
-        # SAVE
-        elif(which == 28):
+        elif(which == self.ident.switch("S")):
             self.printer.line("Saves the current Bertjen configuration")
-        # HELP
-        elif(which == 29):
+        elif(which == self.ident.switch("H")):
             self.printer.line("Provides an explanation for a given function --f")
             self.printer.subtitle("Arguments")
             self.printer.argument("f", "Function whose description is required", "string")
-        # SEC
-        elif(which == 30):
+        elif(which == self.ident.switch("SEC")):
             self.printer.line("Approximates the secant of an angle --x using a Taylor")
             self.printer.line("series.")
             self.printer.subtitle("Arguments")
@@ -329,8 +244,7 @@ class menujen:
             self.printer.subtitle("Notes")
             self.printer.warn("Secant calls cosine approximation", "mathbert.sec")
             self.printer.warn("Defaults to radians", "mathbert.sec")
-        # CSC
-        elif(which == 31):
+        elif(which == self.ident.switch("CSC")):
             self.printer.line("Approximates the cosecant of an angle --x using a Taylor")
             self.printer.line("series.")
             self.printer.subtitle("Arguments")
@@ -338,8 +252,7 @@ class menujen:
             self.printer.subtitle("Notes")
             self.printer.warn("Cosecant calls sine approximation", "mathbert.csc")
             self.printer.warn("Defaults to radians", "mathbert.csc")
-        # COT
-        elif(which == 32):
+        elif(which == self.ident.switch("COT")):
             self.printer.line("Approximates the cotangent of an angle --x using a Taylor")
             self.printer.line("series.")
             self.printer.subtitle("Arguments")
@@ -347,8 +260,7 @@ class menujen:
             self.printer.subtitle("Notes")
             self.printer.warn("Cotangent calls tangent approximation", "mathbert.cot")
             self.printer.warn("Defaults to radians", "mathbert.cot")
-        # ANG
-        elif(which == 33):
+        elif(which == self.ident.switch("N")):
             self.printer.line("Configures Bertjen Angle Unit Measures")
             self.printer.subtitle("Arguments")
             self.printer.argument(f'{self.conf.getSymbol("theta")}', "Angle unit measure", "int" )
@@ -455,110 +367,20 @@ class menujen:
     def time(self, flag, start):
         if flag:
             self.printer.command("TIME START", 
-                        str(datetime.datetime.now().strftime("%H: %M: %S.%f")[:-4]))
+                        str(datetime.datetime.now().strftime("%H: %M: %S.%f")[:-6]))
             return datetime.datetime.now()
         else:
             end = datetime.datetime.now()
             self.printer.command("TIME END", 
-                        str(end.strftime("%H: %M: %S.%f")[:-4]))
+                        str(end.strftime("%H: %M: %S.%f")[:-6]))
             self.printer.command("TIME DIFF", 
                         str(end - start) + " sec")
     
-    # SINGLE ARG : 
-    #   COUNT(0), EXP(2), FACT(3), NEWTROOT(11), LN(13)
-    #   COS(16), SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21)
-    #   INTEGRALSET(22), BERTJEN(26), HELP(29), SEC(30)
-    #   CSC(31), COT(32), ANG(33)
-    def isSingleArg(self, firstIn):
-        return (firstIn == 0 or firstIn == 2 or firstIn == 3 or firstIn == 11
-                or firstIn == 13 or firstIn == 16 or firstIn == 17 or firstIn == 18
-                or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 22
-                or firstIn == 26 or firstIn == 29 or firstIn == 30 or firstIn == 31
-                or firstIn == 32 or firstIn == 33)
-    
-    # DOUBLE ARG: 
-    #   BINROOT(15), POWER(9), VERB(23), LOG(27)
-    def isDoubleArg(self, firstIn):
-        return (firstIn == 15 or firstIn == 9 or firstIn == 23 or firstIn == 27)
-    
-    # TRIPLE ARG: 
-    #   NORMCDF(6), NORMPDF(7), BINPMF(24), BINCDF(25) 
-    def isTripleArg(self, firstIn):
-        return (firstIn ==  6 or firstIn == 7 or firstIn == 24 or firstIn == 25)
-
-    # SPECIAL ARG:
-    #   BLACKSCHOLES(12)
-    def isSpecialArg(self, firstIn):
-        return (firstIn == 12)
- 
-    # FLOAT ARG: 
-    #   EXP(2), NEWTROOT(11), LN(13), COS(16)
-    #   SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21),
-    #   BINROOT(15), LOG(27), NORMCDF(6), NORMPDF(7),
-    #   SEC(30), CSC(31), COT(32)
-    def isFloatArg(self, firstIn):
-        return (firstIn == 2 or firstIn == 11 or firstIn == 13 or firstIn == 16 or firstIn == 17 
-                or firstIn == 18 or firstIn == 19 or firstIn == 20 or firstIn == 21 or firstIn == 15
-                or firstIn == 27 or firstIn == 6 or firstIn == 7 or firstIn == 30 or firstIn == 31
-                or firstIn == 32)
-
-    # INT ARG : 
-    #   COUNT(0), FACT(3), INTEGRALSET(22)
-    def isIntArg(self, firstIn):
-        return (firstIn == 0 or firstIn == 3 or firstIn == 22 or firstIn == 33)
-
-    # BOOL ARG: 
-    #   VERB(23), BERTJEN(26)
-    def isBoolArg(self, firstIn):
-        return (firstIn == 26 or firstIn == 23)
-
-    # STRING ARG:
-    #   HELP(29)
-    def isStringArg(self, firstIn):
-        return firstIn == 29
-
-    # COMPOUND ARG : 
-    #   POWER(9), BLACKSCHOLES(12), BINPMF(24)
-    #   BINCDF(25)
-    # TODO: BINCDF AND BINPMF ARE COMPOUND, DUMBASS!
-    def isCompoundArg(self, firstIn):
-        return (firstIn == 9 or firstIn == 12 or firstIn == 24 or firstIn == 25)
-
-    # NO OUTPUT FUNCTION : 
-    def isNoOutput(self, firstIn):
-        return (firstIn == 26 or firstIn == 23 or firstIn == 22 or firstIn == 29
-                or firstIn == 5 or firstIn == 33)
-
-    # TRIG FUNCTIONS:
-    #   COS(16), SIN(17), TAN(19), ACOS(20), ASIN(18), ATAN(21)
-    #   SEC(30), CSC(31), COT(32)
-    def isTrigFunction(self, firstIn):
-        return (firstIn == 16 or firstIn == 17 or firstIn == 19 or firstIn == 20
-                or firstIn == 18 or firstIn == 21 or firstIn == 30 or firstIn == 31
-                or firstIn == 32)
-
-    # BINOMIAL FUNCTIONS:
-    #   BINPMF(24), BINCDF(25)
-    def isBinomialFunction(self, firstIn):
-        return firstIn == 24 or firstIn == 25
-
-    # NORMAL FUNCTIONS:
-    #   NORMCDF(6), NORMPDF(7)
-    def isNormalFunction(self, firstIn):
-        return firstIn == 6 or firstIn ==7
-
-    # ADMIN FUNCTIONS
-    #   MENU(5), INTEGRATION(22), VERBOSE(23), SAVE(28), HELP(29), 
-    #   ANG(33), QUIT(99)
-    def isAdminFunction(self, firstIn):
-        return (firstIn == 5 or firstIn == 22 or firstIn == 23 or firstIn == 28
-                or firstIn == 29 or firstIn == 33 or firstIn == 99)
-
     # Retrieve Valid Menu Input From User
     def getMenuInput(self):
         menput = []
         menput.append("nothing")
-        while(self.switch(menput[0]) == "nothing"):
+        while(self.ident.switch(menput[0]) == "nothing"):
             # GET INPUT
             menput = input("<< ").upper().split()
             if(len(menput) == 0):
@@ -569,7 +391,7 @@ class menujen:
                 # INPUT VERIFICATION
                 ##############################################
                 # STEP 1: VERIFY FIRST INPUT CONTAINS FUNCTION
-                firstIn = self.switch(menput[0])
+                firstIn = self.ident.switch(menput[0])
                 if(firstIn == "nothing"):
                     self.printer.warn("Selection not found!", "menujen.getMenuInput")
                 ######################
@@ -582,15 +404,15 @@ class menujen:
                     else:
                         ###########################################
                         # PRE- STEP 2: GROUP INT BY NUMBER AND TYPE
-                        singleArg = self.isSingleArg(firstIn)
-                        doubleArg = self.isDoubleArg(firstIn)
-                        tripleArg = self.isTripleArg(firstIn)
-                        specialArg = self.isSpecialArg(firstIn)
-                        floatArg = self.isFloatArg(firstIn)
-                        intArg = self.isIntArg(firstIn)
-                        boolArg = self.isBoolArg(firstIn)
-                        compoundArg = self.isCompoundArg(firstIn)
-                        stringArg = self.isStringArg(firstIn)
+                        singleArg = self.ident.isSingleArg(firstIn)
+                        doubleArg = self.ident.isDoubleArg(firstIn)
+                        tripleArg = self.ident.isTripleArg(firstIn)
+                        specialArg = self.ident.isSpecialArg(firstIn)
+                        floatArg = self.ident.isFloatArg(firstIn)
+                        intArg = self.ident.isIntArg(firstIn)
+                        boolArg = self.ident.isBoolArg(firstIn)
+                        compoundArg = self.ident.isCompoundArg(firstIn)
+                        stringArg = self.ident.isStringArg(firstIn)
                         
                         if(singleArg):
                             ############################################################
@@ -619,7 +441,7 @@ class menujen:
                                 # STEP 2A-1-1d: GET STRING INPUT FOR STRING VALUED FUNCTIONS
                                 elif(stringArg):
                                     if(firstIn == 29):
-                                        menput[1] = self.unswitch(self.getFunctionIndex())
+                                        menput[1] = self.ident.unswitch(self.getFunctionIndex())
                                         return menput
                             ####################################            
                             # STEP 2B: VERIFY INPUT MATCHES TYPE
@@ -656,9 +478,9 @@ class menujen:
                                 # STEP 2B-1-2d: VERIFY STRING INPUT
                                 elif(stringArg):
                                     if(firstIn == 29):
-                                        if(self.switch(menput[1]) == "nothing"):
+                                        if(self.ident.switch(menput[1]) == "nothing"):
                                             self.printer.warn("Input Not Understood", "menujen.getMenuInput")
-                                            menput[1] = self.unswitch(self.getFunctionIndex())
+                                            menput[1] = self.ident.unswitch(self.getFunctionIndex())
                                             return menput
                                         else:
                                             return menput
@@ -927,9 +749,9 @@ class menujen:
         stput = "nothing"
         while(stput == "nothing"):
             stput =  input("<< ").upper()
-            stput = self.switch(stput)
+            stput = self.ident.switch(stput)
             if(stput != "nothing"):
-                self.printer.command("Input", self.unswitch(stput))
+                self.printer.command("Input", self.ident.unswitch(stput))
                 return stput
             else:
                 self.printer.warn("Not A Function!", "getFunctionIndex")
