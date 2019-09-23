@@ -7,7 +7,6 @@ class mathbert:
         self.conf = myConfig
         self.printer = myPrinter
         self.initStores()
-        self.initActuals()
         self.loadStores(self.conf.retrieveConstantStore(), self.conf.retrieveActualStore())
 
     # Initialize Stores For Constants
@@ -38,8 +37,6 @@ class mathbert:
             self.actual_root_3 = float(actuals['actual_root_3'])
         if(actuals["actual_pi"]):
             self.actual_pi = float(actuals['actual_pi'])
-        if(actuals["actual_e"]):
-            self.actual_e = float(actuals['e'])
 
     # Calculate percentage and absolute error between bertjen calcuations 
     # and actual values (as defined by the store.json)
