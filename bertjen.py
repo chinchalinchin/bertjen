@@ -518,7 +518,7 @@ class bertjen:
             if calibrateFlag:
                 changedFlag = False
                 try:
-                    changedFlag = self.conf.calibrate(self.math, self.printer)
+                    changedFlag = self.math.calibrate()
                 except Exception as e:
                     self.printer.warn(str(e), "confijen.calibrate")
                 if changedFlag:

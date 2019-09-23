@@ -85,54 +85,6 @@ class configuration:
         with open('./jens/gollys/store.json', 'w') as outfile:
             json.dump(data, outfile)
 
-    def calibrate(self, math, printer):
-        flag1 = self.calibrateTrig(math, printer)
-        flag2 = self.calibrateLn(math, printer)
-        flag3 = self.calibrateRoot(math, printer)
-        return flag1 or flag2 or flag3
-        # return flag1 or flag2 or ... 
-
-    def calibrateLn(self, math, printer):
-        current = math.nearestPerfectLn(self.LN_BREAK)
-        startTime = datetime.datetime.now()
-        for index in range(1, self.LN_LIMIT):
-            current = current + 2 * (self.LN_BREAK- math.exp(current))/(self.LN_BREAK+math.exp(current))
-            if helpjen.isNan(current):
-                old = self.LN_ACC
-                self.LN_ACC = index - 1
-                if(old == self.LN_ACC):
-                    return False
-                else:
-                    return True
-            now = datetime.datetime.now()
-            if self.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.LAG)):
-                printer.warn("Calibrating Natural Log", "confijen.calibrateLn")
-                printer.warn(f'Current Natural Log Iteration Threshold: {index}', "confijen.calibrateLn")  
-                startTime = datetime.datetime.now()    
-
-    def calibrateTrig(self, math, printer):
-        startTime = datetime.datetime.now()
-        for index in range(1, self.TRIG_LIMIT):
-            try:
-                float(math.power(4, index)*math.power(math.factorial(index), 2)*(2*index+1))
-            except Exception as e:
-                old = self.TRIG_ACC
-                self.TRIG_ACC = index - 1
-                if self.TRIG_ACC%2==1:
-                    self.TRIG_ACC = self.TRIG_ACC - 1
-                if(old == self.TRIG_ACC):
-                    return False
-                else:
-                    return True
-            now = datetime.datetime.now()
-            if self.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.LAG)):
-                printer.warn("Calibrating Trig Series Approximation", "confijen.calibrateTrig")
-                printer.warn(f'Current Trig Iteration Threshold: {index}', "confijen.calibrateTrig")
-                startTime = datetime.datetime.now()
-
-    def calibrateRoot(self, math, printer):
-        return False
-
     def switchUnits(self, arg):
         return self.ANGLE_UNITS.get(arg, "nothing")
 
