@@ -1,1 +1,0 @@
-cd python/bertulator && python ./bertjen.py
