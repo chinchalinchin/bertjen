@@ -70,6 +70,8 @@ class menujen:
             self.printer.subtitle("Taylor Series Cotangent Approximation")
         elif(which == self.ident.switch("N")):
             self.printer.subtitle("Angle Unit Settings")
+        elif(which == self.ident.switch("MPI")):
+            self.printer.subtitle("Machin's Infinte Series Pi Approximation")
 
     def printFunctionDetails(self, which):
         self.printFunctionTitle(which)
@@ -266,6 +268,9 @@ class menujen:
             self.printer.argument(f'{self.conf.getSymbol("theta")}', "Angle unit measure", "int" )
             self.printer.subtitle("Notes")
             self.printer.warn("Check Angle Settings with 'Ang' to see units", "confijen")
+        elif(which == self.ident.switch("MPI")):
+            self.printer.line("Approximates pi using Machin's arctangent formula")
+            self.printer.line("and a Taylor series for arctangent.")
         self.printer.divider()
 
     def printBertjenDetails(self):
@@ -436,7 +441,7 @@ class menujen:
                                     # BERTJEN
                                     if(firstIn == 26):
                                         self.printer.line("Calibrate Bertjen?")
-                                        menput[1] = self.getBinaryDecision("Yes", "No")
+                                        menput[1] = helpjen.switchBoolToYN(self.getBinaryDecision("Yes", "No"))
                                         return menput
                                 # STEP 2A-1-1d: GET STRING INPUT FOR STRING VALUED FUNCTIONS
                                 elif(stringArg):
@@ -469,7 +474,7 @@ class menujen:
                                         if(menput[1].upper() != "YES" and menput[1].upper() != "NO"):
                                             self.printer.warn("Argument Not Understood", "menujen.getMenuInput")
                                             self.printer.line("Calibrate Bertjen?")
-                                            menput[1] = self.getBinaryDecision("Yes", "No")
+                                            menput[1] = helpjen.switchBoolToYN(self.getBinaryDecision("Yes", "No"))
                                             return menput
                                         else:
                                             return menput
@@ -511,9 +516,9 @@ class menujen:
                                     # VERBOSE
                                     if(firstIn == 23):
                                         self.printer.line("Verbose?")
-                                        menput[1] = self.getBinaryDecision("Yes", "No")
+                                        menput[1] = helpjen.switchBoolToYN(self.getBinaryDecision("Yes", "No"))
                                         self.printer.line("Extra Verbose?")
-                                        menput[2] = self.getBinaryDecision("Yes", "No")
+                                        menput[2] = helpjen.switchBoolToYN(self.getBinaryDecision("Yes", "No"))
                                         return menput
                                 # STEP 2A-2-1d: GET STRING INPUT FOR STRING VALUED FUNCTIONS
                                 elif(stringArg):
@@ -557,11 +562,11 @@ class menujen:
                                         if(menput[1].upper() != "YES" and menput[1].upper() != "NO"):
                                             self.printer.warn("1st Argument Not Understood", "menujen.getMenuInput")
                                             self.printer.line("Verbose?")
-                                            menput[1] = self.getBinaryDecision("Yes", "No")
+                                            menput[1] = helpjen.switchBoolToYN(self.getBinaryDecision("Yes", "No"))
                                         if(menput[2].upper() != "YES" and menput[2].upper() != "NO"):
                                             self.printer.warn("2nd Argument Not Understood", "menujen.getMenuInput")
                                             self.printer.line("Extra Verbose?")
-                                            menput[2] = self.getBinaryDecision("Yes", "No")
+                                            menput[2] = helpjen.switchBoolToYN(self.getBinaryDecision("Yes", "No"))
                                         return menput
                                     else:
                                         return menput

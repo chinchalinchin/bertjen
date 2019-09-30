@@ -1,9 +1,8 @@
 import sys, os
 sys.path.append(os.path.join(sys.path[0], "jens"))
 sys.path.append(os.path.join(sys.path[0], "berts"))
-sys.path.append(os.path.join(sys.path[0], "lollys"))
-sys.path.append(os.path.join(sys.path[0], "gollys"))
-sys.path.append(os.path.join(sys.path[0], "troys"))
+sys.path.append(os.path.join(sys.path[0], "jens","gollys"))
+sys.path.append(os.path.join(sys.path[0], "berts","chets"))
 
 from mathbert import mathbert
 from finbert import finbert
@@ -19,7 +18,7 @@ class bertjen:
 
     # ADDING NEW FUNCTIONS:
     # 1: add function title to printjen.printMenu
-    # 2: add function name to menujen.switcher and menujen.unswitcher 
+    # 2: add function name to identijen.switcher and identijen.unswitcher 
     #   dictionaries
     # 3: add title to menujen.getFunctionTitle
     # 4: add description to menujen.getFunctionDetails
@@ -39,10 +38,6 @@ class bertjen:
     #       C: Add to Output Formatting
     #       D: Add to Output or Prevent Output
     #
-    # TODO: create mathematical constant store in store.json
-    #       -introduce store function in confijen that receives
-    #       -mathbert and outputs stores to file.
-    #       -call at same time as sav function!
     # TODO: function recursion, i.e. cos(newtPi()) or 'cos npi' from line
     # TODO: Config preferredPi, preferredRoot2, preferredRoot3
     #        with confijen and config.json.
@@ -111,7 +106,7 @@ class bertjen:
         # 1 : COMPUTATION
         #################
         if self.conf.EXTRA_VERBOSE:
-            self.printer.warn(f'Step 1: Computation Of {self.menu.unswitch(args[0])}', "callFunction")
+            self.printer.warn(f'Step 1: Computation Of {self.ident.unswitch(args[0])}', "callFunction")
         try:
             if(args[0] == self.ident.switch("CF")):
                 result = self.math.countFormula(int(args[1]))
@@ -169,14 +164,19 @@ class bertjen:
                 verbChangedFlag = self.conf.setVerbose(helpjen.switchYesOrNo(args[1]))
                 extraChangedFlag = self.conf.setExtraVerbose(helpjen.switchYesOrNo(args[2]))
             elif(args[0] == self.ident.switch("B")):
-                bertFlag = self.conf.calibrate(self.math, self.printer)
+                if(helpjen.switchYesOrNo(args[1])):
+                    bertFlag = self.math.calibrate()
+                else:
+                    bertFlag = False
             elif(args[0] == self.ident.switch("N")):
                 angleFlag = self.conf.setAngleUnits(int(args[1]))
+            elif(args[0] == self.ident.switch("MPI")):
+                result = self.math.machinPi()
         # 1A : EXCEPTIONS
         ################
         except Exception as e:
             if self.conf.EXTRA_VERBOSE:
-                self.printer.warn(f'Step 1A : Exception Handling For {self.menu.unswitch(args[0])}', "callFunction")
+                self.printer.warn(f'Step 1A : Exception Handling For {self.ident.unswitch(args[0])}', "callFunction")
             if(args[0] == self.ident.switch("CF")):
                 self.printer.warn(str(e), "mathbert.countFormula")
             elif(args[0] == self.ident.switch("E")):
@@ -231,6 +231,8 @@ class bertjen:
                 self.printer.warn(str(e), "confijen.setVerbose")
             elif(args[0] == self.ident.switch("B")):
                 self.printer.warn(str(e), "confijen.calibrate")
+            elif(args[0] == self.ident.switch("MPI")):
+                self.printer.warn(str(e), "mathbert.machinPi")
 
         # 2 : FORMAT RESULTS
         ####################
@@ -250,6 +252,8 @@ class bertjen:
         elif(args[0] == self.ident.switch("F")):
             outString = f'{str(args[1])}! = {str(result)}'
         elif(args[0] == self.ident.switch("LPI")):
+            outString = f'{pi} = {str(result)}'
+        elif(args[0] == self.ident.switch("MPI")):
             outString = f'{pi} = {str(result)}'
         elif(args[0] == self.ident.switch("NORMCDF")):
             Zscore = self.stat.standardize(float(args[1]), float(args[2]), float(args[3]))
@@ -471,7 +475,8 @@ class bertjen:
         elif switchIn == self.ident.switch("Q"):
             self.alive = False
         # NOT FOUND
-        elif switchIn != self.ident.switch("NPI") and switchIn != self.ident.switch("LPI"):
+        elif (switchIn != self.ident.switch("NPI") and switchIn != self.ident.switch("LPI")
+                and switchIn != self.ident.switch("MPI")):
             self.printer.warn("Error. Make Another Selection", "doProgram")
         # IF NOT CONFIGURE FUNCTION, CALL FUNCTION
         if(switchIn != self.ident.switch("Q") and switchIn != self.ident.switch("S") 

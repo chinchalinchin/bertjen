@@ -1,11 +1,13 @@
 import datetime
 import helpjen
+from ratchet import ratchet
 
 class mathbert:
     
     def __init__(self, myConfig, myPrinter):
         self.conf = myConfig
         self.printer = myPrinter
+        self.wrench = ratchet(self.conf, self.printer, self)
         self.initStores()
         self.loadStores(self.conf.retrieveConstantStore(), self.conf.retrieveActualStore())
 
@@ -13,11 +15,13 @@ class mathbert:
     def initStores(self):
         self.newtpi_store = None
         self.liebpi_store = None
+        self.machinpi_store = None
         self.e_store = None
         self.newtroot_2_store = None
         self.newtroot_3_store = None
         self.binroot_2_store = None
 
+    # Pass In Stores
     def loadStores(self, stores, actuals):
         if(stores["e_store"]):
             self.e_store = float(stores['e_store'])
@@ -31,6 +35,8 @@ class mathbert:
             self.newtroot_3_store = float(stores['newtroot_3_store'])
         if(stores["binroot_2_store"]):
             self.binroot_2_store = float(stores['binroot_2_store'])
+        if(stores["machinpi_store"]):
+            self.machinpi_store = float(stores['machinpi_store'])
 
     # Count Integer Function
     def countFormula(self, n):
@@ -522,6 +528,28 @@ class mathbert:
                 self.printer.warn("Using Pi Stored From Previous Calculations", "mathbert.newtPi")
             return self.newtpi_store
    
+    # Machin's Approximation of Pi
+    def machinPi(self):
+        if self.conf.EXTRA_VERBOSE:
+            self.printer.warn("Checking Stor for Pi", "mathbert.machinPi")
+        if self.machinpi_store == None:
+            if self.conf.EXTRA_VERBOSE:
+                self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.machinPi")
+            unitHolder = self.conf.getAngleUnits()
+            if unitHolder != 1:
+                self.conf.setAngleUnits(0)
+            machin_first_term = 16 * self.arctan(1/5)
+            machin_second_term = 4 * self.arctan(1/239)
+            if unitHolder != 1:
+                self.conf.setAngleUnits(unitHolder)
+            machin_pi = machin_first_term - machin_second_term
+            self.machinpi_store = machin_pi
+            return machin_pi
+        else:
+            if self.conf.VERBOSE:
+                self.printer.warn("Using Pi Stored From Previous Calculations", "mathbert.machinPi")
+            return self.machinpi_store
+    
     # HELPER FUNCTIONS
       
     # Preferred Pi
@@ -604,49 +632,4 @@ class mathbert:
         return rad*180/pi
 
     def calibrate(self):
-        flag1 = self.calibrateTrig()
-        flag2 = self.calibrateLn()
-        flag3 = self.calibrateRoot()
-        return flag1 or flag2 or flag3
-        # return flag1 or flag2 or ... 
-
-    def calibrateLn(self):
-        current = self.nearestPerfectLn(self.conf.LN_BREAK)
-        startTime = datetime.datetime.now()
-        for index in range(1, self.conf.LN_LIMIT):
-            current = current + 2 * (self.conf.LN_BREAK- self.exp(current))/(self.conf.LN_BREAK+self.exp(current))
-            if helpjen.isNan(current):
-                old = self.conf.LN_ACC
-                self.conf.LN_ACC = index - 1
-                if(old == self.conf.LN_ACC):
-                    return False
-                else:
-                    return True
-            now = datetime.datetime.now()
-            if self.conf.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                printer.warn("Calibrating Natural Log", "mathbert.calibrateLn")
-                printer.warn(f'Current Natural Log Iteration Threshold: {index}', "mathbert.calibrateLn")  
-                startTime = datetime.datetime.now()    
-
-    def calibrateTrig(self):
-        startTime = datetime.datetime.now()
-        for index in range(1, self.conf.TRIG_LIMIT):
-            try:
-                float(self.power(4, index)*self.power(self.factorial(index), 2)*(2*index+1))
-            except Exception as e:
-                old = self.conf.TRIG_ACC
-                self.conf.TRIG_ACC = index - 1
-                if self.conf.TRIG_ACC%2==1:
-                    self.conf.TRIG_ACC = self.conf.TRIG_ACC - 1
-                if(old == self.conf.TRIG_ACC):
-                    return False
-                else:
-                    return True
-            now = datetime.datetime.now()
-            if self.conf.VERBOSE and (now - startTime > datetime.timedelta(seconds=self.conf.LAG)):
-                printer.warn("Calibrating Trig Series Approximation", "confijen.calibrateTrig")
-                printer.warn(f'Current Trig Iteration Threshold: {index}', "confijen.calibrateTrig")
-                startTime = datetime.datetime.now()
-
-    def calibrateRoot(self):
-        return False
+        self.wrench.calibrate()

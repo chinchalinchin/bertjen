@@ -25,6 +25,14 @@ def switchYesOrNo(test):
         else:
             return False
 
+# Switch Bool to Yes or No
+
+def switchBoolToYN(test):
+    if(test):
+        return 'YES'
+    else:
+        return 'NO'
+
 # Switch Provided Options To Boolean
 def switchToBool(trueOpt, falseOpt, test):
     if(test.upper() == trueOpt.upper()):

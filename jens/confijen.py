@@ -79,6 +79,7 @@ class configuration:
         data["e_store"] = myMath.e_store
         data["newtpi_store"] = myMath.newtpi_store
         data["liebpi_store"] = myMath.liebpi_store
+        data["machinpi_store"] = myMath.machinpi_store
         data["newtroot_2_store"] = myMath.newtroot_2_store
         data["newtroot_3_store"] = myMath.newtroot_3_store
         data["binroot_2_store"] = myMath.binroot_2_store

@@ -42,16 +42,20 @@ class printjen():
         self.command("CSC", "Taylor Series Cosecant Approximation")
         # SINGLE ARUGMENT
         self.command("COT", "Taylor Series Cotangent Approximation")
-        # NO ARGUMENT
-        self.command("LPI", "Liebniz Series Pi Approximation")
-        # NO ARGUMENT
-        self.command("NPI", "Newton Series Pi Approximation")
         # DOUBLE ARGUMENT 
         self.command("ROOT", "Binomial Series Root Approximation")
         # SINGLE ARGUMENT
         self.command("SQ", "Newton's Method Square Root Approximation")
         self.divider()
-        
+
+        self.subtitle("Mathbert Constants")
+        # NO ARGUMENT
+        self.command("LPI", "Liebniz Series Pi Approximation")
+        # NO ARGUMENT
+        self.command("NPI", "Newton Series Pi Approximation")
+        # NO ARGUMENT
+        self.command("MPI", "Machin Series Pi Approximation")
+
         self.subtitle("Statbert")
         
         self.subtitle("Statbert PDFs/PMFs")

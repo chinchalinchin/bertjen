@@ -11,7 +11,7 @@ class identijen:
             "BINPMF": 24, "BINCDF":25, "B": 26,
             "LOG": 27, "S": 28, "H": 29,
             "SEC": 30, "CSC": 31, "COT": 32,
-            "N": 33,
+            "N": 33, "MPI": 34,
             "Q" : 99,
         }
         self.unswitcher = {
@@ -24,7 +24,7 @@ class identijen:
             24: "BINPMF", 25: "BINCDF", 26: "B",
             27: "LOG", 28: "S", 29: "H",
             30: "SEC", 31: "CSC", 32: "COT",
-            33: "N",
+            33: "N", 34: "MPI",
             99: "Q" 
         }
     
