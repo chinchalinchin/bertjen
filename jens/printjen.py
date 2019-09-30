@@ -46,7 +46,6 @@ class printjen():
         self.command("ROOT", "Binomial Series Root Approximation")
         # SINGLE ARGUMENT
         self.command("SQ", "Newton's Method Square Root Approximation")
-        self.divider()
 
         self.subtitle("Mathbert Constants")
         # NO ARGUMENT
@@ -55,6 +54,7 @@ class printjen():
         self.command("MPI", "Machin Series Pi Approximation")
         # NO ARGUMENT
         self.command("NPI", "Newton Series Pi Approximation")
+        self.divider()
 
         self.subtitle("Statbert")
         

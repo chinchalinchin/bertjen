@@ -62,10 +62,12 @@ for completeness,
 >> SEC : Taylor Series Secant Approximation
 >> CSC : Taylor Series Cosecant Approximation
 >> COT : Taylor Series Cotangent Approximation
->> LPI : Liebniz Series Pi Approximation
->> NPI : Newton Series Pi Approximation
 >> ROOT : Binomial Series Root Approximation
 >> SQ : Newton's Method Square Root Approximation
+******************** MATHBERT CONSTANTS *********************
+>> LPI : Liebniz Series Pi Approximation
+>> MPI : Machin Series Pi Approximation
+>> NPI : Newton Series Pi Approximation
 *************************************************************
 ************************* STATBERT **************************
 ******************** STATBERT PDFS/PMFS *********************
