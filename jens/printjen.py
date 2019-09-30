@@ -52,9 +52,9 @@ class printjen():
         # NO ARGUMENT
         self.command("LPI", "Liebniz Series Pi Approximation")
         # NO ARGUMENT
-        self.command("NPI", "Newton Series Pi Approximation")
-        # NO ARGUMENT
         self.command("MPI", "Machin Series Pi Approximation")
+        # NO ARGUMENT
+        self.command("NPI", "Newton Series Pi Approximation")
 
         self.subtitle("Statbert")
         

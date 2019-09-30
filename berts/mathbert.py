@@ -531,7 +531,7 @@ class mathbert:
     # Machin's Approximation of Pi
     def machinPi(self):
         if self.conf.EXTRA_VERBOSE:
-            self.printer.warn("Checking Stor for Pi", "mathbert.machinPi")
+            self.printer.warn("Checking Store for Pi", "mathbert.machinPi")
         if self.machinpi_store == None:
             if self.conf.EXTRA_VERBOSE:
                 self.printer.warn("No Pi Store Found, Calculating Pi", "mathbert.machinPi")
@@ -554,7 +554,7 @@ class mathbert:
       
     # Preferred Pi
     def preferredPi(self):
-        return self.newtPi()
+        return self.machinPi()
 
     def preferredRoot2(self):
         return self.newtRoot(2)

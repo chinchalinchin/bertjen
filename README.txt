@@ -15,13 +15,16 @@ logical operators FOR...EACH, NOT, AND, OR, and IF...THEN.
 The purpose of this project to see how quickly and accurately these
 operations can be implemented using various techniques. 
 
-For example, there are currently two methods of approximating pi 
-within Bertjen, one based on Liebniz's infinite series approximation
-and one on Newton's infinite series approximation. The Liebniz
-approximation takes significantly longer and produces less significant
-digits of accuracy. Thus, we see the purpose of the project is in 
-the author understanding the nature of finite mathematics and its 
-implementation in computing machines. 
+For example, there are currently three methods of approximating pi 
+within Bertjen, one based on Liebniz's infinite series approximation,
+one on Newton's infinite series approximation and one based on
+John Machin's arctangent formula with the accompanying Taylor
+series approximation for arctangent. The Liebniz approximation 
+takes significantly longer and produces less significant
+digits of accuracy, while the Machin approximation only requires 
+20 or so iterations versus the Newton approximation's 50. 
+Thus, we see the purpose of the project is in the author understanding 
+the nature of finite mathematics and its implementation in computing machines. 
 
 Bertjen is broken up into two components: Berts and Jens. Berts
 are largely concerned with computation and approximation,
