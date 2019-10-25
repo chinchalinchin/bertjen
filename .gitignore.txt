@@ -1,1 +1,1 @@
-myBoot.sh
+/__pycache__/
