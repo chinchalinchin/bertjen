@@ -65,6 +65,7 @@ This will bring up the Bertjen Command Line Interface. Hopefully, the CLI should
 	23. NORMCDF : Normal Cumulative Distribution Function
 	24. BINCDF : Binomial Cumulative Distribution Function
 	25. BS : Black Scholes Option Function
+
 <i>Admin Commands</i>
 	1. I : Integration Technique Settings
 	2. V : Verbose Settings
@@ -81,14 +82,14 @@ The 'H' help function provides a short description of all the functions Bertjen 
 
 replacing <i>FUNCTION_NAME</i> with the appropriate function name. For example, 
 
-	'<< h normcdf'
-	'>> NORMAL CUMULATIVE PROBABILITY DISTRIBUTION FUNCTION'
-	'>> Computes a normal probability --x P(X<x) for a given mean'
-	'>> --μ and standard deviation --σ'
-	'>> ARGUMENTS'
-	'--x : type : float :  Desired probability'
-	'--μ : type : float :  Mean'
-	'--σ : type : float :  Standard deviation'
+	<< h normcdf
+	>> NORMAL CUMULATIVE PROBABILITY DISTRIBUTION FUNCTION
+	>> Computes a normal probability --x P(X<x) for a given mean
+	>> --μ and standard deviation --σ
+	>> ARGUMENTS
+	>> --x : type : float :  Desired probability
+	>> --μ : type : float :  Mean
+	>> --σ : type : float :  Standard deviation
 
 Note that Bertjen is not case sensitive! 
 
