@@ -3,9 +3,12 @@ _____________________________________________________________________________
 _____________________________________________________________________________
 <h1>THE BERTJEN COMMAND LINE CALCULATOR</h1>
 _____________________________________________________________________________
-<a href = "https://github.com/chinchalinchin/bertjen"> Bertjen Github Repo</a>
+_____________________________________________________________________________
+
+<a href = "https://github.com/chinchalinchin/bertjen"> Bertjen Github Repo</a><br><br>
 _____________________________________________________________________________
 _____________________________________________________________________________
+
 
 _____________________________________________________________________________
 <b>Introduction</b>
@@ -19,14 +22,15 @@ For example, there are currently three methods of approximating pi within Bertje
 Bertjen is broken up into two components: Berts and Jens. Berts are largely concerned with computation and approximation, while Jens are more concerned with user input validation  and output formatting, etc. Essentially, Berts do the calculation behind the scenes and Jens make sure those calculations get the correct input and then ensure the results are displayed appropriately
 
 
+_____________________________________________________________________________
 <b>Prerequisites</b>
 _____________________________________________________________________________
 
-All you need is Python! Bertjen should run on the most minimal of distributions! Download Python from
+All you need is Python! No numpy, no scipy, just sweet sweet Python.
 
-	<a href="https://www.python.org/downloads/"> Python Download</a>
+<a href="https://www.python.org/downloads/">Download Python Here</a>
 
-
+_____________________________________________________________________________
 <b>Usage</b>
 _____________________________________________________________________________
 If running from source, execute from the root folder the command
@@ -89,6 +93,7 @@ replacing <i>FUNCTION_NAME</i> with the appropriate function name. For example,
 Note that Bertjen is not case sensitive! 
 
 
+_____________________________________________________________________________
 <b>Function Input</b>
 _____________________________________________________________________________
 
@@ -107,12 +112,14 @@ and
 will initiate the command line program for that particular function. 
 
 
+_____________________________________________________________________________
 <b>Calibration</b>
 _____________________________________________________________________________
 
 If Bertjen outputs an error, it may need calibrated to your system. Use the 'B' command to initate system calibration. Be sure to save your configuration with 'S' command, otherwise you will need to recalibrate the next time you start up Bertjen.
 
 
+_____________________________________________________________________________
 <b>Character Encoding<b>
 _____________________________________________________________________________
 
@@ -125,8 +132,11 @@ Or something similar. If so, you need to set your terminal session encoding to U
 	chcp 65001
 	set PYTHONIOENCDOING=utf-8
 
+
+_____________________________________________________________________________
 <b>Dockerfile<b>
 _____________________________________________________________________________
+
 
 Build the image with Docker from the root folder like you normally would,
 
@@ -138,10 +148,11 @@ When you run the image, make sure you do so with an interactive terminal,
 
 
 _____________________________________________________________________________
-TODO
+<h1>TODO<h1>
 _____________________________________________________________________________
 
-1. Function recursion
+
+1. <b>Function recursion</b>
 _____________________________________________________________________________
 
 In the future, Bertjen will (hopefully) feature function recursion so that
@@ -151,7 +162,8 @@ commands such as
 
 will have meaning. Still thinking about how to implement this functionality! 
 
-2. Interesting Normal CDF Behavior?
+
+2. <b>Interesting Normal CDF Behavior?</b>
 _____________________________________________________________________________
 Right now, the Normal CDF simply uses a naive Simpson's Rule approximation (you can also set the Integration Technique to Left-Hand, Right-Hand or Trapezoid Rules, but Simpson's Rule provides the most accurate approximation). The algorithm as is also exploits symmetry in the normal distribution, so that if the desired probability is above the mean, the integral will be calculated from the mean to the point of interest and 0.5 will be add to the answer (i.e., half of the normal distribution is below the mean). The number of divisions is hardcoded into algorithm, so is equal in each case.
 
