@@ -4,7 +4,7 @@ _____________________________________________________________________________<br
 <a href = "https://github.com/chinchalinchin/bertjen"> Bertjen Github Repo</a><br>
 _____________________________________________________________________________<br><br>
 _____________________________________________________________________________<br>
-<b>Introduction</b>
+<b>Introduction</b><br>
 _____________________________________________________________________________<br>
 Bertjen is a command line calculator that tries to use the bare minimum with regards to outside library imports. This means all mathematical functions and operations have been implemented with the basic arithmetical operations +, -, / and *, plus the usual logical operators FOR...EACH, NOT, AND, OR, and IF...THEN. 
 
@@ -129,9 +129,9 @@ When you run the image, make sure you do so with an interactive terminal,
 <br><br>
 _____________________________________________________________________________
 <h1>TODO</h1>
-_____________________________________________________________________________
-1. <b>Function recursion</b>
-_____________________________________________________________________________
+_____________________________________________________________________________<br><br>
+1. <b>Function recursion</b><br>
+_____________________________________________________________________________<br>
 In the future, Bertjen will (hopefully) feature function recursion so that commands such as
 
 	COS (PI*E(SIN(5)))
