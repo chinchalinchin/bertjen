@@ -44,30 +44,30 @@ This will bring up the Bertjen Command Line Interface. Hopefully, the CLI should
 	9. TAN : Taylor Series Tangent Approximation<br>
 	10. ACOS : Taylor Series Arccosine Approximation<br>
 	11. ASIN : Taylor Series Arcsine Approximation<br>
-	12. ATAN : Taylor Series Arctangent Approximation
-	13. SEC : Taylor Series Secant Approximation
-	14. CSC : Taylor Series Cosecant Approximation
-	15. COT : Taylor Series Cotangent Approximation
-	16.ROOT : Binomial Series Root Approximation
-	17. SQ : Newton's Method Square Root Approximation
-	18. LPI : Liebniz Series Pi Approximation
-	19. MPI : Machin Series Pi Approximation
-	20. NPI : Newton Series Pi Approximation
-	21. NORMPDF : Normal Probability Density Function
-	22. BINPMF : Binomial Probability Mass Function
-	23. NORMCDF : Normal Cumulative Distribution Function
-	24. BINCDF : Binomial Cumulative Distribution Function
-	25. BS : Black Scholes Option Function
+	12. ATAN : Taylor Series Arctangent Approximation<br>
+	13. SEC : Taylor Series Secant Approximation<br>
+	14. CSC : Taylor Series Cosecant Approximation<br>
+	15. COT : Taylor Series Cotangent Approximation<br>
+	16.ROOT : Binomial Series Root Approximation<br>
+	17. SQ : Newton's Method Square Root Approximation<br>
+	18. LPI : Liebniz Series Pi Approximation<br>
+	19. MPI : Machin Series Pi Approximation<br>
+	20. NPI : Newton Series Pi Approximation<br>
+	21. NORMPDF : Normal Probability Density Function<br>
+	22. BINPMF : Binomial Probability Mass Function<br>
+	23. NORMCDF : Normal Cumulative Distribution Function<br>
+	24. BINCDF : Binomial Cumulative Distribution Function<br>
+	25. BS : Black Scholes Option Function<br>
 
-<i>Admin Commands</i>
-	1. I : Integration Technique Settings
-	2. V : Verbose Settings
-	3. N : Angle Unit Settings
-	4. S : Save Bertjen Configuration
-	5. B : Calibrate Bertjen
-	6. M : Print Menu
-	7. H : Help Function
-	8. Q : Quit
+<i>Admin Commands</i><br>
+	1. I : Integration Technique Settings<br>
+	2. V : Verbose Settings<br>
+	3. N : Angle Unit Settings<br>
+	4. S : Save Bertjen Configuration<br>
+	5. B : Calibrate Bertjen<br>
+	6. M : Print Menu<br>
+	7. H : Help Function<br>
+	8. Q : Quit<br>
 
 The 'H' help function provides a short description of all the functions Bertjen provides. Simply type 
 
@@ -100,7 +100,7 @@ and
 	
 	NORMCDF goobledygook
 
-will initiate the command line program for that particular function. <br><br>
+will initiate the command line program for that particular function. Bertjen will then step through the program and ask for the arguments of that function one by one.<br><br>
 _____________________________________________________________________________
 <b>Calibration</b>
 _____________________________________________________________________________
