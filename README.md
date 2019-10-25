@@ -1,11 +1,11 @@
-_____________________________________________________________________________=
-<h1>THE BERTJEN COMMAND LINE CALCULATOR</h1>
 _____________________________________________________________________________
-<a href = "https://github.com/chinchalinchin/bertjen"> Bertjen Github Repo</a>
+<h1>THE BERTJEN COMMAND LINE CALCULATOR</h1>
+_____________________________________________________________________________<br>
+<a href = "https://github.com/chinchalinchin/bertjen"> Bertjen Github Repo</a><br>
 _____________________________________________________________________________<br><br>
 _____________________________________________________________________________
 <b>Introduction</b>
-_____________________________________________________________________________
+_____________________________________________________________________________<br>
 Bertjen is a command line calculator that tries to use the bare minimum with regards to outside library imports. This means all mathematical functions and operations have been implemented with the basic arithmetical operations +, -, / and *, plus the usual logical operators FOR...EACH, NOT, AND, OR, and IF...THEN. 
 
 The purpose of this project to see how quickly and accurately these operations can be implemented using various techniques. 
