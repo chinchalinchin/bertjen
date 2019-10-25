@@ -121,7 +121,7 @@ If Bertjen outputs an error, it may need calibrated to your system. Use the 'B' 
 
 
 _____________________________________________________________________________
-<b>Character Encoding<b>
+<b>Character Encoding</b>
 _____________________________________________________________________________
 
 Bertjen uses UTF-8 encoding to print Greek and Latin characters. (Hopefully, Hebrew soon. Need to learn more about Aleph-null and Aleph-one first.) If you are on Windows, you may run into the following UnicodeEncodingErrror
@@ -135,7 +135,7 @@ Or something similar. If so, you need to set your terminal session encoding to U
 
 
 _____________________________________________________________________________
-<b>Dockerfile<b>
+<b>Dockerfile</b>
 _____________________________________________________________________________
 
 
@@ -149,7 +149,7 @@ When you run the image, make sure you do so with an interactive terminal,
 
 
 _____________________________________________________________________________
-<h1>TODO<h1>
+<h1>TODO</h1>
 _____________________________________________________________________________
 
 
