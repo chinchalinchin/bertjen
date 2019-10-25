@@ -1,11 +1,15 @@
 
-*****************************************************************************
-THE BERTJEN COMMAND LINE CALCULATOR
-*****************************************************************************
+_____________________________________________________________________________
+_____________________________________________________________________________
+<h1>THE BERTJEN COMMAND LINE CALCULATOR</h1>
+_____________________________________________________________________________
+<a href = "https://github.com/chinchalinchin/bertjen"> Bertjen Github Repo</a>
+_____________________________________________________________________________
+_____________________________________________________________________________
 
-*****************************************************************************
-Introduction
-*****************************************************************************
+_____________________________________________________________________________
+<b>Introduction</b>
+_____________________________________________________________________________
 Bertjen is a command line calculator that tries to use the bare minimum with regards to outside library imports. This means all mathematical functions and operations have been implemented with the basic arithmetical operations +, -, / and *, plus the usual logical operators FOR...EACH, NOT, AND, OR, and IF...THEN. 
 
 The purpose of this project to see how quickly and accurately these operations can be implemented using various techniques. 
@@ -14,70 +18,78 @@ For example, there are currently three methods of approximating pi within Bertje
 
 Bertjen is broken up into two components: Berts and Jens. Berts are largely concerned with computation and approximation, while Jens are more concerned with user input validation  and output formatting, etc. Essentially, Berts do the calculation behind the scenes and Jens make sure those calculations get the correct input and then ensure the results are displayed appropriately
 
-*****************************************************************************
-Usage
-*****************************************************************************
-Simply run the command
+
+<b>Prerequisites</b>
+_____________________________________________________________________________
+
+All you need is Python! Bertjen should run on the most minimal of distributions! Download Python from
+
+	<a href="https://www.python.org/downloads/"> Python Download</a>
+
+
+<b>Usage</b>
+_____________________________________________________________________________
+If running from source, execute from the root folder the command
 
 	python ./bertjen.py
 
-From the project's root folder to bring up the command line interface. Hopefully, the CLI should be relatively intuitive. A list of commands can be always be brought up with the 'M' menu command, printed here for completeness,
+This will bring up the Bertjen Command Line Interface. Hopefully, the CLI should be relatively intuitive. A list of commands can be always be brought up with the 'M' menu command, printed here for completeness,
 
-************************* MATHBERT **************************
->> CF : Count Function
->> F : Factorial Function
->> P : Power Function
->> LOG : Logarithm Function
-****************** MATHBERT APPROXIMATIONS ******************
->> E : Taylor Series Exponential Approximation
->> LN : Halley's Method Natural Log Approximation
->> COS : Taylor Series Cosine Approximation
->> SIN : Taylor Series Sine Approximation
->> TAN : Taylor Series Tangent Approximation
->> ACOS : Taylor Series Arccosine Approximation
->> ASIN : Taylor Series Arcsine Approximation
->> ATAN : Taylor Series Arctangent Approximation
->> SEC : Taylor Series Secant Approximation
->> CSC : Taylor Series Cosecant Approximation
->> COT : Taylor Series Cotangent Approximation
->> ROOT : Binomial Series Root Approximation
->> SQ : Newton's Method Square Root Approximation
-******************** MATHBERT CONSTANTS *********************
->> LPI : Liebniz Series Pi Approximation
->> MPI : Machin Series Pi Approximation
->> NPI : Newton Series Pi Approximation
-*************************************************************
-************************* STATBERT **************************
-******************** STATBERT PDFS/PMFS *********************
->> NORMPDF : Normal Probability Density Function
->> BINPMF : Binomial Probability Mass Function
-*********************** STATBERT CDFS ***********************
->> NORMCDF : Normal Cumulative Distribution Function
->> BINCDF : Binomial Cumulative Distribution Function
-*************************************************************
-************************** FINBERT **************************
-******************** FINBERT VALUATIONS *********************
->> BS : Black Scholes Option Function
-*************************************************************
-********************** ADMIN COMMANDS ***********************
->> I : Integration Technique Settings
->> V : Verbose Settings
->> N : Angle Unit Settings
->> S : Save Bertjen Configuration
->> B : Calibrate Bertjen
->> M : Print Menu
->> H : Help Function
->> Q : Quit
+<i>Main Commands</i>
+	1. CF : Count Function
+	2. F : Factorial Function
+	3. P : Power Function
+	4. LOG : Logarithm Function
+	5. E : Taylor Series Exponential Approximation
+	6. LN : Halley's Method Natural Log Approximation
+	7. COS : Taylor Series Cosine Approximation
+	8. SIN : Taylor Series Sine Approximation
+	9. TAN : Taylor Series Tangent Approximation
+	10. ACOS : Taylor Series Arccosine Approximation
+	11. ASIN : Taylor Series Arcsine Approximation
+	12. ATAN : Taylor Series Arctangent Approximation
+	13. SEC : Taylor Series Secant Approximation
+	14. CSC : Taylor Series Cosecant Approximation
+	15. COT : Taylor Series Cotangent Approximation
+	16.ROOT : Binomial Series Root Approximation
+	17. SQ : Newton's Method Square Root Approximation
+	18. LPI : Liebniz Series Pi Approximation
+	19. MPI : Machin Series Pi Approximation
+	20. NPI : Newton Series Pi Approximation
+	21. NORMPDF : Normal Probability Density Function
+	22. BINPMF : Binomial Probability Mass Function
+	23. NORMCDF : Normal Cumulative Distribution Function
+	24. BINCDF : Binomial Cumulative Distribution Function
+	25. BS : Black Scholes Option Function
+<i>Admin Commands</i>
+	1. I : Integration Technique Settings
+	2. V : Verbose Settings
+	3. N : Angle Unit Settings
+	4. S : Save Bertjen Configuration
+	5. B : Calibrate Bertjen
+	6. M : Print Menu
+	7. H : Help Function
+	8. Q : Quit
 
-The 'H' help function provides a short description of all the 
-functions Bertjen provides.
+The 'H' help function provides a short description of all the functions Bertjen provides. Simply type 
+
+	H FUNCTION_NAME
+
+replacing <i>FUNCTION_NAME</i> with the appropriate function name. For example, 
+
+	'<< h normcdf'
+	'>> NORMAL CUMULATIVE PROBABILITY DISTRIBUTION FUNCTION'
+	'>> Computes a normal probability --x P(X<x) for a given mean'
+	'>> --μ and standard deviation --σ'
+	'>> ARGUMENTS'
+	'--x : type : float :  Desired probability'
+	'--μ : type : float :  Mean'
+	'--σ : type : float :  Standard deviation'
+
+Note that Bertjen is not case sensitive! 
 
 
-*****************************************************************************
-Notes
-*****************************************************************************
-
-1. Function Input
+<b>Function Input</b>
 _____________________________________________________________________________
 
 Bertjen is setup to receive the inputs directly from the command line if separated by a space, i.e.
@@ -94,15 +106,17 @@ and
 
 will initiate the command line program for that particular function. 
 
-2. Calibration
+
+<b>Calibration</b>
 _____________________________________________________________________________
 
 If Bertjen outputs an error, it may need calibrated to your system. Use the 'B' command to initate system calibration. Be sure to save your configuration with 'S' command, otherwise you will need to recalibrate the next time you start up Bertjen.
 
-3. Character Encoding
+
+<b>Character Encoding<b>
 _____________________________________________________________________________
 
-If you are on Windows, you may run into the following UnicodeEncodingErrror
+Bertjen uses UTF-8 encoding to print Greek and Latin characters. (Hopefully, Hebrew soon. Need to learn more about Aleph-null and Aleph-one first.) If you are on Windows, you may run into the following UnicodeEncodingErrror
 
 	UnicodeEncodeError: 'charmap' codec can't encode character '\u03bc' in position 24: character maps to <undefined>
 
@@ -111,21 +125,21 @@ Or something similar. If so, you need to set your terminal session encoding to U
 	chcp 65001
 	set PYTHONIOENCDOING=utf-8
 
-4. Dockerfile
+<b>Dockerfile<b>
 _____________________________________________________________________________
 
 Build the image with Docker from the root folder like you normally would,
 
-	docker build -t apps/bertjen .
+	docker build -t bertjen .
 
 When you run the image, make sure you do so with an interactive terminal,
 
-	docker run -it apps/bertjen
+	docker run -it bertjen
 
 
-*****************************************************************************
+_____________________________________________________________________________
 TODO
-*****************************************************************************
+_____________________________________________________________________________
 
 1. Function recursion
 _____________________________________________________________________________
